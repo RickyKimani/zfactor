@@ -1,0 +1,1022 @@
+[
+  {
+    "name": "Methane",
+    "mw": 16.043,
+    "acentric": 0.012,
+    "tn": 111.4,
+    "critical": {
+      "tc": 190.6,
+      "pc": 45.99,
+      "vc": 98.6,
+      "zc": 0.286
+    }
+  },
+  {
+    "name": "Ethane",
+    "mw": 30.07,
+    "acentric": 0.1,
+    "tn": 184.6,
+    "critical": {
+      "tc": 305.3,
+      "pc": 48.72,
+      "vc": 145.5,
+      "zc": 0.279
+    }
+  },
+  {
+    "name": "Propane",
+    "mw": 44.097,
+    "acentric": 0.152,
+    "tn": 231.1,
+    "critical": {
+      "tc": 369.8,
+      "pc": 42.48,
+      "vc": 200.0,
+      "zc": 0.276
+    }
+  },
+  {
+    "name": "n-Butane",
+    "mw": 58.123,
+    "acentric": 0.2,
+    "tn": 272.7,
+    "critical": {
+      "tc": 425.1,
+      "pc": 37.96,
+      "vc": 255.0,
+      "zc": 0.274
+    }
+  },
+  {
+    "name": "n-Pentane",
+    "mw": 72.15,
+    "acentric": 0.252,
+    "tn": 309.2,
+    "critical": {
+      "tc": 469.7,
+      "pc": 33.7,
+      "vc": 313.0,
+      "zc": 0.27
+    }
+  },
+  {
+    "name": "n-Hexane",
+    "mw": 86.177,
+    "acentric": 0.301,
+    "tn": 341.9,
+    "critical": {
+      "tc": 507.6,
+      "pc": 30.25,
+      "vc": 371.0,
+      "zc": 0.266
+    }
+  },
+  {
+    "name": "n-Heptane",
+    "mw": 100.204,
+    "acentric": 0.35,
+    "tn": 371.6,
+    "critical": {
+      "tc": 540.2,
+      "pc": 27.4,
+      "vc": 428.0,
+      "zc": 0.261
+    }
+  },
+  {
+    "name": "n-Octane",
+    "mw": 114.231,
+    "acentric": 0.4,
+    "tn": 398.8,
+    "critical": {
+      "tc": 568.7,
+      "pc": 24.9,
+      "vc": 486.0,
+      "zc": 0.256
+    }
+  },
+  {
+    "name": "n-Nonane",
+    "mw": 128.258,
+    "acentric": 0.444,
+    "tn": 424.0,
+    "critical": {
+      "tc": 594.6,
+      "pc": 22.9,
+      "vc": 544.0,
+      "zc": 0.252
+    }
+  },
+  {
+    "name": "n-Decane",
+    "mw": 142.285,
+    "acentric": 0.492,
+    "tn": 447.3,
+    "critical": {
+      "tc": 617.7,
+      "pc": 21.1,
+      "vc": 600.0,
+      "zc": 0.247
+    }
+  },
+  {
+    "name": "Isobutane",
+    "mw": 58.123,
+    "acentric": 0.181,
+    "tn": 261.4,
+    "critical": {
+      "tc": 408.1,
+      "pc": 36.48,
+      "vc": 262.7,
+      "zc": 0.282
+    }
+  },
+  {
+    "name": "Cyclopentane",
+    "mw": 70.134,
+    "acentric": 0.196,
+    "tn": 322.4,
+    "critical": {
+      "tc": 511.8,
+      "pc": 45.02,
+      "vc": 258.0,
+      "zc": 0.273
+    }
+  },
+  {
+    "name": "Cyclohexane",
+    "mw": 84.161,
+    "acentric": 0.21,
+    "tn": 353.9,
+    "critical": {
+      "tc": 553.6,
+      "pc": 40.73,
+      "vc": 308.0,
+      "zc": 0.273
+    }
+  },
+  {
+    "name": "Methylcyclopentane",
+    "mw": 84.161,
+    "acentric": 0.23,
+    "tn": 345.0,
+    "critical": {
+      "tc": 532.8,
+      "pc": 37.85,
+      "vc": 319.0,
+      "zc": 0.272
+    }
+  },
+  {
+    "name": "Methylcyclohexane",
+    "mw": 98.188,
+    "acentric": 0.235,
+    "tn": 374.1,
+    "critical": {
+      "tc": 572.2,
+      "pc": 34.71,
+      "vc": 368.0,
+      "zc": 0.269
+    }
+  },
+  {
+    "name": "Ethylene",
+    "mw": 28.054,
+    "acentric": 0.087,
+    "tn": 169.4,
+    "critical": {
+      "tc": 282.3,
+      "pc": 50.4,
+      "vc": 131.0,
+      "zc": 0.281
+    }
+  },
+  {
+    "name": "Propylene",
+    "mw": 42.081,
+    "acentric": 0.14,
+    "tn": 225.5,
+    "critical": {
+      "tc": 365.6,
+      "pc": 46.65,
+      "vc": 188.4,
+      "zc": 0.289
+    }
+  },
+  {
+    "name": "1-Butene",
+    "mw": 56.108,
+    "acentric": 0.191,
+    "tn": 266.9,
+    "critical": {
+      "tc": 420.0,
+      "pc": 40.43,
+      "vc": 239.3,
+      "zc": 0.277
+    }
+  },
+  {
+    "name": "cis-2-Butene",
+    "mw": 56.108,
+    "acentric": 0.205,
+    "tn": 276.9,
+    "critical": {
+      "tc": 435.6,
+      "pc": 42.43,
+      "vc": 233.8,
+      "zc": 0.273
+    }
+  },
+  {
+    "name": "trans -2-Butene",
+    "mw": 56.108,
+    "acentric": 0.218,
+    "tn": 274.0,
+    "critical": {
+      "tc": 428.6,
+      "pc": 41.0,
+      "vc": 237.7,
+      "zc": 0.275
+    }
+  },
+  {
+    "name": "1-Hexene",
+    "mw": 84.161,
+    "acentric": 0.28,
+    "tn": 336.3,
+    "critical": {
+      "tc": 504.0,
+      "pc": 31.4,
+      "vc": 354.0,
+      "zc": 0.265
+    }
+  },
+  {
+    "name": "Isobutylene",
+    "mw": 56.108,
+    "acentric": 0.194,
+    "tn": 266.3,
+    "critical": {
+      "tc": 417.9,
+      "pc": 40.0,
+      "vc": 238.9,
+      "zc": 0.275
+    }
+  },
+  {
+    "name": "1,3-Butadiene",
+    "mw": 54.092,
+    "acentric": 0.19,
+    "tn": 268.7,
+    "critical": {
+      "tc": 425.2,
+      "pc": 42.77,
+      "vc": 220.4,
+      "zc": 0.267
+    }
+  },
+  {
+    "name": "Cyclohexene",
+    "mw": 82.145,
+    "acentric": 0.212,
+    "tn": 356.1,
+    "critical": {
+      "tc": 560.4,
+      "pc": 43.5,
+      "vc": 291.0,
+      "zc": 0.272
+    }
+  },
+  {
+    "name": "Acetylene",
+    "mw": 26.038,
+    "acentric": 0.187,
+    "tn": 189.4,
+    "critical": {
+      "tc": 308.3,
+      "pc": 61.39,
+      "vc": 113.0,
+      "zc": 0.271
+    }
+  },
+  {
+    "name": "Benzene",
+    "mw": 78.114,
+    "acentric": 0.21,
+    "tn": 353.2,
+    "critical": {
+      "tc": 562.2,
+      "pc": 48.98,
+      "vc": 259.0,
+      "zc": 0.271
+    }
+  },
+  {
+    "name": "Toluene",
+    "mw": 92.141,
+    "acentric": 0.262,
+    "tn": 383.8,
+    "critical": {
+      "tc": 591.8,
+      "pc": 41.06,
+      "vc": 316.0,
+      "zc": 0.264
+    }
+  },
+  {
+    "name": "Ethylbenzene",
+    "mw": 106.167,
+    "acentric": 0.303,
+    "tn": 409.4,
+    "critical": {
+      "tc": 617.2,
+      "pc": 36.06,
+      "vc": 374.0,
+      "zc": 0.263
+    }
+  },
+  {
+    "name": "Cumene",
+    "mw": 120.194,
+    "acentric": 0.326,
+    "tn": 425.6,
+    "critical": {
+      "tc": 631.1,
+      "pc": 32.09,
+      "vc": 427.0,
+      "zc": 0.261
+    }
+  },
+  {
+    "name": "o-Xylene",
+    "mw": 106.167,
+    "acentric": 0.31,
+    "tn": 417.6,
+    "critical": {
+      "tc": 630.3,
+      "pc": 37.34,
+      "vc": 369.0,
+      "zc": 0.263
+    }
+  },
+  {
+    "name": "m-Xylene",
+    "mw": 106.167,
+    "acentric": 0.326,
+    "tn": 412.3,
+    "critical": {
+      "tc": 617.1,
+      "pc": 35.36,
+      "vc": 376.0,
+      "zc": 0.259
+    }
+  },
+  {
+    "name": "p-Xylene",
+    "mw": 106.167,
+    "acentric": 0.322,
+    "tn": 411.5,
+    "critical": {
+      "tc": 616.2,
+      "pc": 35.11,
+      "vc": 379.0,
+      "zc": 0.26
+    }
+  },
+  {
+    "name": "Styrene",
+    "mw": 104.152,
+    "acentric": 0.297,
+    "tn": 418.3,
+    "critical": {
+      "tc": 636.0,
+      "pc": 38.4,
+      "vc": 352.0,
+      "zc": 0.256
+    }
+  },
+  {
+    "name": "Naphthalene",
+    "mw": 128.174,
+    "acentric": 0.302,
+    "tn": 491.2,
+    "critical": {
+      "tc": 748.4,
+      "pc": 40.51,
+      "vc": 413.0,
+      "zc": 0.269
+    }
+  },
+  {
+    "name": "Biphenyl",
+    "mw": 154.211,
+    "acentric": 0.365,
+    "tn": 528.2,
+    "critical": {
+      "tc": 789.3,
+      "pc": 38.5,
+      "vc": 502.0,
+      "zc": 0.295
+    }
+  },
+  {
+    "name": "Formaldehyde",
+    "mw": 30.026,
+    "acentric": 0.282,
+    "tn": 254.1,
+    "critical": {
+      "tc": 408.0,
+      "pc": 65.9,
+      "vc": 115.0,
+      "zc": 0.223
+    }
+  },
+  {
+    "name": "Acetaldehyde",
+    "mw": 44.053,
+    "acentric": 0.291,
+    "tn": 294.0,
+    "critical": {
+      "tc": 466.0,
+      "pc": 55.5,
+      "vc": 154.0,
+      "zc": 0.221
+    }
+  },
+  {
+    "name": "Methyl acetate",
+    "mw": 74.079,
+    "acentric": 0.331,
+    "tn": 330.1,
+    "critical": {
+      "tc": 506.6,
+      "pc": 47.5,
+      "vc": 228.0,
+      "zc": 0.257
+    }
+  },
+  {
+    "name": "Ethyl acetate",
+    "mw": 88.106,
+    "acentric": 0.366,
+    "tn": 350.2,
+    "critical": {
+      "tc": 523.3,
+      "pc": 38.8,
+      "vc": 286.0,
+      "zc": 0.255
+    }
+  },
+  {
+    "name": "Acetone",
+    "mw": 58.08,
+    "acentric": 0.307,
+    "tn": 329.4,
+    "critical": {
+      "tc": 508.2,
+      "pc": 47.01,
+      "vc": 209.0,
+      "zc": 0.233
+    }
+  },
+  {
+    "name": "Methyl ethyl ketone",
+    "mw": 72.107,
+    "acentric": 0.323,
+    "tn": 352.8,
+    "critical": {
+      "tc": 535.5,
+      "pc": 41.5,
+      "vc": 267.0,
+      "zc": 0.249
+    }
+  },
+  {
+    "name": "Diethyl ether",
+    "mw": 74.123,
+    "acentric": 0.281,
+    "tn": 307.6,
+    "critical": {
+      "tc": 466.7,
+      "pc": 36.4,
+      "vc": 280.0,
+      "zc": 0.263
+    }
+  },
+  {
+    "name": "Methyl t-butyl ether",
+    "mw": 88.15,
+    "acentric": 0.266,
+    "tn": 328.4,
+    "critical": {
+      "tc": 497.1,
+      "pc": 34.3,
+      "vc": 329.0,
+      "zc": 0.273
+    }
+  },
+  {
+    "name": "Methanol",
+    "mw": 32.042,
+    "acentric": 0.564,
+    "tn": 337.9,
+    "critical": {
+      "tc": 512.6,
+      "pc": 80.97,
+      "vc": 118.0,
+      "zc": 0.224
+    }
+  },
+  {
+    "name": "Ethanol",
+    "mw": 46.069,
+    "acentric": 0.645,
+    "tn": 351.4,
+    "critical": {
+      "tc": 513.9,
+      "pc": 61.48,
+      "vc": 167.0,
+      "zc": 0.24
+    }
+  },
+  {
+    "name": "1-Propanol",
+    "mw": 60.096,
+    "acentric": 0.622,
+    "tn": 370.4,
+    "critical": {
+      "tc": 536.8,
+      "pc": 51.75,
+      "vc": 219.0,
+      "zc": 0.254
+    }
+  },
+  {
+    "name": "1-Butanol",
+    "mw": 74.123,
+    "acentric": 0.594,
+    "tn": 390.8,
+    "critical": {
+      "tc": 563.1,
+      "pc": 44.23,
+      "vc": 275.0,
+      "zc": 0.26
+    }
+  },
+  {
+    "name": "1-Hexanol",
+    "mw": 102.177,
+    "acentric": 0.579,
+    "tn": 430.6,
+    "critical": {
+      "tc": 611.4,
+      "pc": 35.1,
+      "vc": 381.0,
+      "zc": 0.263
+    }
+  },
+  {
+    "name": "2-Propanol",
+    "mw": 60.096,
+    "acentric": 0.668,
+    "tn": 355.4,
+    "critical": {
+      "tc": 508.3,
+      "pc": 47.62,
+      "vc": 220.0,
+      "zc": 0.248
+    }
+  },
+  {
+    "name": "Ethylene glycol",
+    "mw": 62.068,
+    "acentric": 0.487,
+    "tn": 470.5,
+    "critical": {
+      "tc": 719.7,
+      "pc": 77.0,
+      "vc": 191.0,
+      "zc": 0.246
+    }
+  },
+  {
+    "name": "Acetic acid",
+    "mw": 60.053,
+    "acentric": 0.467,
+    "tn": 391.1,
+    "critical": {
+      "tc": 592.0,
+      "pc": 57.86,
+      "vc": 179.7,
+      "zc": 0.211
+    }
+  },
+  {
+    "name": "n-Butyric acid",
+    "mw": 88.106,
+    "acentric": 0.681,
+    "tn": 436.4,
+    "critical": {
+      "tc": 615.7,
+      "pc": 40.64,
+      "vc": 291.7,
+      "zc": 0.232
+    }
+  },
+  {
+    "name": "Benzoic acid",
+    "mw": 122.123,
+    "acentric": 0.603,
+    "tn": 522.4,
+    "critical": {
+      "tc": 751.0,
+      "pc": 44.7,
+      "vc": 344.0,
+      "zc": 0.246
+    }
+  },
+  {
+    "name": "Acetonitrile",
+    "mw": 41.053,
+    "acentric": 0.338,
+    "tn": 354.8,
+    "critical": {
+      "tc": 545.5,
+      "pc": 48.3,
+      "vc": 173.0,
+      "zc": 0.184
+    }
+  },
+  {
+    "name": "Methylamine",
+    "mw": 31.057,
+    "acentric": 0.281,
+    "tn": 266.8,
+    "critical": {
+      "tc": 430.1,
+      "pc": 74.6,
+      "vc": 154.0,
+      "zc": 0.321
+    }
+  },
+  {
+    "name": "Ethylamine",
+    "mw": 45.084,
+    "acentric": 0.285,
+    "tn": 289.7,
+    "critical": {
+      "tc": 456.2,
+      "pc": 56.2,
+      "vc": 207.0,
+      "zc": 0.307
+    }
+  },
+  {
+    "name": "Nitromethane",
+    "mw": 61.04,
+    "acentric": 0.348,
+    "tn": 374.4,
+    "critical": {
+      "tc": 588.2,
+      "pc": 63.1,
+      "vc": 173.0,
+      "zc": 0.223
+    }
+  },
+  {
+    "name": "Carbon tetrachloride",
+    "mw": 153.822,
+    "acentric": 0.193,
+    "tn": 349.8,
+    "critical": {
+      "tc": 556.4,
+      "pc": 45.6,
+      "vc": 276.0,
+      "zc": 0.272
+    }
+  },
+  {
+    "name": "Chloroform",
+    "mw": 119.377,
+    "acentric": 0.222,
+    "tn": 334.3,
+    "critical": {
+      "tc": 536.4,
+      "pc": 54.72,
+      "vc": 239.0,
+      "zc": 0.293
+    }
+  },
+  {
+    "name": "Dichloromethane",
+    "mw": 84.932,
+    "acentric": 0.199,
+    "tn": 312.9,
+    "critical": {
+      "tc": 510.0,
+      "pc": 60.8,
+      "vc": 185.0,
+      "zc": 0.265
+    }
+  },
+  {
+    "name": "Methyl chloride",
+    "mw": 50.488,
+    "acentric": 0.153,
+    "tn": 249.1,
+    "critical": {
+      "tc": 416.3,
+      "pc": 66.8,
+      "vc": 143.0,
+      "zc": 0.276
+    }
+  },
+  {
+    "name": "Ethyl chloride",
+    "mw": 64.514,
+    "acentric": 0.19,
+    "tn": 285.4,
+    "critical": {
+      "tc": 460.4,
+      "pc": 52.7,
+      "vc": 200.0,
+      "zc": 0.275
+    }
+  },
+  {
+    "name": "Chlorobenzene",
+    "mw": 112.558,
+    "acentric": 0.25,
+    "tn": 404.9,
+    "critical": {
+      "tc": 632.4,
+      "pc": 45.2,
+      "vc": 308.0,
+      "zc": 0.265
+    }
+  },
+  {
+    "name": "Tetrafluoroethane",
+    "mw": 102.03,
+    "acentric": 0.327,
+    "tn": 247.1,
+    "critical": {
+      "tc": 374.2,
+      "pc": 40.6,
+      "vc": 198.0,
+      "zc": 0.258
+    }
+  },
+  {
+    "name": "Argon",
+    "mw": 39.948,
+    "acentric": 0.0,
+    "tn": 87.3,
+    "critical": {
+      "tc": 150.9,
+      "pc": 48.98,
+      "vc": 74.6,
+      "zc": 0.291
+    }
+  },
+  {
+    "name": "Krypton",
+    "mw": 83.8,
+    "acentric": 0.0,
+    "tn": 119.8,
+    "critical": {
+      "tc": 209.4,
+      "pc": 55.02,
+      "vc": 91.2,
+      "zc": 0.288
+    }
+  },
+  {
+    "name": "Xenon",
+    "mw": 131.3,
+    "acentric": 0.0,
+    "tn": 165.0,
+    "critical": {
+      "tc": 289.7,
+      "pc": 58.4,
+      "vc": 118.0,
+      "zc": 0.286
+    }
+  },
+  {
+    "name": "Helium 4",
+    "mw": 4.003,
+    "acentric": 0.39,
+    "tn": 4.2,
+    "critical": {
+      "tc": 5.2,
+      "pc": 2.28,
+      "vc": 57.3,
+      "zc": 0.302
+    }
+  },
+  {
+    "name": "Hydrogen",
+    "mw": 2.016,
+    "acentric": 0.216,
+    "tn": 20.4,
+    "critical": {
+      "tc": 33.19,
+      "pc": 13.13,
+      "vc": 64.1,
+      "zc": 0.305
+    }
+  },
+  {
+    "name": "Oxygen",
+    "mw": 31.999,
+    "acentric": 0.022,
+    "tn": 90.2,
+    "critical": {
+      "tc": 154.6,
+      "pc": 50.43,
+      "vc": 73.4,
+      "zc": 0.288
+    }
+  },
+  {
+    "name": "Nitrogen",
+    "mw": 28.014,
+    "acentric": 0.038,
+    "tn": 77.3,
+    "critical": {
+      "tc": 126.2,
+      "pc": 34.0,
+      "vc": 89.2,
+      "zc": 0.289
+    }
+  },
+  {
+    "name": "Chlorine",
+    "mw": 70.905,
+    "acentric": 0.069,
+    "tn": 239.1,
+    "critical": {
+      "tc": 417.2,
+      "pc": 77.1,
+      "vc": 124.0,
+      "zc": 0.265
+    }
+  },
+  {
+    "name": "Carbon monoxide",
+    "mw": 28.01,
+    "acentric": 0.048,
+    "tn": 81.7,
+    "critical": {
+      "tc": 132.9,
+      "pc": 34.99,
+      "vc": 93.4,
+      "zc": 0.299
+    }
+  },
+  {
+    "name": "Carbon disulfide",
+    "mw": 76.143,
+    "acentric": 0.111,
+    "tn": 319.4,
+    "critical": {
+      "tc": 552.0,
+      "pc": 79.0,
+      "vc": 160.0,
+      "zc": 0.275
+    }
+  },
+  {
+    "name": "Hydrogen sulfide",
+    "mw": 34.082,
+    "acentric": 0.094,
+    "tn": 212.8,
+    "critical": {
+      "tc": 373.5,
+      "pc": 89.63,
+      "vc": 98.5,
+      "zc": 0.284
+    }
+  },
+  {
+    "name": "Sulfur dioxide",
+    "mw": 64.065,
+    "acentric": 0.245,
+    "tn": 263.1,
+    "critical": {
+      "tc": 430.8,
+      "pc": 78.84,
+      "vc": 122.0,
+      "zc": 0.269
+    }
+  },
+  {
+    "name": "Sulfur trioxide",
+    "mw": 80.064,
+    "acentric": 0.424,
+    "tn": 317.9,
+    "critical": {
+      "tc": 490.9,
+      "pc": 82.1,
+      "vc": 127.0,
+      "zc": 0.255
+    }
+  },
+  {
+    "name": "Nitric oxide (NO)",
+    "mw": 30.006,
+    "acentric": 0.583,
+    "tn": 121.4,
+    "critical": {
+      "tc": 180.2,
+      "pc": 64.8,
+      "vc": 58.0,
+      "zc": 0.251
+    }
+  },
+  {
+    "name": "Nitrous oxide (N 2O)",
+    "mw": 44.013,
+    "acentric": 0.141,
+    "tn": 184.7,
+    "critical": {
+      "tc": 309.6,
+      "pc": 72.45,
+      "vc": 97.4,
+      "zc": 0.274
+    }
+  },
+  {
+    "name": "Hydrogen chloride",
+    "mw": 36.461,
+    "acentric": 0.132,
+    "tn": 188.2,
+    "critical": {
+      "tc": 324.7,
+      "pc": 83.1,
+      "vc": 81.0,
+      "zc": 0.249
+    }
+  },
+  {
+    "name": "Hydrogen cyanide",
+    "mw": 27.026,
+    "acentric": 0.41,
+    "tn": 298.9,
+    "critical": {
+      "tc": 456.7,
+      "pc": 53.9,
+      "vc": 139.0,
+      "zc": 0.197
+    }
+  },
+  {
+    "name": "Water",
+    "mw": 18.015,
+    "acentric": 0.345,
+    "tn": 373.2,
+    "critical": {
+      "tc": 647.1,
+      "pc": 220.55,
+      "vc": 55.9,
+      "zc": 0.229
+    }
+  },
+  {
+    "name": "Ammonia",
+    "mw": 17.031,
+    "acentric": 0.253,
+    "tn": 239.7,
+    "critical": {
+      "tc": 405.7,
+      "pc": 112.8,
+      "vc": 72.5,
+      "zc": 0.242
+    }
+  },
+  {
+    "name": "Nitric acid",
+    "mw": 63.013,
+    "acentric": 0.714,
+    "tn": 356.2,
+    "critical": {
+      "tc": 520.0,
+      "pc": 68.9,
+      "vc": 145.0,
+      "zc": 0.231
+    }
+  },
+  {
+    "name": "Sulfuric acid",
+    "mw": 98.08,
+    "acentric": 0.0,
+    "tn": 610.0,
+    "critical": {
+      "tc": 924.0,
+      "pc": 64.0,
+      "vc": 177.0,
+      "zc": 0.147
+    }
+  }
+]
