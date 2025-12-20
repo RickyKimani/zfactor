@@ -8,16 +8,16 @@ import (
 // It uses the approximation V = RT/P + B.
 func SolveForVolumeTwoTerm(T, P, R, B float64) (float64, error) {
 	if P <= 0 {
-		return 0, zfactor.PressErr
+		return 0, zfactor.ErrPressure
 	}
 	if T <= 0 {
-		return 0, zfactor.TempErr
+		return 0, zfactor.ErrTemp
 	}
 	if R <= 0 {
-		return 0, zfactor.UniversalConstErr
+		return 0, zfactor.ErrUniversalConst
 	}
 	if B == 0 {
-		return 0, zfactor.VirialCoeffErr
+		return 0, zfactor.ErrVirialCoeff
 	}
 
 	return (R * T / P) + B, nil
@@ -27,16 +27,16 @@ func SolveForVolumeTwoTerm(T, P, R, B float64) (float64, error) {
 // The equation is Z = 1 + B/V + C/V^2, which rearranges to a cubic equation in V.
 func SolveForVolumeThreeTerm(T, P, R, B, C float64) ([3]complex128, error) {
 	if P <= 0 {
-		return [3]complex128{}, zfactor.PressErr
+		return [3]complex128{}, zfactor.ErrPressure
 	}
 	if T <= 0 {
-		return [3]complex128{}, zfactor.TempErr
+		return [3]complex128{}, zfactor.ErrTemp
 	}
 	if R <= 0 {
-		return [3]complex128{}, zfactor.UniversalConstErr
+		return [3]complex128{}, zfactor.ErrUniversalConst
 	}
 	if B == 0 || C == 0 {
-		return [3]complex128{}, zfactor.VirialCoeffErr
+		return [3]complex128{}, zfactor.ErrVirialCoeff
 	}
 
 	a := P / (R * T)
@@ -51,16 +51,16 @@ func SolveForVolumeThreeTerm(T, P, R, B, C float64) ([3]complex128, error) {
 // Z = 1 + BP/RT
 func CompressibilityTwoTerm(T, P, R, B float64) (float64, error) {
 	if P <= 0 {
-		return 0, zfactor.PressErr
+		return 0, zfactor.ErrPressure
 	}
 	if T <= 0 {
-		return 0, zfactor.TempErr
+		return 0, zfactor.ErrTemp
 	}
 	if R <= 0 {
-		return 0, zfactor.UniversalConstErr
+		return 0, zfactor.ErrUniversalConst
 	}
 	if B == 0 {
-		return 0, zfactor.VirialCoeffErr
+		return 0, zfactor.ErrVirialCoeff
 	}
 
 	return 1 + (B*P)/(R*T), nil
@@ -70,10 +70,10 @@ func CompressibilityTwoTerm(T, P, R, B float64) (float64, error) {
 // Z = 1 + B/V + C/V^2
 func CompressibilityThreeTerm(V, B, C float64) (float64, error) {
 	if V <= 0 {
-		return 0, zfactor.VolumeErr
+		return 0, zfactor.ErrVolume
 	}
 	if B == 0 || C == 0 {
-		return 0, zfactor.VirialCoeffErr
+		return 0, zfactor.ErrVirialCoeff
 	}
 
 	return 1 + B/V + C/(V*V), nil

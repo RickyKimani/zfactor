@@ -8,7 +8,6 @@ import (
 	"github.com/rickykimani/zfactor"
 )
 
-
 // Params represents the substance agnostic variables in any
 // cubic equation of state
 type Params struct {
@@ -87,18 +86,18 @@ func calculatea(psi, alpha, r, tc, pc float64) float64 {
 // Returns an error if input parameters are invalid (e.g. non-positive temperature).
 func SolveForVolume(cfg *EOSCfg) (*VolumeResult, error) {
 	if cfg.T <= 0 {
-		return nil, zfactor.TempErr
+		return nil, zfactor.ErrTemp
 	}
 	if cfg.P <= 0 {
-		return nil, zfactor.PressErr
+		return nil, zfactor.ErrPressure
 	}
 
 	if cfg.Pc <= 0 || cfg.Tc <= 0 {
-		return nil, zfactor.CriticalPropErr
+		return nil, zfactor.ErrCriticalProp
 	}
 
 	if cfg.R <= 0 {
-		return nil, zfactor.UniversalConstErr
+		return nil, zfactor.ErrUniversalConst
 	}
 
 	tr := cfg.T / cfg.Tc
@@ -116,7 +115,7 @@ func SolveForVolume(cfg *EOSCfg) (*VolumeResult, error) {
 	//eV^3 + fV^2 + gV + h = 0
 	x := epsilon + sigma
 	y := epsilon * sigma
-	v_ig := cfg.R * cfg.Tc / cfg.Pc
+	v_ig := cfg.R * cfg.T / cfg.P //oops
 
 	e := 1.0
 	f := b*(x-1) - v_ig
@@ -141,14 +140,14 @@ func SolveForVolume(cfg *EOSCfg) (*VolumeResult, error) {
 // Returns an error if input parameters are invalid.
 func Pressure(cfg *EOSCfg, volume float64) (*PressureResult, error) {
 	if cfg.T <= 0 {
-		return nil, zfactor.TempErr
+		return nil, zfactor.ErrTemp
 	}
 	if cfg.Pc <= 0 || cfg.Tc <= 0 {
-		return nil, zfactor.CriticalPropErr
+		return nil, zfactor.ErrCriticalProp
 	}
 
 	if cfg.R <= 0 {
-		return nil, zfactor.UniversalConstErr
+		return nil, zfactor.ErrUniversalConst
 	}
 	tr := cfg.T / cfg.Tc
 

@@ -43,4 +43,6 @@ go.work.sum
 .vscode/
 
 *.pdf
+*.png
 examples/
+debug/
