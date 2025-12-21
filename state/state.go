@@ -108,6 +108,10 @@ type PVConfig struct {
 	NumberStates bool
 	// StatePointNumberColor is the color of the number of the state. Defaults to black if nil.
 	StatePointNumberColor Color
+	// LabelIsotherms places a label alongside the isotherm with the numerical value of the temperature
+	LabelIsotherms bool
+	// IsothermLabelColor is the color of the isotherm label. Defaults to black if nil.
+	IsothermLabelColor Color
 }
 
 // DrawPV generates a Pressure-Volume (PV) diagram for the provided states.
@@ -206,6 +210,19 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	critLine.LineStyle.Width = vg.Points(1)
 	p.Add(critLine)
 
+	if cfg.LabelIsotherms && len(critPts) > 0 {
+		lastPt := critPts[len(critPts)-1]
+		labels, _ := plotter.NewLabels(plotter.XYLabels{
+			XYs:    []plotter.XY{lastPt},
+			Labels: []string{fmt.Sprintf("Tc=%.1f K", Tc)},
+		})
+		labels.Offset.X = vg.Points(2)
+		if cfg.IsothermLabelColor != nil {
+			labels.TextStyle[0].Color = cfg.IsothermLabelColor
+		}
+		p.Add(labels)
+	}
+
 	// 2. Draw Saturation Dome
 	domeCfg := s0.Substance.PRCfg(Tc, Pc, R)
 	var liquidPts, vaporPts plotter.XYs
@@ -282,6 +299,25 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 			isoLine.Color = cfg.IsothermsColor
 		}
 		p.Add(isoLine)
+
+		if cfg.LabelIsotherms && len(isoPts) > 0 {
+			lastPt := isoPts[len(isoPts)-1]
+			labels, _ := plotter.NewLabels(plotter.XYLabels{
+				XYs:    []plotter.XY{lastPt},
+				Labels: []string{fmt.Sprintf("T=%.1f K", state.Temperature)},
+			})
+			labels.Offset.X = vg.Points(2)
+			// Shift label to avoid overlap with Critical Isotherm
+			if state.Temperature < Tc {
+				labels.Offset.Y = vg.Points(-10)
+			} else {
+				labels.Offset.Y = vg.Points(10)
+			}
+			if cfg.IsothermLabelColor != nil {
+				labels.TextStyle[0].Color = cfg.IsothermLabelColor
+			}
+			p.Add(labels)
+		}
 
 		// Calculate State Point
 		volRes, err := cubic.SolveForVolume(stateCfg)
