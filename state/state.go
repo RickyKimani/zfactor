@@ -112,6 +112,9 @@ type PVConfig struct {
 	LabelIsotherms bool
 	// IsothermLabelColor is the color of the isotherm label. Defaults to black if nil.
 	IsothermLabelColor Color
+	// VolumeScaleFactor determines the maximum volume shown on the X-axis as a multiple of the critical volume (Vc).
+	// If 0, it defaults to 7.0.
+	VolumeScaleFactor float64
 }
 
 // DrawPV generates a Pressure-Volume (PV) diagram for the provided states.
@@ -179,7 +182,11 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	// Default max view: if Vc is known, use it. Else guess.
 	maxViewV := minV * 15
 	if Vc > 0 {
-		maxViewV = Vc * 7 //Might be a bad guess idk
+		factor := cfg.VolumeScaleFactor
+		if factor <= 0 {
+			factor = 7.0
+		}
+		maxViewV = Vc * factor
 	}
 
 	// Check if any state is outside this view
