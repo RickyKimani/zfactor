@@ -27,7 +27,7 @@ type Substance struct {
 // LeeKesler evaluates a thermodynamic property using the Lee-Kesler correlation.
 // p is the pressure in bar.
 // t is the temperature in Kelvin.
-func (s Substance) LeeKesler(p, t float64, property leekesler.Property) (float64, error) {
+func (s *Substance) LeeKesler(p, t float64, property leekesler.Property) (float64, error) {
 	pr := p / s.Critical.Pc
 	tr := t / s.Critical.Tc
 
@@ -43,22 +43,40 @@ func (s Substance) LeeKesler(p, t float64, property leekesler.Property) (float64
 	return v, nil
 }
 
-func (s Substance) VdWCfg(t, p, r float64) *cubic.EOSCfg {
-	return cubic.NewvdWCfg(t, p, s.Critical.Tc, s.Critical.Pc, r)
-}
-func (s Substance) RKCfg(t, p, r float64) *cubic.EOSCfg {
-	return cubic.NewRKCfg(t, p, s.Critical.Tc, s.Critical.Pc, r)
-}
-func (s Substance) SRKCfg(t, p, r float64) *cubic.EOSCfg {
-	return cubic.NewSRKCfg(t, p, s.Critical.Tc, s.Critical.Pc, s.Acentric, r)
-}
-func (s Substance) PRCfg(t, p, r float64) *cubic.EOSCfg {
-	return cubic.NewPRCfg(t, p, s.Critical.Tc, s.Critical.Pc, s.Acentric, r)
+// CubicConfig creates a configuration for a cubic equation of state (EOS) solver.
+// It initializes the EOS parameters based on the substance's critical properties and acentric factor.
+//
+// Supported standard types (VdW, RK, SRK, PR) are initialized with their specific constructors.
+// Custom implementations of cubic.EOSType are handled by the default case, which populates
+// the configuration with the substance's properties.
+func (s *Substance) CubicConfig(Type cubic.EOSType, t, p, r float64) *cubic.EOSCfg {
+	tc := s.Critical.Tc
+	pc := s.Critical.Pc
+	switch Type.(type) {
+	case *cubic.VdW:
+		return cubic.NewvdWCfg(t, p, tc, pc, r)
+	case *cubic.RK:
+		return cubic.NewRKCfg(t, p, tc, pc, r)
+	case *cubic.SRK:
+		return cubic.NewSRKCfg(t, p, tc, pc, s.Acentric, r)
+	case *cubic.PR:
+		return cubic.NewPRCfg(t, p, tc, pc, s.Acentric, r)
+	default:
+		return &cubic.EOSCfg{
+			Type:     Type,
+			T:        t,
+			P:        p,
+			Tc:       tc,
+			Pc:       pc,
+			Acentric: s.Acentric,
+			R:        r,
+		}
+	}
 }
 
 // Vsat calculates the saturated liquid molar volume at the given temperature using the Rackett equation.
 // Temperature must be in Kelvin.
-func (s Substance) Vsat(Temperature float64) (float64, error) {
+func (s *Substance) Vsat(Temperature float64) (float64, error) {
 	if Temperature <= 0 {
 		return 0, zfactor.ErrTemp
 	}

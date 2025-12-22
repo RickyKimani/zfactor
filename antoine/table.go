@@ -2,7 +2,7 @@
 
 package antoine
 
-var Acetone = Antoine{
+var Acetone = &Antoine{
 	Name:    "Acetone",
 	Formula: "C3H6O",
 	A:       14.31450,
@@ -16,7 +16,7 @@ var Acetone = Antoine{
 	Tn: 56.20000,
 }
 
-var AceticAcid = Antoine{
+var AceticAcid = &Antoine{
 	Name:    "Acetic acid",
 	Formula: "C2H4O",
 	A:       215.07170,
@@ -30,7 +30,7 @@ var AceticAcid = Antoine{
 	Tn: 117.90000,
 }
 
-var Acetonitrile = Antoine{
+var Acetonitrile = &Antoine{
 	Name:    "Acetonitrile",
 	Formula: "C2H3N",
 	A:       14.89500,
@@ -44,7 +44,7 @@ var Acetonitrile = Antoine{
 	Tn: 81.60000,
 }
 
-var Benzene = Antoine{
+var Benzene = &Antoine{
 	Name:    "Benzene",
 	Formula: "C6H6",
 	A:       13.78190,
@@ -58,7 +58,7 @@ var Benzene = Antoine{
 	Tn: 80.00000,
 }
 
-var IsoButane = Antoine{
+var IsoButane = &Antoine{
 	Name:    "iso-Butane",
 	Formula: "C4H10",
 	A:       13.82540,
@@ -72,7 +72,7 @@ var IsoButane = Antoine{
 	Tn: -11.90000,
 }
 
-var NButane = Antoine{
+var NButane = &Antoine{
 	Name:    "n-Butane",
 	Formula: "C4H10",
 	A:       13.66080,
@@ -86,7 +86,7 @@ var NButane = Antoine{
 	Tn: -0.50000,
 }
 
-var OneButanol = Antoine{
+var OneButanol = &Antoine{
 	Name:    "1-Butanol",
 	Formula: "C4H10O",
 	A:       15.31440,
@@ -100,7 +100,7 @@ var OneButanol = Antoine{
 	Tn: 117.60000,
 }
 
-var TwoButanol = Antoine{
+var TwoButanol = &Antoine{
 	Name:    "2-Butanol",
 	Formula: "C4H10O",
 	A:       15.19890,
@@ -114,7 +114,7 @@ var TwoButanol = Antoine{
 	Tn: 99.50000,
 }
 
-var IsoButanol = Antoine{
+var IsoButanol = &Antoine{
 	Name:    "iso-Butanol",
 	Formula: "C4H10O",
 	A:       14.60470,
@@ -128,7 +128,7 @@ var IsoButanol = Antoine{
 	Tn: 107.80000,
 }
 
-var TertButanol = Antoine{
+var TertButanol = &Antoine{
 	Name:    "tert-Butanol",
 	Formula: "C4H10O",
 	A:       14.84450,
@@ -142,7 +142,7 @@ var TertButanol = Antoine{
 	Tn: 82.30000,
 }
 
-var CarbonTetrachloride = Antoine{
+var CarbonTetrachloride = &Antoine{
 	Name:    "Carbon tetrachloride",
 	Formula: "CCl4",
 	A:       14.05720,
@@ -156,7 +156,7 @@ var CarbonTetrachloride = Antoine{
 	Tn: 76.60000,
 }
 
-var Chlorobenzene = Antoine{
+var Chlorobenzene = &Antoine{
 	Name:    "Chlorobenzene",
 	Formula: "C6H5Cl",
 	A:       13.86350,
@@ -170,7 +170,7 @@ var Chlorobenzene = Antoine{
 	Tn: 131.70000,
 }
 
-var OneChlorobutane = Antoine{
+var OneChlorobutane = &Antoine{
 	Name:    "1-Chlorobutane",
 	Formula: "C4H9Cl",
 	A:       13.79650,
@@ -184,7 +184,7 @@ var OneChlorobutane = Antoine{
 	Tn: 78.50000,
 }
 
-var Chloroform = Antoine{
+var Chloroform = &Antoine{
 	Name:    "Chloroform",
 	Formula: "CHCl3",
 	A:       13.73240,
@@ -198,7 +198,7 @@ var Chloroform = Antoine{
 	Tn: 61.10000,
 }
 
-var Cyclohexane = Antoine{
+var Cyclohexane = &Antoine{
 	Name:    "Cyclohexane",
 	Formula: "C6H12",
 	A:       13.65680,
@@ -212,7 +212,7 @@ var Cyclohexane = Antoine{
 	Tn: 80.70000,
 }
 
-var Cyclopentane = Antoine{
+var Cyclopentane = &Antoine{
 	Name:    "Cyclopentane",
 	Formula: "C5H10",
 	A:       13.97270,
@@ -226,7 +226,7 @@ var Cyclopentane = Antoine{
 	Tn: 49.20000,
 }
 
-var NDecane = Antoine{
+var NDecane = &Antoine{
 	Name:    "n-Decane",
 	Formula: "C10H22",
 	A:       13.97480,
@@ -240,7 +240,7 @@ var NDecane = Antoine{
 	Tn: 174.10000,
 }
 
-var Dichloromethane = Antoine{
+var Dichloromethane = &Antoine{
 	Name:    "Dichloromethane",
 	Formula: "CH2Cl",
 	A:       213.98910,
@@ -254,7 +254,7 @@ var Dichloromethane = Antoine{
 	Tn: 39.70000,
 }
 
-var DiethylEther = Antoine{
+var DiethylEther = &Antoine{
 	Name:    "Diethyl ether",
 	Formula: "C4H10O",
 	A:       14.07350,
@@ -268,7 +268,7 @@ var DiethylEther = Antoine{
 	Tn: 34.40000,
 }
 
-var One4Dioxane = Antoine{
+var One4Dioxane = &Antoine{
 	Name:    "1,4-Dioxane",
 	Formula: "C4H8O",
 	A:       215.09670,
@@ -282,7 +282,7 @@ var One4Dioxane = Antoine{
 	Tn: 101.30000,
 }
 
-var NEicosane = Antoine{
+var NEicosane = &Antoine{
 	Name:    "n-Eicosane",
 	Formula: "C20H42",
 	A:       14.45750,
@@ -296,7 +296,7 @@ var NEicosane = Antoine{
 	Tn: 343.60000,
 }
 
-var Ethanol = Antoine{
+var Ethanol = &Antoine{
 	Name:    "Ethanol",
 	Formula: "C2H6O",
 	A:       16.89580,
@@ -310,7 +310,7 @@ var Ethanol = Antoine{
 	Tn: 78.20000,
 }
 
-var Ethylbenzene = Antoine{
+var Ethylbenzene = &Antoine{
 	Name:    "Ethylbenzene",
 	Formula: "C8H10",
 	A:       13.97260,
@@ -324,7 +324,7 @@ var Ethylbenzene = Antoine{
 	Tn: 136.20000,
 }
 
-var EthyleneGlycol = Antoine{
+var EthyleneGlycol = &Antoine{
 	Name:    "Ethylene glycol",
 	Formula: "C2H6O",
 	A:       215.75670,
@@ -338,7 +338,7 @@ var EthyleneGlycol = Antoine{
 	Tn: 197.30000,
 }
 
-var NHeptane = Antoine{
+var NHeptane = &Antoine{
 	Name:    "n-Heptane",
 	Formula: "C7H16",
 	A:       13.86220,
@@ -352,7 +352,7 @@ var NHeptane = Antoine{
 	Tn: 98.40000,
 }
 
-var NHexane = Antoine{
+var NHexane = &Antoine{
 	Name:    "n-Hexane",
 	Formula: "C6H14",
 	A:       13.81930,
@@ -366,7 +366,7 @@ var NHexane = Antoine{
 	Tn: 68.70000,
 }
 
-var Methanol = Antoine{
+var Methanol = &Antoine{
 	Name:    "Methanol",
 	Formula: "CH4O",
 	A:       16.57850,
@@ -380,7 +380,7 @@ var Methanol = Antoine{
 	Tn: 64.70000,
 }
 
-var MethylAcetate = Antoine{
+var MethylAcetate = &Antoine{
 	Name:    "Methyl acetate",
 	Formula: "C3H6O",
 	A:       214.24560,
@@ -394,7 +394,7 @@ var MethylAcetate = Antoine{
 	Tn: 56.90000,
 }
 
-var MethylEthylKetone = Antoine{
+var MethylEthylKetone = &Antoine{
 	Name:    "Methyl ethyl ketone",
 	Formula: "C4H8O",
 	A:       14.13340,
@@ -408,7 +408,7 @@ var MethylEthylKetone = Antoine{
 	Tn: 79.60000,
 }
 
-var Nitromethane = Antoine{
+var Nitromethane = &Antoine{
 	Name:    "Nitromethane",
 	Formula: "CH3NO",
 	A:       214.75130,
@@ -422,7 +422,7 @@ var Nitromethane = Antoine{
 	Tn: 101.20000,
 }
 
-var NNonane = Antoine{
+var NNonane = &Antoine{
 	Name:    "n-Nonane",
 	Formula: "C9H20",
 	A:       13.98540,
@@ -436,7 +436,7 @@ var NNonane = Antoine{
 	Tn: 150.80000,
 }
 
-var IsoOctane = Antoine{
+var IsoOctane = &Antoine{
 	Name:    "iso-Octane",
 	Formula: "C8H18",
 	A:       13.67030,
@@ -450,7 +450,7 @@ var IsoOctane = Antoine{
 	Tn: 99.20000,
 }
 
-var NOctane = Antoine{
+var NOctane = &Antoine{
 	Name:    "n-Octane",
 	Formula: "C8H18",
 	A:       13.93460,
@@ -464,7 +464,7 @@ var NOctane = Antoine{
 	Tn: 125.60000,
 }
 
-var NPentane = Antoine{
+var NPentane = &Antoine{
 	Name:    "n-Pentane",
 	Formula: "C5H12",
 	A:       13.76670,
@@ -478,7 +478,7 @@ var NPentane = Antoine{
 	Tn: 36.00000,
 }
 
-var Phenol = Antoine{
+var Phenol = &Antoine{
 	Name:    "Phenol",
 	Formula: "C6H6O",
 	A:       14.43870,
@@ -492,7 +492,7 @@ var Phenol = Antoine{
 	Tn: 181.80000,
 }
 
-var OnePropanol = Antoine{
+var OnePropanol = &Antoine{
 	Name:    "1-Propanol",
 	Formula: "C3H8O",
 	A:       16.11540,
@@ -506,7 +506,7 @@ var OnePropanol = Antoine{
 	Tn: 97.20000,
 }
 
-var TwoPropanol = Antoine{
+var TwoPropanol = &Antoine{
 	Name:    "2-Propanol",
 	Formula: "C3H8O",
 	A:       16.67960,
@@ -520,7 +520,7 @@ var TwoPropanol = Antoine{
 	Tn: 82.20000,
 }
 
-var Toluene = Antoine{
+var Toluene = &Antoine{
 	Name:    "Toluene",
 	Formula: "C7H8",
 	A:       13.93200,
@@ -534,7 +534,7 @@ var Toluene = Antoine{
 	Tn: 110.60000,
 }
 
-var Water = Antoine{
+var Water = &Antoine{
 	Name:    "Water",
 	Formula: "H2O",
 	A:       16.38720,
@@ -548,7 +548,7 @@ var Water = Antoine{
 	Tn: 100.00000,
 }
 
-var OXylene = Antoine{
+var OXylene = &Antoine{
 	Name:    "o-Xylene",
 	Formula: "C8H10",
 	A:       14.04150,
@@ -562,7 +562,7 @@ var OXylene = Antoine{
 	Tn: 144.40000,
 }
 
-var MXylene = Antoine{
+var MXylene = &Antoine{
 	Name:    "m-Xylene",
 	Formula: "C8H10",
 	A:       14.13870,
@@ -576,7 +576,7 @@ var MXylene = Antoine{
 	Tn: 139.10000,
 }
 
-var PXylene = Antoine{
+var PXylene = &Antoine{
 	Name:    "p-Xylene",
 	Formula: "C8H10",
 	A:       14.05790,

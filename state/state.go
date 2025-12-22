@@ -61,14 +61,14 @@ const (
 // State represents a specific thermodynamic state of a substance defined by its
 // temperature and pressure.
 type State struct {
-	Substance   substance.Substance
+	Substance   *substance.Substance
 	Temperature float64 // Temperature in Kelvin
 	Pressure    float64 // Pressure in bar
 }
 
 // NewState creates a new State object. It validates that the temperature and pressure
 // are positive values.
-func NewState(substance substance.Substance, t, p float64) (*State, error) {
+func NewState(substance *substance.Substance, t, p float64) (*State, error) {
 	if t <= 0 {
 		return nil, zfactor.ErrTemp
 	}
@@ -173,7 +173,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	// 1. Draw Critical Isotherm (T = Tc)
 	// This defines the boundary between subcritical and supercritical
-	critCfg := s0.Substance.PRCfg(Tc, Pc, R)
+	critCfg := s0.Substance.CubicConfig(&cubic.PR{}, Tc, Pc, R)
 	b := critCfg.Type.Params().Omega * R * Tc / Pc
 
 	// Define V range based on Vc
@@ -231,7 +231,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	}
 
 	// 2. Draw Saturation Dome
-	domeCfg := s0.Substance.PRCfg(Tc, Pc, R)
+	domeCfg := s0.Substance.CubicConfig(&cubic.PR{}, Tc, Pc, R)
 	var liquidPts, vaporPts plotter.XYs
 
 	// Range from 0.6 Tc to 0.99 Tc
@@ -289,7 +289,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	// 4. Draw States and their Isotherms
 	for i, state := range states {
-		stateCfg := state.Substance.PRCfg(state.Temperature, state.Pressure, R)
+		stateCfg := state.Substance.CubicConfig(&cubic.PR{}, state.Temperature, state.Pressure, R)
 
 		// Draw Isotherm
 		isoPts := make(plotter.XYs, 0)

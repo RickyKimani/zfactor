@@ -174,13 +174,14 @@ func Pressure(cfg *EOSCfg, volume float64) (*PressureResult, error) {
 	}, nil
 }
 
-type vdW struct{}
+// VdW represents the van der Waals equation of state.
+type VdW struct{}
 
-func (*vdW) Alpha(tr, w float64) float64 {
+func (*VdW) Alpha(tr, w float64) float64 {
 	return 1.0
 }
 
-func (*vdW) Params() *Params {
+func (*VdW) Params() *Params {
 	return &Params{
 		Sigma:   0,
 		Epsilon: 0,
@@ -192,7 +193,7 @@ func (*vdW) Params() *Params {
 // NewvdWCfg creates a configuration for the van der Waals cubic equation of state
 func NewvdWCfg(T, P, Tc, Pc, R float64) *EOSCfg {
 	return &EOSCfg{
-		Type:     &vdW{},
+		Type:     &VdW{},
 		T:        T,
 		P:        P,
 		Tc:       Tc,
@@ -202,13 +203,14 @@ func NewvdWCfg(T, P, Tc, Pc, R float64) *EOSCfg {
 	}
 }
 
-type rk struct{}
+// RK represents the Redlich-Kwong equation of state.
+type RK struct{}
 
-func (*rk) Alpha(tr, w float64) float64 {
+func (*RK) Alpha(tr, w float64) float64 {
 	return 1 / math.Sqrt(tr)
 }
 
-func (*rk) Params() *Params {
+func (*RK) Params() *Params {
 	return &Params{
 		Sigma:   1,
 		Epsilon: 0,
@@ -220,7 +222,7 @@ func (*rk) Params() *Params {
 // NewRKCfg creates a configuration for the Redlich-Kwong cubic equation of state
 func NewRKCfg(T, P, Tc, Pc, R float64) *EOSCfg {
 	return &EOSCfg{
-		Type:     &rk{},
+		Type:     &RK{},
 		T:        T,
 		P:        P,
 		Tc:       Tc,
@@ -230,16 +232,17 @@ func NewRKCfg(T, P, Tc, Pc, R float64) *EOSCfg {
 	}
 }
 
-type srk struct{}
+// SRK represents the Soave-Redlich-Kwong equation of state.
+type SRK struct{}
 
-func (*srk) Alpha(tr, w float64) float64 {
+func (*SRK) Alpha(tr, w float64) float64 {
 	a := 0.480 + 1.574*w - 0.716*w*w
 	b := 1 - math.Sqrt(tr)
 	c := 1 + a*b
 	return c * c
 }
 
-func (*srk) Params() *Params {
+func (*SRK) Params() *Params {
 	return &Params{
 		Sigma:   1,
 		Epsilon: 0,
@@ -251,7 +254,7 @@ func (*srk) Params() *Params {
 // NewSRKCfg creates a configuration for the Soave-Redlich-Kwong cubic equation of state
 func NewSRKCfg(T, P, Tc, Pc, W, R float64) *EOSCfg {
 	return &EOSCfg{
-		Type:     &srk{},
+		Type:     &SRK{},
 		T:        T,
 		P:        P,
 		Tc:       Tc,
@@ -261,16 +264,17 @@ func NewSRKCfg(T, P, Tc, Pc, W, R float64) *EOSCfg {
 	}
 }
 
-type pr struct{}
+// PR represents the Peng-Robinson equation of state.
+type PR struct{}
 
-func (*pr) Alpha(tr, w float64) float64 {
+func (*PR) Alpha(tr, w float64) float64 {
 	a := 0.37464 + 1.54226*w - 0.26992*w*w
 	b := 1 - math.Sqrt(tr)
 	c := 1 + a*b
 	return c * c
 }
 
-func (*pr) Params() *Params {
+func (*PR) Params() *Params {
 	return &Params{
 		Sigma:   1 + math.Sqrt2,
 		Epsilon: 1 - math.Sqrt2,
@@ -282,7 +286,7 @@ func (*pr) Params() *Params {
 // NewPRCfg creates a configuration for the Peng-Robinson cubic equation of state
 func NewPRCfg(T, P, Tc, Pc, W, R float64) *EOSCfg {
 	return &EOSCfg{
-		Type:     &pr{},
+		Type:     &PR{},
 		T:        T,
 		P:        P,
 		Tc:       Tc,

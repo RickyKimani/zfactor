@@ -13,8 +13,8 @@ const (
 // correlation bundles the base ("0") and departure ("1") tables
 // for a given property and exposes an At method to evaluate both.
 type correlation struct {
-	base   table // e.g., Z0, H0, S0, PHI0
-	depart table // e.g., Z1, H1, S1, PHI1
+	base   *table // e.g., Z0, H0, S0, PHI0
+	depart *table // e.g., Z1, H1, S1, PHI1
 }
 
 // Correlation returns an evaluator for a property.

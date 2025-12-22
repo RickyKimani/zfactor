@@ -2,7 +2,7 @@
 
 package substance
 
-var Methane = Substance{
+var Methane = &Substance{
 	Name:     "Methane",
 	MW:       16.04300,
 	Acentric: 0.01200,
@@ -15,7 +15,7 @@ var Methane = Substance{
 	},
 }
 
-var Ethane = Substance{
+var Ethane = &Substance{
 	Name:     "Ethane",
 	MW:       30.07000,
 	Acentric: 0.10000,
@@ -28,7 +28,7 @@ var Ethane = Substance{
 	},
 }
 
-var Propane = Substance{
+var Propane = &Substance{
 	Name:     "Propane",
 	MW:       44.09700,
 	Acentric: 0.15200,
@@ -41,7 +41,7 @@ var Propane = Substance{
 	},
 }
 
-var NButane = Substance{
+var NButane = &Substance{
 	Name:     "n-Butane",
 	MW:       58.12300,
 	Acentric: 0.20000,
@@ -54,7 +54,7 @@ var NButane = Substance{
 	},
 }
 
-var NPentane = Substance{
+var NPentane = &Substance{
 	Name:     "n-Pentane",
 	MW:       72.15000,
 	Acentric: 0.25200,
@@ -67,7 +67,7 @@ var NPentane = Substance{
 	},
 }
 
-var NHexane = Substance{
+var NHexane = &Substance{
 	Name:     "n-Hexane",
 	MW:       86.17700,
 	Acentric: 0.30100,
@@ -80,7 +80,7 @@ var NHexane = Substance{
 	},
 }
 
-var NHeptane = Substance{
+var NHeptane = &Substance{
 	Name:     "n-Heptane",
 	MW:       100.20400,
 	Acentric: 0.35000,
@@ -93,7 +93,7 @@ var NHeptane = Substance{
 	},
 }
 
-var NOctane = Substance{
+var NOctane = &Substance{
 	Name:     "n-Octane",
 	MW:       114.23100,
 	Acentric: 0.40000,
@@ -106,7 +106,7 @@ var NOctane = Substance{
 	},
 }
 
-var NNonane = Substance{
+var NNonane = &Substance{
 	Name:     "n-Nonane",
 	MW:       128.25800,
 	Acentric: 0.44400,
@@ -119,7 +119,7 @@ var NNonane = Substance{
 	},
 }
 
-var NDecane = Substance{
+var NDecane = &Substance{
 	Name:     "n-Decane",
 	MW:       142.28500,
 	Acentric: 0.49200,
@@ -132,7 +132,7 @@ var NDecane = Substance{
 	},
 }
 
-var Isobutane = Substance{
+var Isobutane = &Substance{
 	Name:     "Isobutane",
 	MW:       58.12300,
 	Acentric: 0.18100,
@@ -145,7 +145,7 @@ var Isobutane = Substance{
 	},
 }
 
-var Cyclopentane = Substance{
+var Cyclopentane = &Substance{
 	Name:     "Cyclopentane",
 	MW:       70.13400,
 	Acentric: 0.19600,
@@ -158,7 +158,7 @@ var Cyclopentane = Substance{
 	},
 }
 
-var Cyclohexane = Substance{
+var Cyclohexane = &Substance{
 	Name:     "Cyclohexane",
 	MW:       84.16100,
 	Acentric: 0.21000,
@@ -171,7 +171,7 @@ var Cyclohexane = Substance{
 	},
 }
 
-var Methylcyclopentane = Substance{
+var Methylcyclopentane = &Substance{
 	Name:     "Methylcyclopentane",
 	MW:       84.16100,
 	Acentric: 0.23000,
@@ -184,7 +184,7 @@ var Methylcyclopentane = Substance{
 	},
 }
 
-var Methylcyclohexane = Substance{
+var Methylcyclohexane = &Substance{
 	Name:     "Methylcyclohexane",
 	MW:       98.18800,
 	Acentric: 0.23500,
@@ -197,7 +197,7 @@ var Methylcyclohexane = Substance{
 	},
 }
 
-var Ethylene = Substance{
+var Ethylene = &Substance{
 	Name:     "Ethylene",
 	MW:       28.05400,
 	Acentric: 0.08700,
@@ -210,7 +210,7 @@ var Ethylene = Substance{
 	},
 }
 
-var Propylene = Substance{
+var Propylene = &Substance{
 	Name:     "Propylene",
 	MW:       42.08100,
 	Acentric: 0.14000,
@@ -223,7 +223,7 @@ var Propylene = Substance{
 	},
 }
 
-var OneButene = Substance{
+var OneButene = &Substance{
 	Name:     "1-Butene",
 	MW:       56.10800,
 	Acentric: 0.19100,
@@ -236,7 +236,7 @@ var OneButene = Substance{
 	},
 }
 
-var Cis2Butene = Substance{
+var Cis2Butene = &Substance{
 	Name:     "cis-2-Butene",
 	MW:       56.10800,
 	Acentric: 0.20500,
@@ -249,7 +249,7 @@ var Cis2Butene = Substance{
 	},
 }
 
-var Trans2Butene = Substance{
+var Trans2Butene = &Substance{
 	Name:     "trans -2-Butene",
 	MW:       56.10800,
 	Acentric: 0.21800,
@@ -262,7 +262,7 @@ var Trans2Butene = Substance{
 	},
 }
 
-var OneHexene = Substance{
+var OneHexene = &Substance{
 	Name:     "1-Hexene",
 	MW:       84.16100,
 	Acentric: 0.28000,
@@ -275,7 +275,7 @@ var OneHexene = Substance{
 	},
 }
 
-var Isobutylene = Substance{
+var Isobutylene = &Substance{
 	Name:     "Isobutylene",
 	MW:       56.10800,
 	Acentric: 0.19400,
@@ -288,7 +288,7 @@ var Isobutylene = Substance{
 	},
 }
 
-var One3Butadiene = Substance{
+var One3Butadiene = &Substance{
 	Name:     "1,3-Butadiene",
 	MW:       54.09200,
 	Acentric: 0.19000,
@@ -301,7 +301,7 @@ var One3Butadiene = Substance{
 	},
 }
 
-var Cyclohexene = Substance{
+var Cyclohexene = &Substance{
 	Name:     "Cyclohexene",
 	MW:       82.14500,
 	Acentric: 0.21200,
@@ -314,7 +314,7 @@ var Cyclohexene = Substance{
 	},
 }
 
-var Acetylene = Substance{
+var Acetylene = &Substance{
 	Name:     "Acetylene",
 	MW:       26.03800,
 	Acentric: 0.18700,
@@ -327,7 +327,7 @@ var Acetylene = Substance{
 	},
 }
 
-var Benzene = Substance{
+var Benzene = &Substance{
 	Name:     "Benzene",
 	MW:       78.11400,
 	Acentric: 0.21000,
@@ -340,7 +340,7 @@ var Benzene = Substance{
 	},
 }
 
-var Toluene = Substance{
+var Toluene = &Substance{
 	Name:     "Toluene",
 	MW:       92.14100,
 	Acentric: 0.26200,
@@ -353,7 +353,7 @@ var Toluene = Substance{
 	},
 }
 
-var Ethylbenzene = Substance{
+var Ethylbenzene = &Substance{
 	Name:     "Ethylbenzene",
 	MW:       106.16700,
 	Acentric: 0.30300,
@@ -366,7 +366,7 @@ var Ethylbenzene = Substance{
 	},
 }
 
-var Cumene = Substance{
+var Cumene = &Substance{
 	Name:     "Cumene",
 	MW:       120.19400,
 	Acentric: 0.32600,
@@ -379,7 +379,7 @@ var Cumene = Substance{
 	},
 }
 
-var OXylene = Substance{
+var OXylene = &Substance{
 	Name:     "o-Xylene",
 	MW:       106.16700,
 	Acentric: 0.31000,
@@ -392,7 +392,7 @@ var OXylene = Substance{
 	},
 }
 
-var MXylene = Substance{
+var MXylene = &Substance{
 	Name:     "m-Xylene",
 	MW:       106.16700,
 	Acentric: 0.32600,
@@ -405,7 +405,7 @@ var MXylene = Substance{
 	},
 }
 
-var PXylene = Substance{
+var PXylene = &Substance{
 	Name:     "p-Xylene",
 	MW:       106.16700,
 	Acentric: 0.32200,
@@ -418,7 +418,7 @@ var PXylene = Substance{
 	},
 }
 
-var Styrene = Substance{
+var Styrene = &Substance{
 	Name:     "Styrene",
 	MW:       104.15200,
 	Acentric: 0.29700,
@@ -431,7 +431,7 @@ var Styrene = Substance{
 	},
 }
 
-var Naphthalene = Substance{
+var Naphthalene = &Substance{
 	Name:     "Naphthalene",
 	MW:       128.17400,
 	Acentric: 0.30200,
@@ -444,7 +444,7 @@ var Naphthalene = Substance{
 	},
 }
 
-var Biphenyl = Substance{
+var Biphenyl = &Substance{
 	Name:     "Biphenyl",
 	MW:       154.21100,
 	Acentric: 0.36500,
@@ -457,7 +457,7 @@ var Biphenyl = Substance{
 	},
 }
 
-var Formaldehyde = Substance{
+var Formaldehyde = &Substance{
 	Name:     "Formaldehyde",
 	MW:       30.02600,
 	Acentric: 0.28200,
@@ -470,7 +470,7 @@ var Formaldehyde = Substance{
 	},
 }
 
-var Acetaldehyde = Substance{
+var Acetaldehyde = &Substance{
 	Name:     "Acetaldehyde",
 	MW:       44.05300,
 	Acentric: 0.29100,
@@ -483,7 +483,7 @@ var Acetaldehyde = Substance{
 	},
 }
 
-var MethylAcetate = Substance{
+var MethylAcetate = &Substance{
 	Name:     "Methyl acetate",
 	MW:       74.07900,
 	Acentric: 0.33100,
@@ -496,7 +496,7 @@ var MethylAcetate = Substance{
 	},
 }
 
-var EthylAcetate = Substance{
+var EthylAcetate = &Substance{
 	Name:     "Ethyl acetate",
 	MW:       88.10600,
 	Acentric: 0.36600,
@@ -509,7 +509,7 @@ var EthylAcetate = Substance{
 	},
 }
 
-var Acetone = Substance{
+var Acetone = &Substance{
 	Name:     "Acetone",
 	MW:       58.08000,
 	Acentric: 0.30700,
@@ -522,7 +522,7 @@ var Acetone = Substance{
 	},
 }
 
-var MethylEthylKetone = Substance{
+var MethylEthylKetone = &Substance{
 	Name:     "Methyl ethyl ketone",
 	MW:       72.10700,
 	Acentric: 0.32300,
@@ -535,7 +535,7 @@ var MethylEthylKetone = Substance{
 	},
 }
 
-var DiethylEther = Substance{
+var DiethylEther = &Substance{
 	Name:     "Diethyl ether",
 	MW:       74.12300,
 	Acentric: 0.28100,
@@ -548,7 +548,7 @@ var DiethylEther = Substance{
 	},
 }
 
-var MethylTButylEther = Substance{
+var MethylTButylEther = &Substance{
 	Name:     "Methyl t-butyl ether",
 	MW:       88.15000,
 	Acentric: 0.26600,
@@ -561,7 +561,7 @@ var MethylTButylEther = Substance{
 	},
 }
 
-var Methanol = Substance{
+var Methanol = &Substance{
 	Name:     "Methanol",
 	MW:       32.04200,
 	Acentric: 0.56400,
@@ -574,7 +574,7 @@ var Methanol = Substance{
 	},
 }
 
-var Ethanol = Substance{
+var Ethanol = &Substance{
 	Name:     "Ethanol",
 	MW:       46.06900,
 	Acentric: 0.64500,
@@ -587,7 +587,7 @@ var Ethanol = Substance{
 	},
 }
 
-var OnePropanol = Substance{
+var OnePropanol = &Substance{
 	Name:     "1-Propanol",
 	MW:       60.09600,
 	Acentric: 0.62200,
@@ -600,7 +600,7 @@ var OnePropanol = Substance{
 	},
 }
 
-var OneButanol = Substance{
+var OneButanol = &Substance{
 	Name:     "1-Butanol",
 	MW:       74.12300,
 	Acentric: 0.59400,
@@ -613,7 +613,7 @@ var OneButanol = Substance{
 	},
 }
 
-var OneHexanol = Substance{
+var OneHexanol = &Substance{
 	Name:     "1-Hexanol",
 	MW:       102.17700,
 	Acentric: 0.57900,
@@ -626,7 +626,7 @@ var OneHexanol = Substance{
 	},
 }
 
-var TwoPropanol = Substance{
+var TwoPropanol = &Substance{
 	Name:     "2-Propanol",
 	MW:       60.09600,
 	Acentric: 0.66800,
@@ -639,7 +639,7 @@ var TwoPropanol = Substance{
 	},
 }
 
-var EthyleneGlycol = Substance{
+var EthyleneGlycol = &Substance{
 	Name:     "Ethylene glycol",
 	MW:       62.06800,
 	Acentric: 0.48700,
@@ -652,7 +652,7 @@ var EthyleneGlycol = Substance{
 	},
 }
 
-var AceticAcid = Substance{
+var AceticAcid = &Substance{
 	Name:     "Acetic acid",
 	MW:       60.05300,
 	Acentric: 0.46700,
@@ -665,7 +665,7 @@ var AceticAcid = Substance{
 	},
 }
 
-var NButyricAcid = Substance{
+var NButyricAcid = &Substance{
 	Name:     "n-Butyric acid",
 	MW:       88.10600,
 	Acentric: 0.68100,
@@ -678,7 +678,7 @@ var NButyricAcid = Substance{
 	},
 }
 
-var BenzoicAcid = Substance{
+var BenzoicAcid = &Substance{
 	Name:     "Benzoic acid",
 	MW:       122.12300,
 	Acentric: 0.60300,
@@ -691,7 +691,7 @@ var BenzoicAcid = Substance{
 	},
 }
 
-var Acetonitrile = Substance{
+var Acetonitrile = &Substance{
 	Name:     "Acetonitrile",
 	MW:       41.05300,
 	Acentric: 0.33800,
@@ -704,7 +704,7 @@ var Acetonitrile = Substance{
 	},
 }
 
-var Methylamine = Substance{
+var Methylamine = &Substance{
 	Name:     "Methylamine",
 	MW:       31.05700,
 	Acentric: 0.28100,
@@ -717,7 +717,7 @@ var Methylamine = Substance{
 	},
 }
 
-var Ethylamine = Substance{
+var Ethylamine = &Substance{
 	Name:     "Ethylamine",
 	MW:       45.08400,
 	Acentric: 0.28500,
@@ -730,7 +730,7 @@ var Ethylamine = Substance{
 	},
 }
 
-var Nitromethane = Substance{
+var Nitromethane = &Substance{
 	Name:     "Nitromethane",
 	MW:       61.04000,
 	Acentric: 0.34800,
@@ -743,7 +743,7 @@ var Nitromethane = Substance{
 	},
 }
 
-var CarbonTetrachloride = Substance{
+var CarbonTetrachloride = &Substance{
 	Name:     "Carbon tetrachloride",
 	MW:       153.82200,
 	Acentric: 0.19300,
@@ -756,7 +756,7 @@ var CarbonTetrachloride = Substance{
 	},
 }
 
-var Chloroform = Substance{
+var Chloroform = &Substance{
 	Name:     "Chloroform",
 	MW:       119.37700,
 	Acentric: 0.22200,
@@ -769,7 +769,7 @@ var Chloroform = Substance{
 	},
 }
 
-var Dichloromethane = Substance{
+var Dichloromethane = &Substance{
 	Name:     "Dichloromethane",
 	MW:       84.93200,
 	Acentric: 0.19900,
@@ -782,7 +782,7 @@ var Dichloromethane = Substance{
 	},
 }
 
-var MethylChloride = Substance{
+var MethylChloride = &Substance{
 	Name:     "Methyl chloride",
 	MW:       50.48800,
 	Acentric: 0.15300,
@@ -795,7 +795,7 @@ var MethylChloride = Substance{
 	},
 }
 
-var EthylChloride = Substance{
+var EthylChloride = &Substance{
 	Name:     "Ethyl chloride",
 	MW:       64.51400,
 	Acentric: 0.19000,
@@ -808,7 +808,7 @@ var EthylChloride = Substance{
 	},
 }
 
-var Chlorobenzene = Substance{
+var Chlorobenzene = &Substance{
 	Name:     "Chlorobenzene",
 	MW:       112.55800,
 	Acentric: 0.25000,
@@ -821,7 +821,7 @@ var Chlorobenzene = Substance{
 	},
 }
 
-var Tetrafluoroethane = Substance{
+var Tetrafluoroethane = &Substance{
 	Name:     "Tetrafluoroethane",
 	MW:       102.03000,
 	Acentric: 0.32700,
@@ -834,7 +834,7 @@ var Tetrafluoroethane = Substance{
 	},
 }
 
-var Argon = Substance{
+var Argon = &Substance{
 	Name:     "Argon",
 	MW:       39.94800,
 	Acentric: 0.00000,
@@ -847,7 +847,7 @@ var Argon = Substance{
 	},
 }
 
-var Krypton = Substance{
+var Krypton = &Substance{
 	Name:     "Krypton",
 	MW:       83.80000,
 	Acentric: 0.00000,
@@ -860,7 +860,7 @@ var Krypton = Substance{
 	},
 }
 
-var Xenon = Substance{
+var Xenon = &Substance{
 	Name:     "Xenon",
 	MW:       131.30000,
 	Acentric: 0.00000,
@@ -873,7 +873,7 @@ var Xenon = Substance{
 	},
 }
 
-var Helium4 = Substance{
+var Helium4 = &Substance{
 	Name:     "Helium 4",
 	MW:       4.00300,
 	Acentric: 0.39000,
@@ -886,7 +886,7 @@ var Helium4 = Substance{
 	},
 }
 
-var Hydrogen = Substance{
+var Hydrogen = &Substance{
 	Name:     "Hydrogen",
 	MW:       2.01600,
 	Acentric: 0.21600,
@@ -899,7 +899,7 @@ var Hydrogen = Substance{
 	},
 }
 
-var Oxygen = Substance{
+var Oxygen = &Substance{
 	Name:     "Oxygen",
 	MW:       31.99900,
 	Acentric: 0.02200,
@@ -912,7 +912,7 @@ var Oxygen = Substance{
 	},
 }
 
-var Nitrogen = Substance{
+var Nitrogen = &Substance{
 	Name:     "Nitrogen",
 	MW:       28.01400,
 	Acentric: 0.03800,
@@ -925,7 +925,7 @@ var Nitrogen = Substance{
 	},
 }
 
-var Chlorine = Substance{
+var Chlorine = &Substance{
 	Name:     "Chlorine",
 	MW:       70.90500,
 	Acentric: 0.06900,
@@ -938,7 +938,7 @@ var Chlorine = Substance{
 	},
 }
 
-var CarbonMonoxide = Substance{
+var CarbonMonoxide = &Substance{
 	Name:     "Carbon monoxide",
 	MW:       28.01000,
 	Acentric: 0.04800,
@@ -951,7 +951,7 @@ var CarbonMonoxide = Substance{
 	},
 }
 
-var CarbonDisulfide = Substance{
+var CarbonDisulfide = &Substance{
 	Name:     "Carbon disulfide",
 	MW:       76.14300,
 	Acentric: 0.11100,
@@ -964,7 +964,7 @@ var CarbonDisulfide = Substance{
 	},
 }
 
-var HydrogenSulfide = Substance{
+var HydrogenSulfide = &Substance{
 	Name:     "Hydrogen sulfide",
 	MW:       34.08200,
 	Acentric: 0.09400,
@@ -977,7 +977,7 @@ var HydrogenSulfide = Substance{
 	},
 }
 
-var SulfurDioxide = Substance{
+var SulfurDioxide = &Substance{
 	Name:     "Sulfur dioxide",
 	MW:       64.06500,
 	Acentric: 0.24500,
@@ -990,7 +990,7 @@ var SulfurDioxide = Substance{
 	},
 }
 
-var SulfurTrioxide = Substance{
+var SulfurTrioxide = &Substance{
 	Name:     "Sulfur trioxide",
 	MW:       80.06400,
 	Acentric: 0.42400,
@@ -1003,7 +1003,7 @@ var SulfurTrioxide = Substance{
 	},
 }
 
-var NitricOxide = Substance{
+var NitricOxide = &Substance{
 	Name:     "Nitric oxide (NO)",
 	MW:       30.00600,
 	Acentric: 0.58300,
@@ -1016,7 +1016,7 @@ var NitricOxide = Substance{
 	},
 }
 
-var NitrousOxide = Substance{
+var NitrousOxide = &Substance{
 	Name:     "Nitrous oxide (N 2O)",
 	MW:       44.01300,
 	Acentric: 0.14100,
@@ -1029,7 +1029,7 @@ var NitrousOxide = Substance{
 	},
 }
 
-var HydrogenChloride = Substance{
+var HydrogenChloride = &Substance{
 	Name:     "Hydrogen chloride",
 	MW:       36.46100,
 	Acentric: 0.13200,
@@ -1042,7 +1042,7 @@ var HydrogenChloride = Substance{
 	},
 }
 
-var HydrogenCyanide = Substance{
+var HydrogenCyanide = &Substance{
 	Name:     "Hydrogen cyanide",
 	MW:       27.02600,
 	Acentric: 0.41000,
@@ -1055,7 +1055,7 @@ var HydrogenCyanide = Substance{
 	},
 }
 
-var Water = Substance{
+var Water = &Substance{
 	Name:     "Water",
 	MW:       18.01500,
 	Acentric: 0.34500,
@@ -1068,7 +1068,7 @@ var Water = Substance{
 	},
 }
 
-var Ammonia = Substance{
+var Ammonia = &Substance{
 	Name:     "Ammonia",
 	MW:       17.03100,
 	Acentric: 0.25300,
@@ -1081,7 +1081,7 @@ var Ammonia = Substance{
 	},
 }
 
-var NitricAcid = Substance{
+var NitricAcid = &Substance{
 	Name:     "Nitric acid",
 	MW:       63.01300,
 	Acentric: 0.71400,
@@ -1094,7 +1094,7 @@ var NitricAcid = Substance{
 	},
 }
 
-var SulfuricAcid = Substance{
+var SulfuricAcid = &Substance{
 	Name:     "Sulfuric acid",
 	MW:       98.08000,
 	Acentric: 0.00000,

@@ -55,7 +55,7 @@ func main() {
 	for _, s := range data {
 		id := goIdent(s.Name)
 
-		fmt.Fprintf(f, "var %s = Antoine{\n", id)
+		fmt.Fprintf(f, "var %s = &Antoine{\n", id)
 		fmt.Printf("Processing %s\n", id)
 		fmt.Fprintf(f, "\tName: %q,\n", s.Name)
 		fmt.Fprintf(f, "\tFormula: %q,\n", s.Formula)

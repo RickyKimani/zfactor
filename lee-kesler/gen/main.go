@@ -61,7 +61,7 @@ package leekesler
 		t := tableList[0]
 		varName := strings.ToUpper(key) + "Table"
 		fmt.Printf("Processing %s table\n", varName)
-		goCode.WriteString(fmt.Sprintf("var %s = table{\n", varName))
+		goCode.WriteString(fmt.Sprintf("var %s = &table{\n", varName))
 		goCode.WriteString(fmt.Sprintf("\tPr: []float64{%s},\n", floatsToString(t.Pr)))
 		goCode.WriteString(fmt.Sprintf("\tTr: []float64{%s},\n", floatsToString(t.Tr)))
 		goCode.WriteString("\tValues: [][]float64{\n")

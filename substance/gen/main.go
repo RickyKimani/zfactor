@@ -59,7 +59,7 @@ func main() {
 
 		fmt.Printf("Processing substance %s\n", id)
 
-		fmt.Fprintf(f, "var %s = Substance{\n", id)
+		fmt.Fprintf(f, "var %s = &Substance{\n", id)
 		fmt.Fprintf(f, "\tName: %q,\n", s.Name)
 		fmt.Fprintf(f, "\tMW: %.5f,\n", s.MW)
 		fmt.Fprintf(f, "\tAcentric: %.5f,\n", s.Acentric)

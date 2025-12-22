@@ -52,7 +52,7 @@ func main() {
 
 	// Configure the Soave-Redlich-Kwong (SRK) Equation of State for the final temperature (T2).
 	// Pressure is initialized to 0 as it is the variable to be determined.
-	cfg := ethane.SRKCfg(T2, 0, R)
+	cfg := ethane.CubicConfig(&cubic.VdW{}, T2, 0, R)
 
 	// Calculate the final pressure (P2) corresponding to the constant molar volume using the SRK EOS.
 	// The result includes the calculated pressure and intermediate EOS parameters.
