@@ -3,8 +3,10 @@
 package substance
 
 import (
+	"github.com/rickykimani/zfactor"
 	"github.com/rickykimani/zfactor/cubic"
 	leekesler "github.com/rickykimani/zfactor/lee-kesler"
+	"github.com/rickykimani/zfactor/liquids"
 )
 
 type CriticalProps struct {
@@ -52,4 +54,16 @@ func (s Substance) SRKCfg(t, p, r float64) *cubic.EOSCfg {
 }
 func (s Substance) PRCfg(t, p, r float64) *cubic.EOSCfg {
 	return cubic.NewPRCfg(t, p, s.Critical.Tc, s.Critical.Pc, s.Acentric, r)
+}
+
+// Vsat calculates the saturated liquid molar volume at the given temperature using the Rackett equation.
+// Temperature must be in Kelvin.
+func (s Substance) Vsat(Temperature float64) (float64, error) {
+	if Temperature <= 0 {
+		return 0, zfactor.ErrTemp
+	}
+
+	tr := Temperature / s.Critical.Tc
+
+	return liquids.Vsat(s.Critical.Vc, s.Critical.Zc, tr)
 }

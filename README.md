@@ -10,6 +10,8 @@
   - Soave-Redlich-Kwong (SRK)
   - Peng-Robinson (PR)
 - **Lee-Kesler Correlation**: Accurate estimation of compressibility factors (Z) and other derived properties.
+- **Virial Equations**: Solvers for 2-term and 3-term virial equations of state.
+- **Liquid Properties**: Calculation of saturated liquid molar volumes using the Rackett equation.
 - **Antoine Equation**: Calculation of saturation vapor pressures.
 - **Thermodynamic State Management**: Easy definition and validation of states ($T, P$).
 - **Visualization**: Built-in generation of PV diagrams with:
@@ -121,8 +123,10 @@ The following diagram was generated using the code in [examples/main.go](example
 
 - **`zfactor`**: Root package containing physical constants and cubic equation solver.
 - **`cubic`**: Implementation of cubic equations of state solvers (Pressure, Volume, Saturation).
+- **`virial`**: Virial equation solvers (2-term and 3-term).
 - **`lee-kesler`**: Implementation of the Lee-Kesler correlation tables and interpolation.
 - **`antoine`**: Antoine equation coefficients and solvers.
+- **`liquids`**: Correlations for liquid phase properties (e.g., Rackett equation).
 - **`state`**: High-level abstraction for thermodynamic states and plotting logic.
 - **`substance`**: Database of chemical species and their properties.
 
@@ -131,7 +135,7 @@ The following diagram was generated using the code in [examples/main.go](example
 The following features are planned for future releases:
 
 - **Abbott Correlations**: Implementation of correlations for the second virial coefficient ($B$) using the Abbott/Pitzer method.
-- **Liquid Phase Properties**: Integration of the Rackett equation for saturated liquid molar volumes and Lydersen charts for critical property estimation.
+- **Lydersen Charts**: Critical property estimation using Lydersen group contribution method.
 
 ## License
 

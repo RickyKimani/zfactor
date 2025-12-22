@@ -45,3 +45,4 @@ go.work.sum
 *.pdf
 pv.png
 debug/
+data/lydersen_raw.json
