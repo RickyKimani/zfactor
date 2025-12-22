@@ -10,6 +10,9 @@ func SolveForVolumeTwoTerm(T, P, R, B float64) (float64, error) {
 	if P <= 0 {
 		return 0, zfactor.ErrPressure
 	}
+	if P > 15 {
+		return 0, zfactor.ErrHighPressureTwoTerm
+	}
 	if T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
@@ -52,6 +55,9 @@ func SolveForVolumeThreeTerm(T, P, R, B, C float64) ([3]complex128, error) {
 func CompressibilityTwoTerm(T, P, R, B float64) (float64, error) {
 	if P <= 0 {
 		return 0, zfactor.ErrPressure
+	}
+	if P > 15 {
+		return 0, zfactor.ErrHighPressureTwoTerm
 	}
 	if T <= 0 {
 		return 0, zfactor.ErrTemp

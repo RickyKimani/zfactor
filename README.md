@@ -119,12 +119,19 @@ The following diagram was generated using the code in [examples/main.go](example
 
 ## Package Overview
 
-- **`zfactor`**: Root package containing physical constants.
+- **`zfactor`**: Root package containing physical constants and cubic equation solver.
 - **`cubic`**: Implementation of cubic equations of state solvers (Pressure, Volume, Saturation).
 - **`lee-kesler`**: Implementation of the Lee-Kesler correlation tables and interpolation.
 - **`antoine`**: Antoine equation coefficients and solvers.
 - **`state`**: High-level abstraction for thermodynamic states and plotting logic.
 - **`substance`**: Database of chemical species and their properties.
+
+## Roadmap
+
+The following features are planned for future releases:
+
+- **Abbott Correlations**: Implementation of correlations for the second virial coefficient ($B$) using the Abbott/Pitzer method.
+- **Liquid Phase Properties**: Integration of the Rackett equation for saturated liquid molar volumes and Lydersen charts for critical property estimation.
 
 ## License
 

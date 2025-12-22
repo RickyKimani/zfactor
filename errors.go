@@ -15,4 +15,6 @@ var (
 	ErrVirialCoeff = errors.New("virial coefficient (B or C) cannot be 0")
 	// ErrVolume is returned when the molar volume is less than or equal to 0
 	ErrVolume = errors.New("molar volume (V) cannot be less than or equal to 0")
+	// ErrHighPressureTwoTerm is returned when the pressure exceeds 15 bar for the two-term virial equation.
+	ErrHighPressureTwoTerm = errors.New("pressure exceeds the validity limit (15 bar) for the two-term virial equation")
 )
