@@ -11,7 +11,7 @@
   - Peng-Robinson (PR)
 - **Lee-Kesler Correlation**: Accurate estimation of compressibility factors (Z) and other derived properties.
 - **Virial Equations**: Solvers for 2-term and 3-term virial equations of state.
-- **Liquid Properties**: Calculation of saturated liquid molar volumes using the Rackett equation.
+- **Liquid Properties**: Calculation of saturated liquid molar volumes using the Rackett equation and reduced density using Lydersen charts.
 - **Antoine Equation**: Calculation of saturation vapor pressures.
 - **Thermodynamic State Management**: Easy definition and validation of states ($T, P$).
 - **Visualization**: Built-in generation of PV diagrams with:
@@ -20,6 +20,15 @@
   - Custom Isotherms
   - Customizable styling (colors, labels, dimensions)
 - **Substance Database**: Pre-defined properties for common substances (Critical properties, Acentric factor, MW, etc.).
+
+## Important Note on Lydersen Charts
+
+The `ReducedDensity` function relies on digitized data from the Lydersen charts. While efforts have been made to ensure accuracy through smoothing and normalization, users should exercise caution.
+
+- **Verification**: Please review the generated [Lydersen Chart Plot](images/lydersen_plot.png) to ensure the curves meet the precision requirements of your specific use case.
+- **Updates**: Data values may be refined in future versions as digitization techniques improve or better data sources are integrated.
+
+![Lydersen Chart](images/lydersen_plot.png)
 
 ## Installation
 
@@ -135,7 +144,6 @@ The following diagram was generated using the code in [examples/main.go](example
 The following features are planned for future releases:
 
 - **Abbott Correlations**: Implementation of correlations for the second virial coefficient ($B$) using the Abbott/Pitzer method.
-- **Lydersen Charts**: Critical property estimation using Lydersen group contribution method.
 
 ## License
 

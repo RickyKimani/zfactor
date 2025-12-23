@@ -85,3 +85,22 @@ func (s *Substance) Vsat(Temperature float64) (float64, error) {
 
 	return liquids.Vsat(s.Critical.Vc, s.Critical.Zc, tr)
 }
+
+// ReducedDensity calculates the reduced density (rho_r) of the substance at the given
+// temperature (K) and pressure (bar) using the Lydersen chart correlation.
+//
+// It returns an error if the temperature is non-positive, pressure is negative,
+// or if the state point is outside the range of the Lydersen chart.
+func (s *Substance) ReducedDensity(Temperature, Pressure float64) (float64, error) {
+	if Temperature <= 0 {
+		return 0, zfactor.ErrTemp
+	}
+	if Pressure < 0 {
+		return 0, zfactor.ErrPressure
+	}
+
+	tr := Temperature / s.Critical.Tc
+	pr := Pressure / s.Critical.Pc
+
+	return liquids.ReducedDensity(tr, pr)
+}
