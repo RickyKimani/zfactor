@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"os"
 	"path/filepath"
 
 	"github.com/rickykimani/zfactor"
@@ -115,6 +116,8 @@ type PVConfig struct {
 	// VolumeScaleFactor determines the maximum volume shown on the X-axis as a multiple of the critical volume (Vc).
 	// If 0, it defaults to 7.0.
 	VolumeScaleFactor float64
+	// ShowOutputPath determines whether to print the full path of the saved image to stdout upon success.
+	ShowOutputPath bool
 }
 
 // DrawPV generates a Pressure-Volume (PV) diagram for the provided states.
@@ -412,7 +415,20 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		height = 4 * vg.Inch
 	}
 
-	return p.Save(width, height, output)
+	err = p.Save(width, height, output)
+	if err != nil {
+		return err
+	}
+
+	if cfg.ShowOutputPath {
+		wd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("failed to get working directory: %w", err)
+		}
+		fmt.Printf("image saved to %s\n", filepath.Join(wd, output))
+	}
+
+	return nil
 }
 
 // verifySubstances ensures that all provided states belong to the same substance.
