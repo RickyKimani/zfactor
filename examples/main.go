@@ -75,6 +75,7 @@ func main() {
 
 	// Configure the visualization parameters for the PV diagram, enabling state numbering.
 	pvCfg := &state.PVConfig{
+		Type:                  cfg.Type,
 		NumberStates:          true,
 		LabelIsotherms:        true,
 		TitleColor:            state.Green,
@@ -82,6 +83,7 @@ func main() {
 		IsothermLabelColor:    state.Orange,
 		CriticalIsothermColor: state.Red,
 		StatePointColor:       state.Blue,
+		ShowOutputPath:        true,
 	}
 
 	// Generate and save the PV diagram to the specified output file.

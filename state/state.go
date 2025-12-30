@@ -85,6 +85,9 @@ func NewState(substance *substance.Substance, t, p float64) (*State, error) {
 
 // PVConfig holds configuration options for customizing the appearance of the PV diagram.
 type PVConfig struct {
+	// Type specifies the cubic Equation of State (EOS) model to use for generating the PV diagram.
+	// This field is required; DrawPV will return an error if it is nil.
+	Type cubic.EOSType
 	// Title is the title of the plot. If empty, a default title is generated.
 	Title string
 	// TitleColor is the color of the title text. Defaults to black if nil.
@@ -125,6 +128,12 @@ type PVConfig struct {
 // specific isotherms for each state provided. The resulting plot is saved to the
 // file specified by 'output'.
 func DrawPV(cfg *PVConfig, output string, states ...*State) error {
+	if cfg == nil {
+		return errors.New("configuration error: config cannot be nil")
+	}
+	if cfg.Type == nil {
+		return errors.New("configuration error: 'Type' field (EOS model) is required")
+	}
 	ext := filepath.Ext(output)
 	if ok := validExts[ext]; !ok {
 		closest := ""
@@ -176,7 +185,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	// 1. Draw Critical Isotherm (T = Tc)
 	// This defines the boundary between subcritical and supercritical
-	critCfg := s0.Substance.CubicConfig(&cubic.PR{}, Tc, Pc, R)
+	critCfg := s0.Substance.CubicConfig(cfg.Type, Tc, Pc, R)
 	b := critCfg.Type.Params().Omega * R * Tc / Pc
 
 	// Define V range based on Vc
@@ -234,7 +243,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	}
 
 	// 2. Draw Saturation Dome
-	domeCfg := s0.Substance.CubicConfig(&cubic.PR{}, Tc, Pc, R)
+	domeCfg := s0.Substance.CubicConfig(cfg.Type, Tc, Pc, R)
 	var liquidPts, vaporPts plotter.XYs
 
 	// Range from 0.6 Tc to 0.99 Tc
@@ -292,7 +301,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	// 4. Draw States and their Isotherms
 	for i, state := range states {
-		stateCfg := state.Substance.CubicConfig(&cubic.PR{}, state.Temperature, state.Pressure, R)
+		stateCfg := state.Substance.CubicConfig(cfg.Type, state.Temperature, state.Pressure, R)
 
 		// Draw Isotherm
 		isoPts := make(plotter.XYs, 0)
