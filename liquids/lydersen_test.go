@@ -59,10 +59,10 @@ func TestReducedDensity(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "Pr Too High for Tr=0.97 (4.1)",
+			name:    "Pr High Fallback for Tr=0.97 (4.1)",
 			tr:      0.97,
 			pr:      4.1,
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "Pr Too Low (-0.1)",

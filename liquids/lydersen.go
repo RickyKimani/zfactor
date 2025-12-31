@@ -35,6 +35,37 @@ func ReducedDensity(Tr, Pr float64) (float64, error) {
 		return 0, fmt.Errorf("lydersen table is empty")
 	}
 
+	// Helper for fallback interpolation between Tr=0.9 and Tr=1.0
+	// This handles cases where intermediate isotherms
+	// do not extend to high pressures.
+	attemptFallback := func(originalErr error) (float64, error) {
+		if Tr > 0.9 && Tr < 1.0 {
+			// Find 0.9 and 1.0 isotherms
+			var iso09, iso10 *isotherm
+
+			idx09 := sort.Search(len(isotherms), func(i int) bool { return isotherms[i].Tr >= 0.9 })
+			if idx09 < len(isotherms) && isotherms[idx09].Tr == 0.9 {
+				iso09 = &isotherms[idx09]
+			}
+
+			idx10 := sort.Search(len(isotherms), func(i int) bool { return isotherms[i].Tr >= 1.0 })
+			if idx10 < len(isotherms) && isotherms[idx10].Tr == 1.0 {
+				iso10 = &isotherms[idx10]
+			}
+
+			if iso09 != nil && iso10 != nil {
+				rho09, err1 := interpolatePr(iso09.Points, Pr)
+				rho10, err2 := interpolatePr(iso10.Points, Pr)
+
+				if err1 == nil && err2 == nil {
+					frac := (Tr - 0.9) / (1.0 - 0.9)
+					return rho09 + frac*(rho10-rho09), nil
+				}
+			}
+		}
+		return 0, originalErr
+	}
+
 	// 1. Find the relevant isotherms (Tr interpolation)
 	// Search for the first isotherm with Tr >= requested Tr
 	idx := sort.Search(len(isotherms), func(i int) bool {
@@ -48,7 +79,11 @@ func ReducedDensity(Tr, Pr float64) (float64, error) {
 
 	// Case: Exact Tr match
 	if isotherms[idx].Tr == Tr {
-		return interpolatePr(isotherms[idx].Points, Pr)
+		val, err := interpolatePr(isotherms[idx].Points, Pr)
+		if err != nil {
+			return attemptFallback(err)
+		}
+		return val, nil
 	}
 
 	// Case: Tr is below the lowest isotherm
@@ -62,11 +97,19 @@ func ReducedDensity(Tr, Pr float64) (float64, error) {
 
 	rhoLow, err := interpolatePr(isoLow.Points, Pr)
 	if err != nil {
+		val, fbErr := attemptFallback(err)
+		if fbErr == nil {
+			return val, nil
+		}
 		return 0, fmt.Errorf("failed to interpolate at lower Tr %g: %w", isoLow.Tr, err)
 	}
 
 	rhoHigh, err := interpolatePr(isoHigh.Points, Pr)
 	if err != nil {
+		val, fbErr := attemptFallback(err)
+		if fbErr == nil {
+			return val, nil
+		}
 		return 0, fmt.Errorf("failed to interpolate at higher Tr %g: %w", isoHigh.Tr, err)
 	}
 
