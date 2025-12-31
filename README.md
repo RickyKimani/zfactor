@@ -11,6 +11,7 @@
   - Peng-Robinson (PR)
 - **Lee-Kesler Correlation**: Accurate estimation of compressibility factors (Z) and other derived properties.
 - **Virial Equations**: Solvers for 2-term and 3-term virial equations of state.
+- **Abbott Correlations**: Generalized correlations for the second virial coefficient ($B$).
 - **Liquid Properties**: Calculation of saturated liquid molar volumes using the Rackett equation and reduced density using Lydersen charts.
 - **Antoine Equation**: Calculation of saturation vapor pressures.
 - **Thermodynamic State Management**: Easy definition and validation of states ($T, P$).
@@ -106,6 +107,7 @@ func main() {
 
  // Configure the plot
  cfg := &state.PVConfig{
+  Type:           *cubic.PR{}
   Title:          "PV Diagram for Ethane",
   NumberStates:   true,
   LabelIsotherms: true,
@@ -135,15 +137,10 @@ The following diagram was generated using the code in [examples/main.go](example
 - **`virial`**: Virial equation solvers (2-term and 3-term).
 - **`lee-kesler`**: Implementation of the Lee-Kesler correlation tables and interpolation.
 - **`antoine`**: Antoine equation coefficients and solvers.
+- **`abbott`**: Generalized correlations for the second virial coefficient.
 - **`liquids`**: Correlations for liquid phase properties (e.g., Rackett equation).
 - **`state`**: High-level abstraction for thermodynamic states and plotting logic.
 - **`substance`**: Database of chemical species and their properties.
-
-## Roadmap
-
-The following features are planned for future releases:
-
-- **Abbott Correlations**: Implementation of correlations for the second virial coefficient ($B$) using the Abbott/Pitzer method.
 
 ## License
 
