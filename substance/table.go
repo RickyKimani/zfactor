@@ -876,7 +876,7 @@ var Xenon = &Substance{
 var Helium4 = &Substance{
 	Name:     "Helium 4",
 	MW:       4.00300,
-	Acentric: 0.39000,
+	Acentric: -0.39000,
 	Tn:       4.20000,
 	Critical: CriticalProps{
 		Tc: 5.20000,
@@ -889,7 +889,7 @@ var Helium4 = &Substance{
 var Hydrogen = &Substance{
 	Name:     "Hydrogen",
 	MW:       2.01600,
-	Acentric: 0.21600,
+	Acentric: -0.21600,
 	Tn:       20.40000,
 	Critical: CriticalProps{
 		Tc: 33.19000,
@@ -925,6 +925,19 @@ var Nitrogen = &Substance{
 	},
 }
 
+var Air = &Substance{
+	Name:     "Air",
+	MW:       28.85100,
+	Acentric: 0.03500,
+	Tn:       0.00000,
+	Critical: CriticalProps{
+		Tc: 132.20000,
+		Pc: 37.45000,
+		Vc: 84.80000,
+		Zc: 0.28900,
+	},
+}
+
 var Chlorine = &Substance{
 	Name:     "Chlorine",
 	MW:       70.90500,
@@ -948,6 +961,19 @@ var CarbonMonoxide = &Substance{
 		Pc: 34.99000,
 		Vc: 93.40000,
 		Zc: 0.29900,
+	},
+}
+
+var CarbonDioxide = &Substance{
+	Name:     "Carbon dioxide",
+	MW:       44.01000,
+	Acentric: 0.22400,
+	Tn:       0.00000,
+	Critical: CriticalProps{
+		Tc: 304.20000,
+		Pc: 73.83000,
+		Vc: 94.00000,
+		Zc: 0.27400,
 	},
 }
 

@@ -34,6 +34,11 @@ def parse_char_prop(pdf_path: str) -> list:
         lines = [l.strip() for l in text.splitlines() if l.strip()]
 
         for line in lines:
+            # Clean up special characters
+            line = line.replace("†", "").replace("*", "")
+            # Normalize unicode minus signs to ASCII hyphen
+            line = line.replace("\u2212", "-").replace("\u2013", "-")
+
             # Skip known headers / footers
             if (
                 "Table B.1" in line
@@ -50,24 +55,35 @@ def parse_char_prop(pdf_path: str) -> list:
             if len(matches) < 6:
                 continue
 
-            # --- Special case: Sulfuric acid (no acentric factor) ---
+            # --- Special case: 6 columns (Missing Omega OR Missing Tn) ---
             if len(matches) == 6:
                 name_end = matches[0].start()
                 name = line[:name_end].strip()
 
-                if name.lower() not in {"sulfuric acid", "sulphuric acid"}:
-                    continue
-
                 nums = [m.group() for m in matches]
 
                 try:
-                    mw = float(nums[0])
-                    omega = 0.0
-                    tc = float(nums[1])
-                    pc = float(nums[2])
-                    zc = float(nums[3])
-                    vc = float(nums[4])
-                    tn = float(nums[5])
+                    vals = [float(n) for n in nums]
+
+                    # Heuristic: Check 2nd number.
+                    # If > 10, it is likely Tc (Missing Omega)
+                    # If <= 10, it is likely Omega (Missing Tn)
+                    if vals[1] > 10.0:
+                        mw = vals[0]
+                        omega = 0.0
+                        tc = vals[1]
+                        pc = vals[2]
+                        zc = vals[3]
+                        vc = vals[4]
+                        tn = vals[5]
+                    else:
+                        mw = vals[0]
+                        omega = vals[1]
+                        tc = vals[2]
+                        pc = vals[3]
+                        zc = vals[4]
+                        vc = vals[5]
+                        tn = 0.0
                 except ValueError:
                     continue
 

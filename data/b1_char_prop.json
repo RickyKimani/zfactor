@@ -806,7 +806,7 @@
   {
     "name": "Helium 4",
     "mw": 4.003,
-    "acentric": 0.39,
+    "acentric": -0.39,
     "tn": 4.2,
     "critical": {
       "tc": 5.2,
@@ -818,7 +818,7 @@
   {
     "name": "Hydrogen",
     "mw": 2.016,
-    "acentric": 0.216,
+    "acentric": -0.216,
     "tn": 20.4,
     "critical": {
       "tc": 33.19,
@@ -852,6 +852,18 @@
     }
   },
   {
+    "name": "Air",
+    "mw": 28.851,
+    "acentric": 0.035,
+    "tn": 0.0,
+    "critical": {
+      "tc": 132.2,
+      "pc": 37.45,
+      "vc": 84.8,
+      "zc": 0.289
+    }
+  },
+  {
     "name": "Chlorine",
     "mw": 70.905,
     "acentric": 0.069,
@@ -873,6 +885,18 @@
       "pc": 34.99,
       "vc": 93.4,
       "zc": 0.299
+    }
+  },
+  {
+    "name": "Carbon dioxide",
+    "mw": 44.01,
+    "acentric": 0.224,
+    "tn": 0.0,
+    "critical": {
+      "tc": 304.2,
+      "pc": 73.83,
+      "vc": 94.0,
+      "zc": 0.274
     }
   },
   {
