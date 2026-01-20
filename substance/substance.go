@@ -4,6 +4,7 @@ package substance
 
 import (
 	"github.com/rickykimani/zfactor"
+	"github.com/rickykimani/zfactor/abbott"
 	"github.com/rickykimani/zfactor/cubic"
 	leekesler "github.com/rickykimani/zfactor/lee-kesler"
 	"github.com/rickykimani/zfactor/liquids"
@@ -103,4 +104,38 @@ func (s *Substance) ReducedDensity(Temperature, Pressure float64) (float64, erro
 	pr := Pressure / s.Critical.Pc
 
 	return liquids.ReducedDensity(tr, pr)
+}
+
+// ResidualEnthalpy calculates the dimensionless residual enthalpy H^R / (R * Tc)
+// at the given temperature (K) and pressure (bar) using the Abbott (Virial) correlations.
+//
+// It returns an error if the temperature is non-positive or pressure is non-positive.
+func (s *Substance) ResidualEnthalpy(T, P float64) (float64, error) {
+	if T <= 0 {
+		return 0, zfactor.ErrTemp
+	}
+	if P <= 0 {
+		return 0, zfactor.ErrPressure
+	}
+	Tr := T / s.Critical.Tc
+	Pr := P / s.Critical.Pc
+
+	return abbott.ResidualEnthalpy(Tr, Pr, s.Acentric)
+}
+
+// ResidualEntropy calculates the dimensionless residual entropy S^R / R
+// at the given temperature (K) and pressure (bar) using the Abbott (Virial) correlations.
+//
+// It returns an error if the temperature is non-positive or pressure is non-positive.
+func (s *Substance) ResidualEntropy(T, P float64) (float64, error) {
+	if T <= 0 {
+		return 0, zfactor.ErrTemp
+	}
+	if P <= 0 {
+		return 0, zfactor.ErrPressure
+	}
+	Tr := T / s.Critical.Tc
+	Pr := P / s.Critical.Pc
+
+	return abbott.ResidualEntropy(Tr, Pr, s.Acentric)
 }

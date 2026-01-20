@@ -2,7 +2,7 @@
 //
 // The second virial coefficient B is calculated as:
 //
-//	B * Pc / (R * Tc) = B0 + ω * B1 
+//	B * Pc / (R * Tc) = B0 + ω * B1
 //
 // where B0 is the simple fluid contribution and B1 is the correction term for
 // acentric factor (ω).
@@ -64,4 +64,67 @@ func DB1(Tr float64) (float64, error) {
 	}
 
 	return 0.722 / math.Pow(Tr, 5.2), nil
+}
+
+// ResidualEnthalpy calculates the dimensionless residual enthalpy H^R / (R * Tc)
+// using the generalized correlations for the second virial coefficient.
+//
+//	H^R / (R * Tc) = Pr * [ (B0 - Tr * dB0/dTr) + ω * (B1 - Tr * dB1/dTr) ]
+//
+// It returns an error if Tr <= 0 or Pr <= 0.
+func ResidualEnthalpy(Tr, Pr, acentric float64) (float64, error) {
+	if Tr <= 0 {
+		return 0, zfactor.ErrInvalidTr
+	}
+	if Pr <= 0 {
+		return 0, zfactor.ErrInvalidPr
+	}
+
+	B0, err := B0(Tr)
+	if err != nil {
+		return 0, err
+	}
+	B1, err := B1(Tr)
+	if err != nil {
+		return 0, err
+	}
+	DB0, err := DB0(Tr)
+	if err != nil {
+		return 0, err
+	}
+	DB1, err := DB1(Tr)
+	if err != nil {
+		return 0, err
+	}
+
+	base := B0 - Tr*DB0
+	depart := B1 - Tr*DB1
+
+	return Pr * (base + acentric*depart), nil
+}
+
+// ResidualEntropy calculates the dimensionless residual entropy S^R / R
+// using the generalized correlations for the second virial coefficient.
+//
+//	S^R / R = -Pr * [ dB0/dTr + ω * dB1/dTr ]
+//
+// It returns an error if Tr <= 0 or Pr <= 0.
+func ResidualEntropy(Tr, Pr, acentric float64) (float64, error) {
+	if Tr <= 0 {
+		return 0, zfactor.ErrInvalidTr
+	}
+	if Pr <= 0 {
+		return 0, zfactor.ErrInvalidPr
+	}
+
+	DB0, err := DB0(Tr)
+	if err != nil {
+		return 0, err
+	}
+	DB1, err := DB1(Tr)
+	if err != nil {
+		return 0, err
+	}
+
+	return -Pr * (DB0 + acentric*DB1), nil
 }

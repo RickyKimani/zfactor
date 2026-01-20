@@ -26,4 +26,6 @@ var (
 	ErrHighPressureTwoTerm = InputError{Msg: "pressure exceeds the validity limit (15 bar) for the two-term virial equation"}
 	// ErrInvalidTr is returned when the reduced temperature (Tr) is less than or equal to 0.
 	ErrInvalidTr = InputError{Msg: "reduced temperature (Tr) must be greater than 0"}
+	// ErrInvalidPr is returned when the reduced pressure (Pr) is less than or equal to 0.
+	ErrInvalidPr = InputError{Msg: "reduced pressure (Pr) must be greater than 0"}
 )
