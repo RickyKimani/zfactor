@@ -69,17 +69,17 @@ type State struct {
 
 // NewState creates a new State object. It validates that the temperature and pressure
 // are positive values.
-func NewState(substance *substance.Substance, t, p float64) (*State, error) {
-	if t <= 0 {
+func NewState(substance *substance.Substance, T, P float64) (*State, error) {
+	if T <= 0 {
 		return nil, zfactor.ErrTemp
 	}
-	if p <= 0 {
+	if P <= 0 {
 		return nil, zfactor.ErrPressure
 	}
 	return &State{
 		Substance:   substance,
-		Temperature: t,
-		Pressure:    p,
+		Temperature: T,
+		Pressure:    P,
 	}, nil
 }
 

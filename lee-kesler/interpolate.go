@@ -10,9 +10,9 @@ import (
 //
 // Usage:
 //
-//	v, err := leekesler.Z0Table.At(0.66, 1.2)
-func (t table) At(pr, tr float64) (float64, error) {
-	return interpolate(pr, tr, t)
+//	v, err := leekesler.Z0Table.At(1.2, 0.66)
+func (t table) At(Tr, Pr float64) (float64, error) {
+	return interpolate(Pr, Tr, t)
 }
 
 // interpolate performs bilinear interpolation on the provided table.

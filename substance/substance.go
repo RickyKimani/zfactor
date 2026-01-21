@@ -26,15 +26,15 @@ type Substance struct {
 }
 
 // LeeKesler evaluates a thermodynamic property using the Lee-Kesler correlation.
-// p is the pressure in bar.
-// t is the temperature in Kelvin.
-func (s *Substance) LeeKesler(p, t float64, property leekesler.Property) (float64, error) {
-	pr := p / s.Critical.Pc
-	tr := t / s.Critical.Tc
+// P is the pressure in bar.
+// T is the temperature in Kelvin.
+func (s *Substance) LeeKesler(T, P float64, property leekesler.Property) (float64, error) {
+	pr := P / s.Critical.Pc
+	tr := T / s.Critical.Tc
 
 	c := leekesler.Correlation(property)
 
-	v0, v1, err := c.At(pr, tr)
+	v0, v1, err := c.At(tr, pr)
 	if err != nil {
 		return 0, err
 	}
@@ -50,39 +50,39 @@ func (s *Substance) LeeKesler(p, t float64, property leekesler.Property) (float6
 // Supported standard types (VdW, RK, SRK, PR) are initialized with their specific constructors.
 // Custom implementations of cubic.EOSType are handled by the default case, which populates
 // the configuration with the substance's properties.
-func (s *Substance) CubicConfig(Type cubic.EOSType, t, p, r float64) *cubic.EOSCfg {
+func (s *Substance) CubicConfig(Type cubic.EOSType, T, P, R float64) *cubic.EOSCfg {
 	tc := s.Critical.Tc
 	pc := s.Critical.Pc
 	switch Type.(type) {
 	case *cubic.VdW:
-		return cubic.NewvdWCfg(t, p, tc, pc, r)
+		return cubic.NewvdWCfg(T, P, tc, pc, R)
 	case *cubic.RK:
-		return cubic.NewRKCfg(t, p, tc, pc, r)
+		return cubic.NewRKCfg(T, P, tc, pc, R)
 	case *cubic.SRK:
-		return cubic.NewSRKCfg(t, p, tc, pc, s.Acentric, r)
+		return cubic.NewSRKCfg(T, P, tc, pc, s.Acentric, R)
 	case *cubic.PR:
-		return cubic.NewPRCfg(t, p, tc, pc, s.Acentric, r)
+		return cubic.NewPRCfg(T, P, tc, pc, s.Acentric, R)
 	default:
 		return &cubic.EOSCfg{
 			Type:     Type,
-			T:        t,
-			P:        p,
+			T:        T,
+			P:        P,
 			Tc:       tc,
 			Pc:       pc,
 			Acentric: s.Acentric,
-			R:        r,
+			R:        R,
 		}
 	}
 }
 
 // Vsat calculates the saturated liquid molar volume at the given temperature using the Rackett equation.
 // Temperature must be in Kelvin.
-func (s *Substance) Vsat(Temperature float64) (float64, error) {
-	if Temperature <= 0 {
+func (s *Substance) Vsat(T float64) (float64, error) {
+	if T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
 
-	tr := Temperature / s.Critical.Tc
+	tr := T / s.Critical.Tc
 
 	return liquids.Vsat(s.Critical.Vc, s.Critical.Zc, tr)
 }
@@ -92,16 +92,16 @@ func (s *Substance) Vsat(Temperature float64) (float64, error) {
 //
 // It returns an error if the temperature is non-positive, pressure is negative,
 // or if the state point is outside the range of the Lydersen chart.
-func (s *Substance) ReducedDensity(Temperature, Pressure float64) (float64, error) {
-	if Temperature <= 0 {
+func (s *Substance) ReducedDensity(T, P float64) (float64, error) {
+	if T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
-	if Pressure < 0 {
+	if P < 0 {
 		return 0, zfactor.ErrPressure
 	}
 
-	tr := Temperature / s.Critical.Tc
-	pr := Pressure / s.Critical.Pc
+	tr := T / s.Critical.Tc
+	pr := P / s.Critical.Pc
 
 	return liquids.ReducedDensity(tr, pr)
 }

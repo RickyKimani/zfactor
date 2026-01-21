@@ -41,7 +41,7 @@ func main() {
 
 	// Compute the compressibility factor (Z) using the Lee-Kesler correlation.
 	// This method is suitable here as the state is in the single-phase region.
-	z, err := ethane.LeeKesler(s1.Pressure, s1.Temperature, leekesler.Z)
+	z, err := ethane.LeeKesler(s1.Temperature, s1.Pressure, leekesler.CompressibilityFactor)
 	if err != nil {
 		log.Fatal(err)
 	}

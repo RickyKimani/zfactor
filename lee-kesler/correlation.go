@@ -3,11 +3,13 @@ package leekesler
 // Property is a Lee-Kesler correlation family (Z, H, S, PHI).
 type Property int
 
+// TODO: Rename properties to actual names (compressibility etc.)
+
 const (
-	Z   Property = iota // Compressibility factor
-	H                   // Residual enthalpy
-	S                   // Residual entropy
-	PHI                 // Fugacity coefficient
+	CompressibilityFactor Property = iota // Compressibility factor (Z)
+	ResidualEnthalpy                      // Dimensionless Residual enthalpy (H^R / R*Tc)
+	ResidualEntropy                       // Dimensionless Residual entropy (S^R / R)
+	FugacityCoefficient                   // Fugacity coefficient
 )
 
 // correlation bundles the base ("0") and departure ("1") tables
@@ -21,31 +23,31 @@ type correlation struct {
 //
 // Usage:
 //
-//	z0, z1, err := leekesler.Correlation(leekesler.Z).At(pr, tr)
+//	z0, z1, err := leekesler.Correlation(leekesler.Z).At(Pr, Tr)
 func Correlation(p Property) correlation {
 	switch p {
-	case Z:
+	case CompressibilityFactor:
 		return correlation{base: Z0Table, depart: Z1Table}
-	case H:
+	case ResidualEnthalpy:
 		return correlation{base: H0Table, depart: H1Table}
-	case S:
+	case ResidualEntropy:
 		return correlation{base: S0Table, depart: S1Table}
-	case PHI:
+	case FugacityCoefficient:
 		return correlation{base: PHI0Table, depart: PHI1Table}
 	default:
 		// Fallback to Z
-		return correlation{base: Z0Table, depart: Z1Table}
+		return correlation{base: Z0Table, depart: Z1Table} //panic instead?
 	}
 }
 
-// At returns the base and departure values at (pr, tr).
+// At returns the base and departure values at (Tr, Pr).
 // For Z, this returns (Z0, Z1).
-func (c correlation) At(pr, tr float64) (float64, float64, error) {
-	v0, err := c.base.At(pr, tr)
+func (c correlation) At(Tr, Pr float64) (float64, float64, error) {
+	v0, err := c.base.At(Tr, Pr)
 	if err != nil {
 		return 0, 0, err
 	}
-	v1, err := c.depart.At(pr, tr)
+	v1, err := c.depart.At(Tr, Pr)
 	if err != nil {
 		return 0, 0, err
 	}
