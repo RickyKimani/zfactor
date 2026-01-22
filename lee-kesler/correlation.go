@@ -3,8 +3,6 @@ package leekesler
 // Property is a Lee-Kesler correlation family (Z, H, S, PHI).
 type Property int
 
-// TODO: Rename properties to actual names (compressibility etc.)
-
 const (
 	CompressibilityFactor Property = iota // Compressibility factor (Z)
 	ResidualEnthalpy                      // Dimensionless Residual enthalpy (H^R / R*Tc)

@@ -185,7 +185,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	// 1. Draw Critical Isotherm (T = Tc)
 	// This defines the boundary between subcritical and supercritical
-	critCfg := s0.Substance.CubicConfig(cfg.Type, Tc, Pc, R)
+	critCfg := s0.Substance.CubicConfig(cfg.Type, zfactor.Args{T: Tc, P: Pc, R: R})
 	b := critCfg.Type.Params().Omega * R * Tc / Pc
 
 	// Define V range based on Vc
@@ -243,7 +243,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	}
 
 	// 2. Draw Saturation Dome
-	domeCfg := s0.Substance.CubicConfig(cfg.Type, Tc, Pc, R)
+	domeCfg := s0.Substance.CubicConfig(cfg.Type, zfactor.Args{T: Tc, P: Pc, R: R})
 	var liquidPts, vaporPts plotter.XYs
 
 	// Range from 0.6 Tc to 0.99 Tc
@@ -301,7 +301,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	// 4. Draw States and their Isotherms
 	for i, state := range states {
-		stateCfg := state.Substance.CubicConfig(cfg.Type, state.Temperature, state.Pressure, R)
+		stateCfg := state.Substance.CubicConfig(cfg.Type, zfactor.Args{T: state.Temperature, P: state.Pressure, R: R})
 
 		// Draw Isotherm
 		isoPts := make(plotter.XYs, 0)

@@ -39,54 +39,145 @@ go get github.com/rickykimani/zfactor
 
 ## Usage
 
-### Basic Property Calculation
+`zfactor` uses a unified argument structure `zfactor.Args` for most functions to ensure clarity and type safety.
 
-Calculate the molar volume of Ethane using the Lee-Kesler correlation and compare it with the result from the SRK Equation of State.
+**Standard Units** (unless otherwise customized or specified):
+- **Temperature**: Kelvin (K)
+- **Pressure**: bar
+- **Volume**: cm³/mol
+- **Gas Constant (R)**: typically `bar·cm³/(mol·K)` (available as `zfactor.RSI * 10`)
+
+### 1. General Property Calculation (Cubic EOS & Lee-Kesler)
+
+Compare molar volume estimates using the Lee-Kesler correlation vs. the Soave-Redlich-Kwong (SRK) Equation of State.
+
+For a full runnable example, see [examples/problem_ethane_cylinder/main.go](examples/problem_ethane_cylinder/main.go).
 
 ```go
 package main
 
 import (
- "fmt"
- "log"
+	"fmt"
+	"log"
 
- "github.com/rickykimani/zfactor"
- "github.com/rickykimani/zfactor/cubic"
- leekesler "github.com/rickykimani/zfactor/lee-kesler"
- "github.com/rickykimani/zfactor/substance"
+	"github.com/rickykimani/zfactor"
+	"github.com/rickykimani/zfactor/cubic"
+	leekesler "github.com/rickykimani/zfactor/lee-kesler"
+	"github.com/rickykimani/zfactor/substance"
 )
 
 func main() {
- ethane := substance.Ethane
- T := 299.0 // Kelvin
- P := 32.0  // bar
- R := 10 * zfactor.RSI // bar*cm³/(mol*K)
+	ethane := substance.Ethane
+	args := zfactor.Args{
+		T: 299.0, // Kelvin
+		P: 32.0,  // bar
+		R: 10 * zfactor.RSI, // bar*cm³/(mol*K)
+	}
 
- // 1. Estimate Z using Lee-Kesler
- z, err := ethane.LeeKesler(P, T, leekesler.Z)
- if err != nil {
-  log.Fatal(err)
- }
- 
- // Calculate molar volume from Z
- v := z * R * T / P
- fmt.Printf("Estimated Volume (Lee-Kesler): %.2f cm³/mol\n", v)
+	// 1. Estimate Z using Lee-Kesler
+	z, err := ethane.LeeKesler(args, leekesler.CompressibilityFactor)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	v_lk := z * args.R * args.T / args.P
+	fmt.Printf("Volume (Lee-Kesler): %.2f cm³/mol\n", v_lk)
 
- // 2. Solve using SRK Equation of State
- // We can solve for Pressure given Volume, or Volume given Pressure.
- cfg := ethane.SRKCfg(T, P, R)
- 
- // Solve for Volume
- volRes, err := cubic.SolveForVolume(cfg)
- if err != nil {
-  log.Fatal(err)
- }
- 
- fmt.Printf("SRK Volumes: %v\n", volRes.Clean())
+	// 2. Solve using SRK Equation of State
+	// Create configuration for SRK
+	cfg := ethane.CubicConfig(&cubic.SRK{}, args)
+	
+	// Solve for Volume (returns roots for liquid/vapor)
+	volRes, err := cubic.SolveForVolume(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	fmt.Printf("Volume (SRK): %v\n", volRes.Clean())
 }
 ```
 
-### Generating a PV Diagram
+### 2. Virial Equations
+
+Solve for compressibility factors using 2-term or 3-term virial equations.
+
+For a full runnable example, see [examples/virial/main.go](examples/virial/main.go).
+
+```go
+import "github.com/rickykimani/zfactor/virial"
+
+// Isopropanol vapor example
+args := zfactor.Args{
+    T: 473.15, // K
+    P: 10.0,   // bar
+    R: 83.14,  // bar·cm³/(mol·K)
+    B: -338.0, // Second virial coefficient (cm³/mol)
+    C: -26000.0, // Third virial coefficient (cm⁶/mol²)
+}
+
+// 2-Term Virial (Z = 1 + BP/RT)
+z2, _ := virial.CompressibilityTwoTerm(args)
+fmt.Printf("Z (2-term): %.4f\n", z2)
+
+// 3-Term Virial (Iterative solution)
+// Returns complex roots for volume
+roots, _ := virial.SolveForVolumeThreeTerm(args)
+```
+
+### 3. Saturation & Liquid Properties
+
+For a full runnable example, see [examples/liquids/main.go](examples/liquids/main.go).
+
+Calculate saturation pressure (Antoine) and liquid molar properties (Rackett/Lydersen).
+
+```go
+import (
+    "github.com/rickykimani/zfactor/antoine"
+    "github.com/rickykimani/zfactor/substance"
+)
+
+// Saturation Pressure (Antoine Equation)
+// Note: Antoine coefficients often use Celsius and specific pressure units (e.g., kPa)
+pSat, _ := antoine.Ethanol.Pressure(25.0) // 25°C
+fmt.Printf("Saturation Pressure (Ethanol @ 25C): %.2f kPa\n", pSat)
+
+// Saturated Liquid Volume (Rackett Equation)
+eth := substance.Ethane
+vSat, _ := eth.Vsat(299.0) // T in Kelvin required
+fmt.Printf("Saturated Liquid Volume: %.4f cm³/mol\n", vSat)
+
+// Reduced Density (Lydersen Charts)
+rhoR, _ := eth.ReducedDensity(zfactor.Args{T: 299.0, P: 50.0})
+fmt.Printf("Reduced Density: %.4f\n", rhoR)
+```
+
+### 4. Residual Properties (Abbott/Virial & Lee-Kesler)
+
+Calculate residual enthalpy ($H^R$) and entropy ($S^R$). You can use either the Abbott correlations (based on Virial coefficients) or the Lee-Kesler tables. Lee-Kesler is generally more accurate at higher pressures.
+
+For a full runnable example, see [examples/residual/main.go](examples/residual/main.go).
+
+```go
+import (
+    leekesler "github.com/rickykimani/zfactor/lee-kesler"
+    "github.com/rickykimani/zfactor/substance"
+)
+
+eth := substance.Ethane
+args := zfactor.Args{T: 299.0, P: 32.0}
+
+// 1. Abbott Correlations (Virial)
+hR, _ := eth.ResidualEnthalpy(args)
+sR, _ := eth.ResidualEntropy(args)
+
+// 2. Lee-Kesler (More accurate at high pressure)
+hR_LK, _ := eth.LeeKesler(args, leekesler.ResidualEnthalpy)
+sR_LK, _ := eth.LeeKesler(args, leekesler.ResidualEntropy)
+```
+
+For a full runnable example including state calculations, see [examples/problem_ethane_cylinder/main.go](examples/problem_ethane_cylinder/main.go).
+
+### 5. Generating a PV Diagram
 
 Visualize thermodynamic states on a PV diagram, including the saturation dome and critical isotherm.
 
@@ -94,33 +185,31 @@ Visualize thermodynamic states on a PV diagram, including the saturation dome an
 package main
 
 import (
- "log"
+	"log"
 
- "github.com/rickykimani/zfactor/state"
- "github.com/rickykimani/zfactor/substance"
+	"github.com/rickykimani/zfactor/cubic"
+	"github.com/rickykimani/zfactor/state"
+	"github.com/rickykimani/zfactor/substance"
 )
 
 func main() {
- // Define states
- s1, _ := state.NewState(substance.Ethane, 299, 32)
- s2, _ := state.NewState(substance.Ethane, 490, 70)
+	// Define states
+	s1, _ := state.NewState(substance.Ethane, 299, 32)
+	s2, _ := state.NewState(substance.Ethane, 490, 70)
 
- // Configure the plot
- cfg := &state.PVConfig{
-  Type:           *cubic.PR{}
-  Title:          "PV Diagram for Ethane",
-  NumberStates:   true,
-  LabelIsotherms: true,
-  // Customize colors and dimensions if needed
-  // IsothermsColor: state.Blue,
-  // VolumeScaleFactor: 10.0,
- }
+	// Configure the plot
+	cfg := &state.PVConfig{
+		Type:           *cubic.PR{}, // Use Peng-Robinson
+		Title:          "PV Diagram for Ethane",
+		NumberStates:   true,
+		LabelIsotherms: true,
+	}
 
- // Generate the diagram
- err := state.DrawPV(cfg, "ethane_pv.png", s1, s2)
- if err != nil {
-  log.Fatal(err)
- }
+	// Generate the diagram
+	err := state.DrawPV(cfg, "ethane_pv.png", s1, s2)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```
 
@@ -132,15 +221,15 @@ The following diagram was generated using the code in [examples/main.go](example
 
 ## Package Overview
 
-- **`zfactor`**: Root package containing physical constants and cubic equation solver.
-- **`cubic`**: Implementation of cubic equations of state solvers (Pressure, Volume, Saturation).
-- **`virial`**: Virial equation solvers (2-term and 3-term).
-- **`lee-kesler`**: Implementation of the Lee-Kesler correlation tables and interpolation.
-- **`antoine`**: Antoine equation coefficients and solvers.
-- **`abbott`**: Generalized correlations for the second virial coefficient.
-- **`liquids`**: Correlations for liquid phase properties (e.g., Rackett equation).
-- **`state`**: High-level abstraction for thermodynamic states and plotting logic.
-- **`substance`**: Database of chemical species and their properties.
+- **`zfactor`**: Root package, defines `Args` and physical constants.
+- **`substance`**: Database of chemical species and methods for substance-specific calculations (e.g., `Ethane.LeeKesler(...)`).
+- **`cubic`**: Solvers for cubic equations of state (vdW, RK, SRK, PR) for Volume, Pressure, and Z.
+- **`lee-kesler`**: Implementation of the Lee-Kesler generalized correlation tables.
+- **`virial`**: Solvers for 2-term and 3-term virial equations.
+- **`abbott`**: Generalized correlations for second virial coefficient ($B$) and residual properties.
+- **`antoine`**: Antoine equation parameters and solvers for saturation pressure.
+- **`liquids`**: Correlations for liquid density (Raackett, Lydersen).
+- **`state`**: High-level plotting logic for generating Thermodynamic PV diagrams.
 
 ## License
 

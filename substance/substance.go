@@ -26,11 +26,13 @@ type Substance struct {
 }
 
 // LeeKesler evaluates a thermodynamic property using the Lee-Kesler correlation.
-// P is the pressure in bar.
-// T is the temperature in Kelvin.
-func (s *Substance) LeeKesler(T, P float64, property leekesler.Property) (float64, error) {
-	pr := P / s.Critical.Pc
-	tr := T / s.Critical.Tc
+//
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+func (s *Substance) LeeKesler(args zfactor.Args, property leekesler.Property) (float64, error) {
+	pr := args.P / s.Critical.Pc
+	tr := args.T / s.Critical.Tc
 
 	c := leekesler.Correlation(property)
 
@@ -50,27 +52,32 @@ func (s *Substance) LeeKesler(T, P float64, property leekesler.Property) (float6
 // Supported standard types (VdW, RK, SRK, PR) are initialized with their specific constructors.
 // Custom implementations of cubic.EOSType are handled by the default case, which populates
 // the configuration with the substance's properties.
-func (s *Substance) CubicConfig(Type cubic.EOSType, T, P, R float64) *cubic.EOSCfg {
+//
+// Required Args:
+//   - T: Temperature
+//   - P: Pressure
+//   - R: Gas Constant
+func (s *Substance) CubicConfig(Type cubic.EOSType, args zfactor.Args) *cubic.EOSCfg {
 	tc := s.Critical.Tc
 	pc := s.Critical.Pc
 	switch Type.(type) {
 	case *cubic.VdW:
-		return cubic.NewvdWCfg(T, P, tc, pc, R)
+		return cubic.NewvdWCfg(args.T, args.P, tc, pc, args.R)
 	case *cubic.RK:
-		return cubic.NewRKCfg(T, P, tc, pc, R)
+		return cubic.NewRKCfg(args.T, args.P, tc, pc, args.R)
 	case *cubic.SRK:
-		return cubic.NewSRKCfg(T, P, tc, pc, s.Acentric, R)
+		return cubic.NewSRKCfg(args.T, args.P, tc, pc, s.Acentric, args.R)
 	case *cubic.PR:
-		return cubic.NewPRCfg(T, P, tc, pc, s.Acentric, R)
+		return cubic.NewPRCfg(args.T, args.P, tc, pc, s.Acentric, args.R)
 	default:
 		return &cubic.EOSCfg{
 			Type:     Type,
-			T:        T,
-			P:        P,
+			T:        args.T,
+			P:        args.P,
 			Tc:       tc,
 			Pc:       pc,
 			Acentric: s.Acentric,
-			R:        R,
+			R:        args.R,
 		}
 	}
 }
@@ -92,16 +99,20 @@ func (s *Substance) Vsat(T float64) (float64, error) {
 //
 // It returns an error if the temperature is non-positive, pressure is negative,
 // or if the state point is outside the range of the Lydersen chart.
-func (s *Substance) ReducedDensity(T, P float64) (float64, error) {
-	if T <= 0 {
+//
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+func (s *Substance) ReducedDensity(args zfactor.Args) (float64, error) {
+	if args.T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
-	if P < 0 {
+	if args.P < 0 {
 		return 0, zfactor.ErrPressure
 	}
 
-	tr := T / s.Critical.Tc
-	pr := P / s.Critical.Pc
+	tr := args.T / s.Critical.Tc
+	pr := args.P / s.Critical.Pc
 
 	return liquids.ReducedDensity(tr, pr)
 }
@@ -109,16 +120,20 @@ func (s *Substance) ReducedDensity(T, P float64) (float64, error) {
 // ResidualEnthalpy calculates the dimensionless residual enthalpy H^R / (R * Tc)
 // at the given temperature (K) and pressure (bar) using the Abbott (Virial) correlations.
 //
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+//
 // It returns an error if the temperature is non-positive or pressure is non-positive.
-func (s *Substance) ResidualEnthalpy(T, P float64) (float64, error) {
-	if T <= 0 {
+func (s *Substance) ResidualEnthalpy(args zfactor.Args) (float64, error) {
+	if args.T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
-	if P <= 0 {
+	if args.P <= 0 {
 		return 0, zfactor.ErrPressure
 	}
-	Tr := T / s.Critical.Tc
-	Pr := P / s.Critical.Pc
+	Tr := args.T / s.Critical.Tc
+	Pr := args.P / s.Critical.Pc
 
 	return abbott.ResidualEnthalpy(Tr, Pr, s.Acentric)
 }
@@ -126,16 +141,20 @@ func (s *Substance) ResidualEnthalpy(T, P float64) (float64, error) {
 // ResidualEntropy calculates the dimensionless residual entropy S^R / R
 // at the given temperature (K) and pressure (bar) using the Abbott (Virial) correlations.
 //
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+//
 // It returns an error if the temperature is non-positive or pressure is non-positive.
-func (s *Substance) ResidualEntropy(T, P float64) (float64, error) {
-	if T <= 0 {
+func (s *Substance) ResidualEntropy(args zfactor.Args) (float64, error) {
+	if args.T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
-	if P <= 0 {
+	if args.P <= 0 {
 		return 0, zfactor.ErrPressure
 	}
-	Tr := T / s.Critical.Tc
-	Pr := P / s.Critical.Pc
+	Tr := args.T / s.Critical.Tc
+	Pr := args.P / s.Critical.Pc
 
 	return abbott.ResidualEntropy(Tr, Pr, s.Acentric)
 }

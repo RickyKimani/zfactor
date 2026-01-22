@@ -3,6 +3,8 @@ package virial
 import (
 	"math"
 	"testing"
+
+	"github.com/rickykimani/zfactor"
 )
 
 func TestIsopropanolVirial(t *testing.T) {
@@ -27,7 +29,8 @@ func TestIsopropanolVirial(t *testing.T) {
 	expectedZ3 := 0.9028
 
 	t.Run("TwoTerm", func(t *testing.T) {
-		v, err := SolveForVolumeTwoTerm(T, P, R, B)
+		args := zfactor.Args{T: T, P: P, R: R, B: B}
+		v, err := SolveForVolumeTwoTerm(args)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -36,7 +39,7 @@ func TestIsopropanolVirial(t *testing.T) {
 			t.Errorf("TwoTerm Volume: got %f, want %f", v, expectedV2)
 		}
 
-		z, err := CompressibilityTwoTerm(T, P, R, B)
+		z, err := CompressibilityTwoTerm(args)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -47,7 +50,8 @@ func TestIsopropanolVirial(t *testing.T) {
 	})
 
 	t.Run("ThreeTerm", func(t *testing.T) {
-		roots, err := SolveForVolumeThreeTerm(T, P, R, B, C)
+		args := zfactor.Args{T: T, P: P, R: R, B: B, C: C}
+		roots, err := SolveForVolumeThreeTerm(args)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -63,7 +67,7 @@ func TestIsopropanolVirial(t *testing.T) {
 					found = true
 
 					// Check Z for this volume
-					z, err := CompressibilityThreeTerm(v, B, C)
+					z, err := CompressibilityThreeTerm(v, args)
 					if err != nil {
 						t.Errorf("unexpected error calculating Z: %v", err)
 					}
