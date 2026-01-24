@@ -175,9 +175,25 @@ hR_LK, _ := eth.LeeKesler(args, leekesler.ResidualEnthalpy)
 sR_LK, _ := eth.LeeKesler(args, leekesler.ResidualEntropy)
 ```
 
-For a full runnable example including state calculations, see [examples/problem_ethane_cylinder/main.go](examples/problem_ethane_cylinder/main.go).
+### 5. Mixture Properties
 
-### 5. Generating a PV Diagram
+Estimate properties for gas mixtures using Kay's Rule (linear pseudo-critical properties) and Lee-Kesler correlations.
+
+For a full runnable example, see [examples/problem_mixture/main.go](examples/problem_mixture/main.go).
+
+```go
+// Define an equimolar mixture of CO2 and Propane
+mixture, _ := substance.NewLinearMixture("Mixture", []substance.Component{
+    {Substance: substance.CarbonDioxide, Fraction: 0.5},
+    {Substance: substance.Propane, Fraction: 0.5},
+})
+
+// Use the mixture just like a pure substance
+args := zfactor.Args{T: 450, P: 140}
+z, _ := mixture.LeeKesler(args, leekesler.CompressibilityFactor)
+```
+
+### 6. Generating a PV Diagram
 
 Visualize thermodynamic states on a PV diagram, including the saturation dome and critical isotherm.
 

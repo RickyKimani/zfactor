@@ -6,7 +6,7 @@ from scripts.parse import parse_char_prop, parse_lee_kesler_tables, parse_antoin
 
 
 def main():
-    pdf_source = "text.pdf"
+    pdf_source = "data/text.pdf"
     appendix_pdf = "data/appendix_BCD.pdf"
     b1_pdf = "data/b1_char_prop.pdf"
     b2_pdf = "data/b2_antoine.pdf"
