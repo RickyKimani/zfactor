@@ -168,8 +168,8 @@ eth := substance.Ethane
 args := zfactor.Args{T: 299.0, P: 32.0}
 
 // 1. Abbott Correlations (Virial)
-hR, _ := eth.ResidualEnthalpy(args)
-sR, _ := eth.ResidualEntropy(args)
+hR, _ := eth.AbbottResidualEnthalpy(args)
+sR, _ := eth.AbbottResidualEntropy(args)
 
 // 2. Lee-Kesler (More accurate at high pressure)
 hR_LK, _ := eth.LeeKesler(args, leekesler.ResidualEnthalpy)

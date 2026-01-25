@@ -117,7 +117,7 @@ func (s *Substance) ReducedDensity(args zfactor.Args) (float64, error) {
 	return liquids.ReducedDensity(tr, pr)
 }
 
-// ResidualEnthalpy calculates the dimensionless residual enthalpy H^R / (R * Tc)
+// AbbottResidualEnthalpy calculates the dimensionless residual enthalpy H^R / (R * Tc)
 // at the given temperature (K) and pressure (bar) using the Abbott (Virial) correlations.
 //
 // Required Args:
@@ -125,7 +125,7 @@ func (s *Substance) ReducedDensity(args zfactor.Args) (float64, error) {
 //   - P: Pressure in bar
 //
 // It returns an error if the temperature is non-positive or pressure is non-positive.
-func (s *Substance) ResidualEnthalpy(args zfactor.Args) (float64, error) {
+func (s *Substance) AbbottResidualEnthalpy(args zfactor.Args) (float64, error) {
 	if args.T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
@@ -138,7 +138,7 @@ func (s *Substance) ResidualEnthalpy(args zfactor.Args) (float64, error) {
 	return abbott.ResidualEnthalpy(Tr, Pr, s.Acentric)
 }
 
-// ResidualEntropy calculates the dimensionless residual entropy S^R / R
+// AbbottResidualEntropy calculates the dimensionless residual entropy S^R / R
 // at the given temperature (K) and pressure (bar) using the Abbott (Virial) correlations.
 //
 // Required Args:
@@ -146,7 +146,7 @@ func (s *Substance) ResidualEnthalpy(args zfactor.Args) (float64, error) {
 //   - P: Pressure in bar
 //
 // It returns an error if the temperature is non-positive or pressure is non-positive.
-func (s *Substance) ResidualEntropy(args zfactor.Args) (float64, error) {
+func (s *Substance) AbbottResidualEntropy(args zfactor.Args) (float64, error) {
 	if args.T <= 0 {
 		return 0, zfactor.ErrTemp
 	}

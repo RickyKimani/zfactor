@@ -16,14 +16,14 @@ func main() {
 	fmt.Println("--- Abbott (Virial) correlations ---")
 	// Dimensionless Residual Enthalpy (H^R / RTc)
 	// Uses Abbott/Virial generalized correlations
-	hR, err := eth.ResidualEnthalpy(args)
+	hR, err := eth.AbbottResidualEnthalpy(args)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("Residual Enthalpy (H^R / RTc): %.4f\n", hR)
 
 	// Dimensionless Residual Entropy (S^R / R)
-	sR, err := eth.ResidualEntropy(args)
+	sR, err := eth.AbbottResidualEntropy(args)
 	if err != nil {
 		log.Fatal(err)
 	}
