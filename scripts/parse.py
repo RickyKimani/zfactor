@@ -292,3 +292,181 @@ def parse_antoine_table(pdf_path: str) -> list:
             })
 
     return substances
+
+def parse_cp_tables(pdf_path: str) -> dict:
+    reader = PdfReader(pdf_path)
+    
+    tables = {
+        "gases": [],
+        "solids": [],
+        "liquids": []
+    }
+    
+    current_table = None # "gases", "solids", "liquids"
+
+    # Regex to handle dots
+    # Matches sequence of 2 or more dots with optional spaces
+    re_dots = re.compile(r'(?:\.\s*){2,}')
+    
+    def to_float(s: str) -> float:
+        if s == "MISSING":
+            return 0.0
+        # clean unicode minus
+        s = s.replace("−", "-").replace("\u2212", "-")
+        try:
+            return float(s)
+        except ValueError:
+            return 0.0
+
+    def is_number_or_missing(s: str) -> bool:
+        if s == "MISSING":
+            return True
+        s = s.replace("−", "-").replace("\u2212", "-")
+        return bool(re.match(r'^[-+]?(?:\d*\.\d+|\d+)$', s))
+
+    for page_num, page in enumerate(reader.pages):
+        text = page.extract_text()
+        if not text:
+            continue
+            
+        # Hardcode page start types for known layout if header is missing/late
+        if page_num == 1: # Page 2: Starts with Solids
+            if current_table == "gases":
+                current_table = "solids"
+
+        lines = [l.strip() for l in text.splitlines() if l.strip()]
+        
+        for line in lines:
+            # Detect table headers
+            if "Table C.1" in line or "Ideal-Gas State" in line:
+                current_table = "gases"
+                continue
+            
+            # Liquids Header Detection (Robust)
+            # Table C.3 usually has "106 C" and does NOT have "D"
+            # This catches the garbled "Table C.2 ... 106 C" line
+            if "106 C" in line and "D" not in line:
+                current_table = "liquids"
+                continue
+            elif "106 C" in line and "D" in line:
+                 # This is likely Table C.1 (Gases) repeated or similar
+                 current_table = "gases"
+                 continue
+                 
+            if "Table C.3" in line or "Liquids" in line:
+                current_table = "liquids"
+                continue
+
+            if "Table C.2" in line or "Solids" in line:
+                current_table = "solids"
+                continue
+                
+            if not current_table:
+                continue
+                
+            # Skip headers/footers
+            if "Chemical species" in line or "Constants in equation" in line or "APPENDIX C" in line:
+                continue
+            if line.startswith("Note") or line.startswith("†"):
+                continue
+
+            # Normalize line
+            # 1. replace unicode minus
+            cleaned_line = line.replace("\u2212", "-").replace("\u2013", "-").replace("−", "-")
+            # 2. replace dots
+            cleaned_line = re_dots.sub(' MISSING ', cleaned_line)
+            
+            parts = cleaned_line.split()
+            if not parts:
+                continue
+
+            # Find where data starts (first number or MISSING)
+            data_start_idx = -1
+            for i, p in enumerate(parts):
+                if is_number_or_missing(p):
+                    data_start_idx = i
+                    break
+            
+            if data_start_idx == -1:
+                continue
+                
+            name_parts = parts[:data_start_idx]
+            data_parts = parts[data_start_idx:]
+            
+            # Filter non-valid rows
+            if not name_parts:
+                continue
+
+            # Process based on table type
+            try:
+                if current_table == "gases":
+                    if len(data_parts) < 6:
+                        continue
+                    
+                    # Assume last part of name is formula if multiple parts
+                    name_str = " ".join(name_parts)
+                    formula = ""
+                    
+                    if len(name_parts) > 1:
+                        formula = name_parts[-1]
+                        name_str = " ".join(name_parts[:-1])
+                    else:
+                        # Single word (e.g. Air)
+                        name_str = name_parts[0]
+                        formula = ""
+
+                    vals = [to_float(x) for x in data_parts[:6]]
+                    
+                    entry = {
+                        "name": name_str,
+                        "formula": formula,
+                        "t_max": vals[0],
+                        "cp_298": vals[1],
+                        "a": vals[2],
+                        "b": vals[3],     # Table value: 10^3 * B
+                        "c": vals[4],     # Table value: 10^6 * C
+                        "d": vals[5]      # Table value: 10^-5 * D
+                    }
+                    tables["gases"].append(entry)
+
+                elif current_table == "solids":
+                    if len(data_parts) < 5:
+                        continue
+                        
+                    name_str = " ".join(name_parts)
+                    vals = [to_float(x) for x in data_parts[:5]]
+                    
+                    entry = {
+                        "name": name_str,
+                        "t_max": vals[0],
+                        "cp_298": vals[1],
+                        "a": vals[2],
+                        "b": vals[3],     # Table value: 10^3 * B
+                        "c": 0.0,
+                        "d": vals[4]      # Table value: 10^-5 * D
+                    }
+                    tables["solids"].append(entry)
+                    
+                elif current_table == "liquids":
+                    if len(data_parts) < 4:
+                        continue
+                    
+                    name_str = " ".join(name_parts)
+                    vals = [to_float(x) for x in data_parts[:4]]
+                    
+                    entry = {
+                        "name": name_str,
+                        "t_min": 273.15,
+                        "t_max": 373.15,
+                        "cp_298": vals[0],
+                        "a": vals[1],
+                        "b": vals[2],     # Table value: 10^3 * B
+                        "c": vals[3],     # Table value: 10^6 * C
+                        "d": 0.0
+                    }
+                    tables["liquids"].append(entry)
+
+            except ValueError:
+                continue
+
+    return tables

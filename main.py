@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 
 from scripts import extractor
-from scripts.parse import parse_char_prop, parse_lee_kesler_tables, parse_antoine_table
+from scripts.parse import parse_char_prop, parse_lee_kesler_tables, parse_antoine_table, parse_cp_tables
 
 
 def main():
@@ -11,6 +11,7 @@ def main():
     b1_pdf = "data/b1_char_prop.pdf"
     b2_pdf = "data/b2_antoine.pdf"
     lee_kesler_pdf = "data/lee_kesler.pdf"
+    cp_pdf = "data/cp.pdf"
     json_out_lee_kesler = "data/lee_kesler.json"
     json_out_b1 = "data/b1_char_prop.json"
     json_out_b2 = "data/b2_antoine.json"
@@ -46,6 +47,14 @@ def main():
         out=lee_kesler_pdf
     )
 
+    #heat capacity
+    extractor.extract_pages(
+        input_pdf=appendix_pdf,
+        start=7,
+        end=9,
+        out=cp_pdf
+    )
+
     data_properties = parse_char_prop(b1_pdf)
     Path(json_out_b1).parent.mkdir(parents=True, exist_ok=True)
     with open(json_out_b1, "w") as f:
@@ -60,6 +69,12 @@ def main():
     with open(json_out_lee_kesler, "w") as f:
         json.dump(data_lee, f, indent=2)
     print(f"Extracted {len(data_lee)} tables -> {json_out_lee_kesler}")
+    
+    data_cp = parse_cp_tables(cp_pdf)
+    json_out_cp = "data/cp.json"
+    with open(json_out_cp, "w") as f:
+        json.dump(data_cp, f, indent=2)
+    print(f"Extracted CP tables -> {json_out_cp}")
 
 
 if __name__ == "__main__":

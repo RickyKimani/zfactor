@@ -1,3 +1,7 @@
+// Package antoine provides coefficients and calculation methods for the Antoine equation,
+// which estimates the saturation vapor pressure of pure substances as a function of temperature.
+//
+// The form used is: ln(P[kPa]) = A - B / (T[°C] + C)
 package antoine
 
 import (

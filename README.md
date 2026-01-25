@@ -15,6 +15,7 @@
 - **Liquid Properties**: Calculation of saturated liquid molar volumes using the Rackett equation and reduced density using Lydersen charts.
 - **Antoine Equation**: Calculation of saturation vapor pressures.
 - **Thermodynamic State Management**: Easy definition and validation of states ($T, P$).
+- **Heat Capacity Data**: Constants for Ideal Gases, Liquids, and Solids.
 - **Visualization**: Built-in generation of PV diagrams with:
   - Critical Isotherms
   - Saturation Domes (Two-phase regions)
@@ -24,7 +25,7 @@
 
 ## Important Note on Lydersen Charts
 
-The `ReducedDensity` function relies on digitized data from the Lydersen charts. While efforts have been made to ensure accuracy through smoothing and normalization, users should exercise caution.
+> The `ReducedDensity` function relies on digitized data from the Lydersen charts. While efforts have been made to ensure accuracy through smoothing and normalization, users should exercise caution.
 
 - **Verification**: Please review the generated [Lydersen Chart Plot](images/lydersen_plot.png) to ensure the curves meet the precision requirements of your specific use case.
 - **Updates**: Data values may be refined in future versions as digitization techniques improve or better data sources are integrated.
@@ -228,12 +229,29 @@ func main() {
 	}
 }
 ```
-
 ### Example Output
 
 The following diagram was generated using the code in [examples/main.go](examples/main.go):
 
 ![PV Diagram](images/ethane_pv.png)
+
+### 7. Heat Capacity Data (cp)
+
+The `cp` package provides standard heat capacity constants ($A, B, C, D$) for gases (Ideal Gas state), liquids, and solids. It supports the standard polynomial form:
+
+$$ \frac{C_P}{R} = A + BT + CT^2 + DT^{-2} $$
+
+
+> [!NOTE]
+> This package currently serves as a data repository. Calculation methods for heat capacity values, enthalpy/entropy integrals are pending implementation
+
+Data is available via pre-defined variables:
+- `cp.MethaneGas`
+- `cp.WaterLiquid`
+- `cp.CaOSolid`
+etc.
+
+
 
 ## Package Overview
 
@@ -244,6 +262,7 @@ The following diagram was generated using the code in [examples/main.go](example
 - **`virial`**: Solvers for 2-term and 3-term virial equations.
 - **`abbott`**: Generalized correlations for second virial coefficient ($B$) and residual properties.
 - **`antoine`**: Antoine equation parameters and solvers for saturation pressure.
+- **`cp`**: Heat capacity constants for gases, liquids, and solids (Data only; calculation logic pending).
 - **`liquids`**: Correlations for liquid density (Raackett, Lydersen).
 - **`state`**: High-level plotting logic for generating Thermodynamic PV diagrams.
 

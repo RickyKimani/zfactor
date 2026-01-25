@@ -1,3 +1,14 @@
+// Package cubic provides implementations of cubic Equations of State (EOS)
+// for calculating thermodynamic properties such as volume and pressure.
+//
+// Supported equations:
+//   - van der Waals (VdW)
+//   - Redlich-Kwong (RK)
+//   - Soave-Redlich-Kwong (SRK)
+//   - Peng-Robinson (PR)
+//
+// The core function SolveForVolume computes the roots of the cubic polynomial
+// for specific conditions (T, P) and substance parameters (Tc, Pc, omega).
 package cubic
 
 import (
@@ -71,13 +82,13 @@ type EOSCfg struct {
 	R        float64 // Universal gas constant in consistent units
 }
 
-// calculateb calculates the b parameter
-func calculateb(omega, r, tc, pc float64) float64 {
+// calculateB calculates the b parameter
+func calculateB(omega, r, tc, pc float64) float64 {
 	return omega * r * tc / pc
 }
 
-// calculatea calculates the a(T) parameter
-func calculatea(psi, alpha, r, tc, pc float64) float64 {
+// calculateA calculates the a(T) parameter
+func calculateA(psi, alpha, r, tc, pc float64) float64 {
 	return psi * alpha * r * r * tc * tc / pc
 }
 
@@ -109,8 +120,8 @@ func SolveForVolume(cfg *EOSCfg) (*VolumeResult, error) {
 	omega := cfg.Type.Params().Omega
 	psi := cfg.Type.Params().Psi
 
-	a := calculatea(psi, alpha, cfg.R, cfg.Tc, cfg.Pc)
-	b := calculateb(omega, cfg.R, cfg.Tc, cfg.Pc)
+	a := calculateA(psi, alpha, cfg.R, cfg.Tc, cfg.Pc)
+	b := calculateB(omega, cfg.R, cfg.Tc, cfg.Pc)
 
 	//eV^3 + fV^2 + gV + h = 0
 	x := epsilon + sigma
@@ -158,8 +169,8 @@ func Pressure(cfg *EOSCfg, volume float64) (*PressureResult, error) {
 	omega := cfg.Type.Params().Omega
 	psi := cfg.Type.Params().Psi
 
-	a := calculatea(psi, alpha, cfg.R, cfg.Tc, cfg.Pc)
-	b := calculateb(omega, cfg.R, cfg.Tc, cfg.Pc)
+	a := calculateA(psi, alpha, cfg.R, cfg.Tc, cfg.Pc)
+	b := calculateB(omega, cfg.R, cfg.Tc, cfg.Pc)
 	v := volume
 
 	first := cfg.R * cfg.T / (v - b)
