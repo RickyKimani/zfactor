@@ -241,9 +241,25 @@ The `cp` package provides standard heat capacity constants ($A, B, C, D$) for ga
 
 $$ \frac{C_P}{R} = A + BT + CT^2 + DT^{-2} $$
 
+It also implements integral methods for calculating property changes for Ideal Gases:
+- Enthalpy Change ($\Delta H^{ig}$)
+- Entropy Change ($\Delta S^{ig}$)
 
-> [!NOTE]
-> This package currently serves as a data repository. Calculation methods for heat capacity values, enthalpy/entropy integrals are pending implementation
+```go
+import "github.com/rickykimani/zfactor/cp"
+
+gas := cp.MethaneGas
+s1 := zfactor.Args{T: 300, P: 100000, R: zfactor.RSI}
+s2 := zfactor.Args{T: 1000, P: 100000, R: zfactor.RSI}
+
+// Calculate Delta H (Enthalpy Change)
+dH, _ := gas.IdealGasEnthalpyChange(s1, s2)
+fmt.Printf("Delta H: %.2f J/mol\n", dH)
+
+// Calculate Delta S (Entropy Change)
+dS, _ := gas.IdealGasEntropyChange(s1, s2)
+fmt.Printf("Delta S: %.2f J/(mol·K)\n", dS)
+```
 
 Data is available via pre-defined variables:
 - `cp.MethaneGas`
@@ -262,8 +278,8 @@ etc.
 - **`virial`**: Solvers for 2-term and 3-term virial equations.
 - **`abbott`**: Generalized correlations for second virial coefficient ($B$) and residual properties.
 - **`antoine`**: Antoine equation parameters and solvers for saturation pressure.
-- **`cp`**: Heat capacity constants for gases, liquids, and solids (Data only; calculation logic pending).
-- **`liquids`**: Correlations for liquid density (Raackett, Lydersen).
+- **`cp`**: Heat capacity constants and thermodynamic property calculations ($\Delta H^{ig}$, $\Delta S^{ig}$) for ideal gases.
+- **`liquids`**: Correlations for liquid density (Rackett, Lydersen).
 - **`state`**: High-level plotting logic for generating Thermodynamic PV diagrams.
 
 ## License
