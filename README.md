@@ -267,7 +267,25 @@ Data is available via pre-defined variables:
 - `cp.CaOSolid`
 etc.
 
+### 8. Vapor Pressure & Acentric Factor (Lee-Kesler)
 
+Estimate saturation vapor pressure ($P^{sat}$) and Acentric Factor ($\omega$) using the Lee-Kesler method.
+
+> [!NOTE]
+> This functionality is **yet to be implemented for the substance package**. Currently, it must be accessed directly via the `lee-kesler` package.
+
+```go
+import leekesler "github.com/rickykimani/zfactor/lee-kesler"
+
+// Estimate Acentric Factor (if unknown)
+// Requires Normal Boiling Point (Tn), Critical Temp (Tc), Critical Pressure (Pc)
+omega, err := leekesler.EstimateAcentricFactor(111.6, 190.6, 46.1)
+
+// Estimate Vapor Pressure at 150K
+// Returns Psat in same units as Pc
+pSat, err := leekesler.VaporPressure(150.0, 190.6, 46.1, omega)
+fmt.Printf("Vapor Pressure (Lee-Kesler): %.2f bar\n", pSat)
+```
 
 ## Package Overview
 

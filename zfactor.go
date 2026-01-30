@@ -8,8 +8,17 @@
 package zfactor
 
 const (
-	// RSI is the value for the universal gas constant in SI units
-	RSI = 8.314 //J/(mol•K)
+	// RSI is the Universal Gas Constant in SI units [J/(mol·K)].
+	RSI = 8.314
+
+	// AtmPa is the standard atmospheric pressure in Pascals (Pa).
+	AtmPa = 101_325.0
+
+	// AtmKPa is the standard atmospheric pressure in Kilopascals (kPa).
+	AtmKPa = AtmPa * 1e-3
+
+	// AtmBar is the standard atmospheric pressure in Bars.
+	AtmBar = AtmPa * 1e-5
 )
 
 // Args holds the thermodynamic state arguments to prevent order-dependent errors.
