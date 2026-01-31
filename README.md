@@ -271,20 +271,36 @@ etc.
 
 Estimate saturation vapor pressure ($P^{sat}$) and Acentric Factor ($\omega$) using the Lee-Kesler method.
 
-> [!NOTE]
-> This functionality is **yet to be implemented for the substance package**. Currently, it must be accessed directly via the `lee-kesler` package.
+The `substance` package provides convenient wrappers for these calculations if the substance has a defined Normal Boiling Point ($T_n$).
+
+```go
+import (
+    "fmt"
+    "github.com/rickykimani/zfactor/substance"
+)
+
+// 1. Calculate Vapor Pressure for a specific substance
+// Example: Methane at 150K
+methane := substance.Methane
+pSat, err := methane.LeeKeslerVaporPressure(150.0)
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf("Vapor Pressure of %s at 150K: %.2f bar\n", methane.Name, pSat)
+
+// 2. Estimate Acentric Factor
+// If the substance is missing the Acentric Factor but has Tn defined:
+omega, err := methane.LeeKeslerAcentric()
+fmt.Printf("Estimated Acentric Factor: %.4f\n", omega)
+```
+
+You can also use the `lee-kesler` package directly if you don't have a `Substance` struct:
 
 ```go
 import leekesler "github.com/rickykimani/zfactor/lee-kesler"
 
-// Estimate Acentric Factor (if unknown)
-// Requires Normal Boiling Point (Tn), Critical Temp (Tc), Critical Pressure (Pc)
-omega, err := leekesler.EstimateAcentricFactor(111.6, 190.6, 46.1)
-
-// Estimate Vapor Pressure at 150K
-// Returns Psat in same units as Pc
-pSat, err := leekesler.VaporPressure(150.0, 190.6, 46.1, omega)
-fmt.Printf("Vapor Pressure (Lee-Kesler): %.2f bar\n", pSat)
+// Estimate Vapor Pressure directly (T, Tn, Tc, Pc)
+pSat, _ := leekesler.VaporPressure(150.0, 111.6, 190.6, 46.1)
 ```
 
 ## Package Overview

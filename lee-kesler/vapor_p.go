@@ -57,15 +57,17 @@ func EstimateAcentricFactor(Tn, Tc, Pc float64) (float64, error) {
 }
 
 // VaporPressure estimates the saturation vapor pressure (Psat) at a given temperature T.
+// This function internally calculates the acentric factor using the Normal Boiling Point (Tn)
+// to ensure consistency with the Lee-Kesler correlation.
 //
 // Arguments:
 //   - T: Temperature (K)
+//   - Tn: Normal Boiling Point (K)
 //   - Tc: Critical Temperature (K)
-//   - Pc: Critical Pressure (any unit, result will match)
-//   - omega: Estimated Acentric Factor from the correlation (ω)
+//   - Pc: Critical Pressure (bar) - Must be in bar for correct acentric factor estimation.
 //
-// Returns Psat in the same units as Pc.
-func VaporPressure(T, Tc, Pc, omega float64) (float64, error) {
+// Returns Psat in bar.
+func VaporPressure(T, Tn, Tc, Pc float64) (float64, error) {
 	if T <= 0 {
 		return 0, zfactor.ErrTemp
 	}
@@ -75,6 +77,10 @@ func VaporPressure(T, Tc, Pc, omega float64) (float64, error) {
 
 	Tr := T / Tc
 
+	omega, err := EstimateAcentricFactor(Tn, Tc, Pc)
+	if err != nil {
+		return 0, err
+	}
 
 	lnPr0 := lnReducedVaporPressureSimple(Tr)
 	lnPr1 := lnReducedVaporPressureCorrection(Tr)

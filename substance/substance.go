@@ -3,6 +3,8 @@
 package substance
 
 import (
+	"fmt"
+
 	"github.com/rickykimani/zfactor"
 	"github.com/rickykimani/zfactor/abbott"
 	"github.com/rickykimani/zfactor/cubic"
@@ -157,4 +159,22 @@ func (s *Substance) AbbottResidualEntropy(args zfactor.Args) (float64, error) {
 	Pr := args.P / s.Critical.Pc
 
 	return abbott.ResidualEntropy(Tr, Pr, s.Acentric)
+}
+
+// LeeKeslerAcentric estimates the acentric factor using the Lee-Kesler correlation.
+// Use this if the substance has no defined acentric factor but has a known Normal Boiling Point (Tn).
+func (s *Substance) LeeKeslerAcentric() (float64, error) {
+	if s.Tn == 0 {
+		return 0, fmt.Errorf("%s has no defined normal boiling point", s.Name)
+	}
+	return leekesler.EstimateAcentricFactor(s.Tn, s.Critical.Tc, s.Critical.Pc)
+}
+
+// LeeKeslerVaporPressure estimates the saturation vapor pressure (Psat) in bar at temperature T (K).
+// It uses the Lee-Kesler correlation which internally estimates the acentric factor based on Tn.
+func (s *Substance) LeeKeslerVaporPressure(T float64) (float64, error) {
+	if s.Tn == 0 {
+		return 0, fmt.Errorf("%s has no defined normal boiling point", s.Name)
+	}
+	return leekesler.VaporPressure(T, s.Tn, s.Critical.Tc, s.Critical.Pc)
 }
