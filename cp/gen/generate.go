@@ -81,7 +81,7 @@ func toGoName(name string) string {
 	}
 
 	res := strings.Join(parts, "")
-	
+
 	reg := regexp.MustCompile("[^a-zA-Z0-9]+")
 	res = reg.ReplaceAllString(res, "")
 
