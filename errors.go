@@ -28,4 +28,8 @@ var (
 	ErrInvalidTr = InputError{Msg: "reduced temperature (Tr) must be greater than 0"}
 	// ErrInvalidPr is returned when the reduced pressure (Pr) is less than or equal to 0.
 	ErrInvalidPr = InputError{Msg: "reduced pressure (Pr) must be greater than 0"}
+	// ErrMolFrac is returned when the mole fractions do not add up to 1 or are at least out of the tolerance range.
+	ErrMolFracSum = InputError{Msg: "mole fractions should sum to 1.0"}
+	// ErrMolFracVal is returned when the mole fraction is out of range.
+	ErrMolFracVal = InputError{Msg: "mole fractions should sum to 1.0"}
 )

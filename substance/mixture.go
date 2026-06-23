@@ -3,6 +3,8 @@ package substance
 import (
 	"errors"
 	"math"
+
+	"github.com/rickykimani/zfactor"
 )
 
 // Component represents a pure substance and its mole fraction in a mixture.
@@ -50,6 +52,9 @@ func NewLinearMixture(name string, components []Component) (*Substance, error) {
 		}
 
 		y := c.Fraction
+		if y < 0 || y > 1 {
+			return nil, zfactor.ErrMolFracVal
+		}
 		sumF += y
 
 		// Linear averages
@@ -64,7 +69,7 @@ func NewLinearMixture(name string, components []Component) (*Substance, error) {
 
 	const tolerance = 1e-4
 	if math.Abs(sumF-1.0) > tolerance {
-		return nil, errors.New("mole fractions must sum to 1.0")
+		return nil, zfactor.ErrMolFracSum
 	}
 
 	mix.Critical = critical
