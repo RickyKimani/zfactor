@@ -4,8 +4,10 @@
 // The package is organized into model-specific subpackages implementing
 // common excess Gibbs energy models, such as:
 //
-//   - wilson
-//   - nrtl
+//   - Wilson
+//   - NRTL
+//   - Margules
+//   - van Laar
 //
 // Each model exposes:
 //
