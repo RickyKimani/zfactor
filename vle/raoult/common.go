@@ -103,88 +103,98 @@ func validatePSat(psat []float64) error {
 	return nil
 }
 
-func preparePressureInput(input PressureInput) (
-	comp,
-	psat []float64,
-	n int,
-	err error,
-) {
-	comp = input.Composition()
-	if err = validateComposition(comp); err != nil {
-		return nil, nil, 0, err
+type presPrepResult struct {
+	comp []float64
+	psat []float64
+	n    int
+}
+
+func preparePressureInput(input PressureInput) (presPrepResult, error) {
+	comp := input.Composition()
+	if err := validateComposition(comp); err != nil {
+		return presPrepResult{}, err
 	}
 
-	psat, err = input.PSat()
+	psat, err := input.PSat()
 	if err != nil {
-		return nil, nil, 0, err
+		return presPrepResult{}, err
 	}
 
-	n = len(comp)
+	n := len(comp)
 
 	if n < 2 {
-		return nil, nil, 0, errors.New(
+		return presPrepResult{}, errors.New(
 			"pressure calculations require at least two components",
 		)
 	}
 
 	if len(psat) != n {
-		return nil, nil, 0, errors.New(
+		return presPrepResult{}, errors.New(
 			"number of saturation pressures must match number of components",
 		)
 	}
 
 	if err = validatePSat(psat); err != nil {
-		return nil, nil, 0, err
+		return presPrepResult{}, err
 	}
 
-	return comp, psat, n, nil
+	return presPrepResult{
+		comp: comp,
+		psat: psat,
+		n:    n,
+	}, nil
 }
 
-func prepareTemperatureInput(
-	input TemperatureInput,
-) (
-	comp []float64,
-	P float64,
-	models []antoine.Model,
-	opts SolverOptions,
-	n int,
-	err error,
-) {
-	comp = input.Composition()
+type tempPrepResult struct {
+	comp   []float64
+	p      float64
+	models []antoine.Model
+	opts   SolverOptions
+	n      int
+}
 
-	if err = validateComposition(comp); err != nil {
-		return nil, 0, nil, SolverOptions{}, 0, err
+func prepareTemperatureInput(input TemperatureInput) (tempPrepResult, error) {
+	comp := input.Composition()
+
+	if err := validateComposition(comp); err != nil {
+		return tempPrepResult{}, err
 	}
 
-	P = input.Pressure()
-	if P <= 0 {
-		return nil, 0, nil, SolverOptions{}, 0, zfactor.ErrPressure
+	p := input.Pressure()
+	if p <= 0 {
+		return tempPrepResult{}, zfactor.ErrPressure
 	}
 
-	models = input.AntoineModels()
+	models := input.AntoineModels()
 
-	n = len(comp)
+	n := len(comp)
 
 	if n < 2 {
-		return nil, 0, nil, SolverOptions{}, 0, errors.New(
+		return tempPrepResult{}, errors.New(
 			"temperature calculations require at least two components",
 		)
 	}
 
 	if len(models) != n {
-		return nil, 0, nil, SolverOptions{}, 0, errors.New(
+		return tempPrepResult{}, errors.New(
 			"number of Antoine models must match number of components",
 		)
 	}
 
 	for i, model := range models {
 		if model == nil {
-			return nil, 0, nil, SolverOptions{}, 0, fmt.Errorf(
+			return tempPrepResult{}, fmt.Errorf(
 				"antoine model %d is nil",
 				i,
 			)
 		}
 	}
 
-	return comp, P, models, input.SolverOptions(), n, nil
+	return tempPrepResult{
+		comp:   comp,
+		p:      p,
+		models: models,
+		opts:   input.SolverOptions(),
+		n:      n,
+	}, nil
 }

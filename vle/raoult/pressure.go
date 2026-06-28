@@ -42,10 +42,14 @@ type BubblePResult struct {
 //
 //	yi = xi Pi_sat / P
 func BubbleP(input PressureInput) (BubblePResult, error) {
-	x, psat, n, err := preparePressureInput(input)
+	res, err := preparePressureInput(input)
 	if err != nil {
 		return BubblePResult{}, err
 	}
+
+	x := res.comp
+	psat := res.psat
+	n := res.n
 
 	var p float64
 
@@ -92,10 +96,14 @@ type DewPResult struct {
 // The returned DewPResult contains the dew pressure and the liquid
 // composition in equilibrium with the specified vapor composition.
 func DewP(input PressureInput) (DewPResult, error) {
-	y, psat, n, err := preparePressureInput(input)
+	res, err := preparePressureInput(input)
 	if err != nil {
 		return DewPResult{}, err
 	}
+
+	y := res.comp
+	psat := res.psat
+	n := res.n
 
 	var denom float64
 	for i := range n {

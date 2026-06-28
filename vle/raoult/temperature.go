@@ -20,12 +20,12 @@ type TemperatureInput interface {
 	SolverOptions() SolverOptions
 }
 
-// saturationPressure returns the saturation saturationPressure of a component at temperature T.
+// saturationPressure returns the saturation pressure of a component at temperature T.
 //
 // Temperatures outside the recommended Antoine correlation range return the
 // computed saturation saturationPressure together with a *antoine.RangeError*. Since the
 // correlation remains mathematically defined outside its fitted range, the
-// saturationPressure is accepted and only non-range errors are propagated.
+// saturation pressure is accepted and only non-range errors are propagated.
 func saturationPressure(model antoine.Model, T float64) (float64, error) {
 	psat, err := model.Pressure(T)
 
@@ -122,10 +122,16 @@ func bubbleResidual(
 //
 // using the secant method.
 func BubbleT(input TemperatureInput) (BubbleTResult, error) {
-	x, p, models, opts, n, err := prepareTemperatureInput(input)
+	res, err := prepareTemperatureInput(input)
 	if err != nil {
 		return BubbleTResult{}, err
 	}
+
+	x := res.comp
+	p := res.p
+	n := res.n
+	models := res.models
+	opts := res.opts
 
 	t0, t1, err := initialTemperatureGuesses(p, n, models)
 	if err != nil {
@@ -206,10 +212,16 @@ func dewResidual(
 //
 // using the secant method.
 func DewT(input TemperatureInput) (DewTResult, error) {
-	y, p, models, opts, n, err := prepareTemperatureInput(input)
+	res, err := prepareTemperatureInput(input)
 	if err != nil {
 		return DewTResult{}, err
 	}
+
+	y := res.comp
+	p := res.p
+	n := res.n
+	models := res.models
+	opts := res.opts
 
 	t0, t1, err := initialTemperatureGuesses(p, n, models)
 	if err != nil {
