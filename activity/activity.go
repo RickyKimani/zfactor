@@ -60,11 +60,19 @@ type Model interface {
 	// prevent callers from modifying the model's state.
 	Composition() []float64
 
+	// Temperature returns the temperature
+	Temperature() float64
+
 	// WithComposition returns a copy of the model with the supplied
 	// liquid-phase composition.
 	//
 	// The receiver must not be modified.
 	WithComposition([]float64) Model
+
+	// WithTemperature returns a copy of the model with the supplied temperature
+	//
+	// The receiver must not be modified
+	WithTemperature(float64) Model
 }
 
 // BinaryInfiniteDilutioner is implemented by models that provide an

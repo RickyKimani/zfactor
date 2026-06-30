@@ -20,6 +20,7 @@ type Margules struct {
 	A12 float64
 	A21 float64
 	X   []float64
+	T   float64
 }
 
 // Activity calculates the liquid-phase activity coefficients using the
@@ -69,11 +70,22 @@ func (m Margules) Composition() []float64 {
 	return x
 }
 
+// Temperature returns the temperature supplied to the model
+func (m Margules) Temperature() float64 {
+	return m.T
+}
+
 // WithComposition returns a copy of the model with the supplied
 // liquid-phase composition.
 func (m Margules) WithComposition(x []float64) activity.Model {
 	m.X = make([]float64, len(x))
 	copy(m.X, x)
+	return m
+}
+
+// WithTemperature returns a copy of the model with the supplied temperature.
+func (m Margules) WithTemperature(T float64) activity.Model {
+	m.T = T
 	return m
 }
 

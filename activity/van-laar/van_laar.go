@@ -20,6 +20,7 @@ type VanLaar struct {
 	A12 float64
 	A21 float64
 	X   []float64
+	T   float64
 }
 
 // Activity calculates the liquid-phase activity coefficients using the
@@ -84,11 +85,22 @@ func (v VanLaar) Composition() []float64 {
 	return x
 }
 
+// Temperature returns the temperature supplied to the model
+func (v VanLaar) Temperature() float64 {
+	return v.T
+}
+
 // WithComposition returns a copy of the model with the supplied
 // liquid-phase composition.
 func (v VanLaar) WithComposition(x []float64) activity.Model {
 	v.X = make([]float64, len(x))
 	copy(v.X, x)
+	return v
+}
+
+// WithTemperature returns a copy of the model with the supplied temperature.
+func (v VanLaar) WithTemperature(T float64) activity.Model {
+	v.T = T
 	return v
 }
 

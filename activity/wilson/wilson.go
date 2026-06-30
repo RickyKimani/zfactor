@@ -60,11 +60,22 @@ func (w Wilson) Composition() []float64 {
 	return x
 }
 
+// Temperature returns the temperature supplied to the model
+func (w Wilson) Temperature() float64 {
+	return w.T
+}
+
 // WithComposition returns a copy of the Wilson model with the supplied
 // liquid-phase composition.
 func (w Wilson) WithComposition(x []float64) activity.Model {
 	w.X = make([]float64, len(x))
 	copy(w.X, x)
+	return w
+}
+
+// WithTemperature returns a copy of the model with the supplied temperature.
+func (w Wilson) WithTemperature(T float64) activity.Model {
+	w.T = T
 	return w
 }
 
