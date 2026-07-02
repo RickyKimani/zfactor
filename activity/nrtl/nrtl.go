@@ -32,25 +32,25 @@ const tol = activity.Tolerance
 //
 // The supplied temperature must be in Kelvin.
 type TauCorrelation interface {
-    Tau(T float64) ([][]float64, error)
+	Tau(T float64) ([][]float64, error)
 }
 
 // ConstantTau represents temperature-independent binary interaction
 // parameters.
 type ConstantTau struct {
-    TauMatrix [][]float64
+	TauMatrix [][]float64
 }
 
 // Tau returns the stored interaction parameter matrix.
 // The temperature argument is ignored.
 func (c ConstantTau) Tau(float64) ([][]float64, error) {
-    return c.TauMatrix, nil
+	return c.TauMatrix, nil
 }
 
 // ExtendedTau evaluates NRTL interaction parameters
 // from the extended temperature-dependent correlation
 //
-//    τij = aij + bij/T + cij ln(T) + dijT
+//	τij = aij + bij/T + cij ln(T) + dijT
 //
 // where T is the absolute temperature in Kelvin.
 type ExtendedTau struct {
@@ -161,16 +161,16 @@ func (n NRTL) WithTemperature(T float64) activity.Model {
 // tau evaluates the interaction parameter matrix at the model
 // temperature.
 func (n NRTL) tau() ([][]float64, error) {
-    if n.Tau == nil {
-        return nil, errors.New("no tau model provided")
-    }
+	if n.Tau == nil {
+		return nil, errors.New("no tau model provided")
+	}
 
-    tau, err := n.Tau.Tau(n.T)
-    if err != nil {
-        return nil, err
-    }
+	tau, err := n.Tau.Tau(n.T)
+	if err != nil {
+		return nil, err
+	}
 
-    return tau, nil
+	return tau, nil
 }
 
 // Activity calculates the activity coefficients of all

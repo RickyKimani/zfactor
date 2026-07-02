@@ -4,6 +4,8 @@ import (
 	"errors"
 
 	"github.com/rickykimani/zfactor/antoine"
+	"github.com/rickykimani/zfactor/vle"
+	"github.com/rickykimani/zfactor/vle/internal"
 )
 
 // TemperatureInput supplies the information required for bubble- and
@@ -17,7 +19,7 @@ type TemperatureInput interface {
 	Composition() []float64
 	Pressure() float64
 	AntoineModels() []antoine.Model
-	SolverOptions() SolverOptions
+	SolverOptions() vle.SolverOptions
 }
 
 // saturationPressure returns the saturation pressure of a component at temperature T.
@@ -35,48 +37,6 @@ func saturationPressure(model antoine.Model, T float64) (float64, error) {
 	}
 
 	return psat, nil
-}
-
-// initialTemperatureGuesses returns two initial temperature estimates for the
-// secant solver.
-//
-// The guesses are chosen as the minimum and maximum pure-component saturation
-// temperatures corresponding to the specified system pressure. For Raoult's
-// law, both the bubble and dew temperatures lie within these bounds.
-func initialTemperatureGuesses(
-	P float64,
-	n int,
-	models []antoine.Model,
-) (float64, float64, error) {
-	var err error
-	tsat := make([]float64, n)
-	for i, model := range models {
-		tsat[i], err = model.Temperature(P)
-		if err != nil {
-			return 0, 0, err
-		}
-	}
-
-	t0 := tsat[0]
-	t1 := tsat[0]
-
-	for _, t := range tsat[1:] {
-		if t < t0 {
-			t0 = t
-		}
-		if t > t1 {
-			t1 = t
-		}
-	}
-
-	if t0 == t1 {
-		return 0, 0, errors.New(
-			"unable to generate distinct initial guesses",
-		)
-	}
-
-	return t0, t1, nil
-
 }
 
 // BubbleTResult contains the bubble temperature and the corresponding
@@ -133,12 +93,12 @@ func BubbleT(input TemperatureInput) (BubbleTResult, error) {
 	models := res.models
 	opts := res.opts
 
-	t0, t1, err := initialTemperatureGuesses(p, n, models)
+	t0, t1, err := internal.InitialTemperatureGuesses(p, n, models)
 	if err != nil {
 		return BubbleTResult{}, err
 	}
 
-	T, err := secant(
+	T, err := internal.Secant(
 		func(T float64) (float64, error) {
 			return bubbleResidual(T, p, x, models)
 		},
@@ -223,12 +183,12 @@ func DewT(input TemperatureInput) (DewTResult, error) {
 	models := res.models
 	opts := res.opts
 
-	t0, t1, err := initialTemperatureGuesses(p, n, models)
+	t0, t1, err := internal.InitialTemperatureGuesses(p, n, models)
 	if err != nil {
 		return DewTResult{}, err
 	}
 
-	T, err := secant(
+	T, err := internal.Secant(
 		func(T float64) (float64, error) {
 			return dewResidual(T, p, y, models)
 		},

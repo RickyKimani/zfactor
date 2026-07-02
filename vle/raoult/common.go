@@ -7,6 +7,7 @@ import (
 
 	"github.com/rickykimani/zfactor"
 	"github.com/rickykimani/zfactor/antoine"
+	"github.com/rickykimani/zfactor/vle"
 )
 
 const tolerance = 1e-6
@@ -26,7 +27,7 @@ type MixtureInput struct {
 
 	Antoine []antoine.Model
 
-	Options SolverOptions
+	Options vle.SolverOptions
 }
 
 // Composition returns the liquid composition.
@@ -62,7 +63,7 @@ func (m MixtureInput) AntoineModels() []antoine.Model {
 	return m.Antoine
 }
 
-func (m MixtureInput) SolverOptions() SolverOptions {
+func (m MixtureInput) SolverOptions() vle.SolverOptions {
 	return m.Options
 }
 
@@ -149,7 +150,7 @@ type tempPrepResult struct {
 	comp   []float64
 	p      float64
 	models []antoine.Model
-	opts   SolverOptions
+	opts   vle.SolverOptions
 	n      int
 }
 
