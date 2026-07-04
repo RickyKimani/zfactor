@@ -6,7 +6,6 @@ import (
 	"math"
 
 	"github.com/rickykimani/zfactor"
-	"github.com/rickykimani/zfactor/activity"
 	"github.com/rickykimani/zfactor/antoine"
 	"github.com/rickykimani/zfactor/vle"
 )
@@ -36,7 +35,7 @@ type MixtureInput struct {
 	Antoine []antoine.Model
 
 	// Liquid-phase activity coefficient model.
-	Activity activity.Model
+	Activity ActivityModel
 
 	Options vle.SolverOptions
 }
@@ -53,7 +52,7 @@ func (m MixtureInput) Composition() []float64 {
 	return m.Compositions
 }
 
-func (m MixtureInput) ActivityModel() activity.Model {
+func (m MixtureInput) ActivityModel() ActivityModel {
 	return m.Activity
 }
 
@@ -90,16 +89,16 @@ func (m MixtureInput) PSat() ([]float64, error) {
 //
 // The supplied temperature is in °C and is converted internally to K.
 func activityCoefficients(
-	model activity.Model,
+	activityModel ActivityModel,
 	T float64,
 	x []float64,
 ) ([]float64, error) {
 
-	if model == nil {
+	if activityModel == nil {
 		return nil, errors.New("activity model is nil")
 	}
 
-	model = model.
+	model := activityModel.Model().
 		WithTemperature(toKelvin(T)).
 		WithComposition(x)
 
@@ -171,12 +170,12 @@ func validateGamma(gamma []float64) error {
 }
 
 type presPrepResult struct {
-	T     float64
-	comp  []float64
-	psat  []float64
-	model activity.Model
-	n     int
-	opts  vle.SolverOptions
+	T             float64
+	comp          []float64
+	psat          []float64
+	activityModel ActivityModel
+	n             int
+	opts          vle.SolverOptions
 }
 
 func preparePressureInput(input PressureInput) (presPrepResult, error) {
@@ -214,19 +213,18 @@ func preparePressureInput(input PressureInput) (presPrepResult, error) {
 		return presPrepResult{}, err
 	}
 
-	model := input.ActivityModel()
-	if model == nil {
+	activityModel := input.ActivityModel()
+	if activityModel == nil {
 		return presPrepResult{}, errors.New("activity model is nil")
 	}
 
-	model = model.WithTemperature(toKelvin(T)).WithComposition(comp)
 	return presPrepResult{
-		T:     T,
-		comp:  comp,
-		psat:  psat,
-		model: model,
-		n:     n,
-		opts:  input.SolverOptions(),
+		T:             T,
+		comp:          comp,
+		psat:          psat,
+		activityModel: activityModel,
+		n:             n,
+		opts:          input.SolverOptions(),
 	}, nil
 }
 
@@ -234,7 +232,7 @@ type tempPrepResult struct {
 	comp     []float64
 	p        float64
 	models   []antoine.Model
-	activity activity.Model
+	activity ActivityModel
 	opts     vle.SolverOptions
 	n        int
 }

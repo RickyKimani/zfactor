@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/rickykimani/zfactor/activity/wilson"
 	"github.com/rickykimani/zfactor/antoine"
 	modified_raoult "github.com/rickykimani/zfactor/vle/modified-raoult"
 	"github.com/rickykimani/zfactor/vle/raoult"
@@ -65,11 +64,6 @@ func main() {
 		}
 	}
 
-	w := wilson.Wilson{
-		V:           molarVolumes,
-		Interaction: a,
-	}
-
 	nonIdeal := modified_raoult.MixtureInput{
 		P:            101.33,
 		Compositions: x,
@@ -77,7 +71,10 @@ func main() {
 			antoine.Acetone,
 			antoine.Water,
 		},
-		Activity: w,
+		Activity: modified_raoult.Wilson{
+			V:           molarVolumes,
+			Interaction: a,
+		},
 	}
 
 	btm, err := modified_raoult.BubbleT(nonIdeal)

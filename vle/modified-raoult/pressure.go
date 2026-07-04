@@ -4,7 +4,6 @@ import (
 	"errors"
 	"math"
 
-	"github.com/rickykimani/zfactor/activity"
 	"github.com/rickykimani/zfactor/vle"
 )
 
@@ -19,7 +18,7 @@ type PressureInput interface {
 	Temperature() float64
 	Composition() []float64
 	PSat() ([]float64, error)
-	ActivityModel() activity.Model
+	ActivityModel() ActivityModel
 	SolverOptions() vle.SolverOptions
 }
 
@@ -36,7 +35,7 @@ type SaturationPressureInput struct {
 	PSats []float64
 
 	// Activity-coefficient model.
-	Activity activity.Model
+	Activity ActivityModel
 
 	Options vle.SolverOptions
 }
@@ -53,7 +52,7 @@ func (s SaturationPressureInput) PSat() ([]float64, error) {
 	return s.PSats, nil
 }
 
-func (s SaturationPressureInput) ActivityModel() activity.Model {
+func (s SaturationPressureInput) ActivityModel() ActivityModel {
 	return s.Activity
 }
 
@@ -87,7 +86,12 @@ func BubbleP(input PressureInput) (BubblePResult, error) {
 		return BubblePResult{}, err
 	}
 
-	gamma, err := res.model.Activity()
+	model := res.activityModel.
+		Model().
+		WithTemperature(toKelvin(res.T)).
+		WithComposition(res.comp)
+
+	gamma, err := model.Activity()
 	if err != nil {
 		return BubblePResult{}, err
 	}
@@ -126,7 +130,10 @@ func DewP(input PressureInput) (DewPResult, error) {
 
 	y := res.comp
 	psat := res.psat
-	model := res.model
+	model := res.activityModel.
+		Model().
+		WithTemperature(toKelvin(res.T)).
+		WithComposition(res.comp)
 	n := res.n
 
 	gamma := make([]float64, n)

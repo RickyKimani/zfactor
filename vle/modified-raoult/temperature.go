@@ -20,7 +20,7 @@ type TemperatureInput interface {
 	Composition() []float64
 	Pressure() float64
 	AntoineModels() []antoine.Model
-	ActivityModel() activity.Model
+	ActivityModel() ActivityModel
 	SolverOptions() vle.SolverOptions
 }
 
@@ -100,7 +100,7 @@ func BubbleT(input TemperatureInput) (BubbleTResult, error) {
 	p := res.p
 	n := res.n
 	models := res.models // antoine
-	activityModel := res.activity.WithComposition(x)
+	activityModel := res.activity.Model().WithComposition(x)
 	opts := res.opts
 
 	t0, t1, err := internal.InitialTemperatureGuesses(p, n, models)
@@ -308,7 +308,7 @@ func DewT(input TemperatureInput) (DewTResult, error) {
 	p := res.p
 	n := res.n
 	models := res.models
-	activityModel := res.activity
+	activityModel := res.activity.Model()
 	opts := res.opts
 
 	t0, t1, err := internal.InitialTemperatureGuesses(p, n, models)
