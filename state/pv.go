@@ -74,6 +74,9 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		theme = themes.DefaultTheme()
 	}
 	palette := theme.Palette()
+	if palette == nil {
+		palette = themes.DefaultTheme().Palette()
+	}
 	ext := filepath.Ext(output)
 	if ok := validExts[ext]; !ok {
 		closest := ""
