@@ -43,7 +43,8 @@ go.work.sum
 .vscode/
 
 *.pdf
-pv.png
+pv*.svg
+pv*.png
 debug/
 data/lydersen_raw.json
 misc/

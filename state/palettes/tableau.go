@@ -1,18 +1,18 @@
 package palettes
 
-import "github.com/rickykimani/zfactor/state/color"
+import "image/color"
 
 var tableauColors = [...]color.Color{
-	color.RGBA(78, 121, 167, 255),
-	color.RGBA(242, 142, 43, 255),
-	color.RGBA(225, 87, 89, 255),
-	color.RGBA(118, 183, 178, 255),
-	color.RGBA(89, 161, 79, 255),
-	color.RGBA(237, 201, 72, 255),
-	color.RGBA(176, 122, 161, 255),
-	color.RGBA(255, 157, 167, 255),
-	color.RGBA(156, 117, 95, 255),
-	color.RGBA(186, 176, 172, 255),
+	color.RGBA{R: 78, G: 121, B: 167, A: 255},  // #4E79A7
+	color.RGBA{R: 242, G: 142, B: 43, A: 255},  // #F28E2B
+	color.RGBA{R: 225, G: 87, B: 89, A: 255},   // #E15759
+	color.RGBA{R: 118, G: 183, B: 178, A: 255}, // #76B7B2
+	color.RGBA{R: 89, G: 161, B: 79, A: 255},   // #59A14F
+	color.RGBA{R: 237, G: 201, B: 72, A: 255},  // #EDC948
+	color.RGBA{R: 176, G: 122, B: 161, A: 255}, // #B07AA1
+	color.RGBA{R: 255, G: 157, B: 167, A: 255}, // #FF9DA7
+	color.RGBA{R: 156, G: 117, B: 95, A: 255},  // #9C755F
+	color.RGBA{R: 186, G: 176, B: 172, A: 255}, // #BAB0AC
 }
 
 type tableau struct{}
@@ -23,16 +23,4 @@ func TableauPalette() Palette {
 
 func (tableau) Isotherm(i int) color.Color {
 	return tableauColors[i%len(tableauColors)]
-}
-
-func (tableau) CriticalIsotherm() color.Color {
-	return color.Magenta
-}
-
-func (tableau) Dome() color.Color {
-	return color.Black
-}
-
-func (tableau) StatePoint() color.Color {
-	return color.Red
 }

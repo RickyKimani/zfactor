@@ -3,7 +3,6 @@ package state
 import (
 	"errors"
 	"fmt"
-	"image/color"
 	"os"
 	"path/filepath"
 
@@ -16,7 +15,6 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
-var errFmtStr string = "oops something went wrong: %w"
 
 // PVConfig holds configuration options for customizing the appearance of the PV diagram.
 type PVConfig struct {
@@ -98,6 +96,12 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 	theme.Apply(p)
 
+	// Add grid lines
+	grid := plotter.NewGrid()
+	grid.Horizontal.Color = theme.GridColor()
+	grid.Vertical.Color = theme.GridColor()
+	p.Add(grid)
+
 	if cfg.Title == "" {
 		p.Title.Text = fmt.Sprintf("PV Diagram for %s", name)
 	} else {
@@ -157,7 +161,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	if err != nil {
 		return fmt.Errorf("oops, something went wrong: %w", err)
 	}
-	critLine.Color = palette.CriticalIsotherm()
+	critLine.Color = theme.CriticalIsotherm()
 
 	critLine.LineStyle.Dashes = []vg.Length{vg.Points(5), vg.Points(5)}
 	critLine.LineStyle.Width = vg.Points(1)
@@ -217,7 +221,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		if err != nil {
 			return fmt.Errorf("oops, something went wrong: %w", err)
 		}
-		domeLine.Color = palette.Dome()
+		domeLine.Color = theme.Dome()
 		domeLine.LineStyle.Width = vg.Points(1.5)
 		p.Add(domeLine)
 	}
@@ -226,7 +230,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	if Vc > 0 {
 		cp, _ := plotter.NewScatter(plotter.XYs{{X: Vc, Y: Pc}})
 		cp.GlyphStyle.Shape = draw.CrossGlyph{}
-		cp.Color = color.RGBA{R: 0, A: 255}
+		cp.Color = theme.CriticalPoint()
 		p.Add(cp)
 	}
 
@@ -317,7 +321,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 		scatter.GlyphStyle.Shape = draw.CircleGlyph{}
 		scatter.GlyphStyle.Radius = vg.Points(4)
-		scatter.Color = palette.StatePoint()
+		scatter.Color = theme.StatePoint()
 		p.Add(scatter)
 
 		if cfg.NumberStates {

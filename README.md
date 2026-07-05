@@ -223,7 +223,7 @@ func main() {
 	}
 
 	// Generate the diagram
-	err := state.DrawPV(cfg, "ethane_pv.png", s1, s2)
+	err := state.DrawPV(cfg, "ethane_pv.svg", s1, s2)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -233,7 +233,7 @@ func main() {
 
 The following diagram was generated using the code in [examples/main.go](examples/main.go):
 
-![PV Diagram](images/ethane_pv.png)
+![PV Diagram](images/ethane_pv.svg)
 
 ### 7. Heat Capacity Data (cp)
 

@@ -1,10 +1,10 @@
 package themes
 
 import (
-	"github.com/rickykimani/zfactor/state/color"
+	"image/color"
+
 	"github.com/rickykimani/zfactor/state/palettes"
 	"gonum.org/v1/plot"
-	"gonum.org/v1/plot/vg"
 )
 
 type darkTheme struct {
@@ -17,9 +17,9 @@ func DarkTheme() Theme {
 
 func (t darkTheme) Apply(p *plot.Plot) {
 	// Background
-	p.BackgroundColor = color.RGBA(24, 24, 24, 255)
+	p.BackgroundColor = color.RGBA{R: 24, G: 24, B: 24, A: 255}
 
-	foreground := color.RGBA(230, 230, 230, 255)
+	foreground := color.RGBA{R: 230, G: 230, B: 230, A: 255}
 
 	// Title
 	p.Title.TextStyle.Color = foreground
@@ -42,26 +42,41 @@ func (t darkTheme) Apply(p *plot.Plot) {
 
 	// Legend
 	p.Legend.TextStyle.Color = foreground
-	p.Legend.Top = true
-	p.Legend.Left = false
-
-	// Optional border around legend.
-	p.Legend.Padding = vg.Points(4)
 }
 
 func (t darkTheme) Palette() palettes.Palette {
 	return t.palette
 }
 
-func (t darkTheme) IsothermLabel() color.Color {
-	return color.Grey
-}
-
-func (t darkTheme) StateNumber() color.Color {
-	return color.Grey
-}
-
 func (t darkTheme) WithPalette(p palettes.Palette) Theme {
 	t.palette = p
 	return t
+}
+
+func (darkTheme) Dome() color.Color {
+	return color.RGBA{R: 200, G: 200, B: 200, A: 255} // Light grey
+}
+
+func (darkTheme) CriticalIsotherm() color.Color {
+	return color.RGBA{R: 255, G: 100, B: 255, A: 255} // Bright magenta
+}
+
+func (darkTheme) CriticalPoint() color.Color {
+	return color.RGBA{R: 255, G: 100, B: 255, A: 255} // Bright magenta
+}
+
+func (darkTheme) StatePoint() color.Color {
+	return color.RGBA{R: 255, G: 80, B: 80, A: 255} // Bright light red
+}
+
+func (darkTheme) IsothermLabel() color.Color {
+	return color.RGBA{R: 180, G: 180, B: 180, A: 255} // Medium grey
+}
+
+func (darkTheme) StateNumber() color.Color {
+	return color.RGBA{R: 180, G: 180, B: 180, A: 255} // Medium grey
+}
+
+func (darkTheme) GridColor() color.Color {
+	return color.RGBA{R: 50, G: 50, B: 50, A: 255} // Dark grey
 }
