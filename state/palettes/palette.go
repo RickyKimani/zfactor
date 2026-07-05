@@ -2,7 +2,7 @@
 // diagrams.
 //
 // A Palette defines the colors used to render thermodynamic entities such as
-// isotherms, saturation domes, critical isotherms, and state points.
+// isotherms
 //
 // Palettes are independent of the overall appearance of the plot. They are
 // intended to be used together with a theme from the themes package, allowing

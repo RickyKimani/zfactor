@@ -34,7 +34,7 @@ func TestDrawPVThemes(t *testing.T) {
 	cfgLight.LabelIsotherms = true
 	cfgLight.ShowOutputPath = false
 
-	outputPathLight := filepath.Join("..", "pv_light.svg")
+	outputPathLight := filepath.Join(t.TempDir(), "pv_light.svg")
 
 	_ = os.Remove(outputPathLight)
 
@@ -54,7 +54,7 @@ func TestDrawPVThemes(t *testing.T) {
 	cfgDark.LabelIsotherms = true
 	cfgDark.ShowOutputPath = false
 
-	outputPathDark := filepath.Join("..", "pv_dark.svg")
+	outputPathDark := filepath.Join(t.TempDir(), "pv_dark.svg")
 
 	_ = os.Remove(outputPathDark)
 
