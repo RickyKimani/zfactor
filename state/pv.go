@@ -68,9 +68,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	if cfg.Type == nil {
 		return errors.New("configuration error: 'Type' field (EOS model) is required")
 	}
-	if len(states) == 0 {
-		return errors.New("state error: at least one state is required")
-	}
+
 	theme := cfg.Theme
 	if theme == nil {
 		theme = themes.DefaultTheme()
@@ -92,7 +90,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	}
 	name, err := verifySubstances(states...)
 	if err != nil {
-		return fmt.Errorf("oops, something went wrong: %w", err)
+		return fmt.Errorf("state error: %w", err)
 	}
 	p := plot.New()
 
@@ -161,7 +159,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	}
 	critLine, err := plotter.NewLine(critPts)
 	if err != nil {
-		return fmt.Errorf("oops, something went wrong: %w", err)
+		return fmt.Errorf("plot error: failed to create critical isotherm: %w", err)
 	}
 	critLine.Color = theme.CriticalIsotherm()
 
@@ -221,7 +219,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	if len(liquidPts) > 0 {
 		domeLine, err := plotter.NewLine(liquidPts)
 		if err != nil {
-			return fmt.Errorf("oops, something went wrong: %w", err)
+			return fmt.Errorf("plot error: failed to create saturation dome: %w", err)
 		}
 		domeLine.Color = theme.Dome()
 		domeLine.LineStyle.Width = vg.Points(1.5)
@@ -250,7 +248,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 		isoLine, err := plotter.NewLine(isoPts)
 		if err != nil {
-			return fmt.Errorf("oops, something went wrong: %w", err)
+			return fmt.Errorf("plot error: failed to create isotherm: %w", err)
 		}
 		isoLine.Color = palette.Isotherm(i)
 		p.Add(isoLine)
@@ -319,7 +317,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		// Plot State Marker
 		scatter, err := plotter.NewScatter(plotter.XYs{{X: stateV, Y: state.Pressure}})
 		if err != nil {
-			return fmt.Errorf("oops, something went wrong: %w", err)
+			return fmt.Errorf("plot error: failed to create state marker: %w", err)
 		}
 		scatter.GlyphStyle.Shape = draw.CircleGlyph{}
 		scatter.GlyphStyle.Radius = vg.Points(4)
@@ -344,8 +342,10 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	p.X.Max = maxViewV
 	p.Y.Min = 0
 	p.Y.Max = Pc * 1.5
-	if states[0].Pressure > p.Y.Max {
-		p.Y.Max = states[0].Pressure * 1.1
+	for _, s := range states {
+		if s.Pressure > p.Y.Max {
+			p.Y.Max = s.Pressure * 1.1
+		}
 	}
 
 	width := cfg.Width
