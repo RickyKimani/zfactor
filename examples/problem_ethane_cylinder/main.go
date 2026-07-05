@@ -101,10 +101,9 @@ func main() {
 		Default.
 		WithPalette(palettes.Viridis)
 
-	err = state.DrawPV(pvCfg, "pv.png", s1, s2)
+	err = state.DrawPV(pvCfg, "pv.svg", s1, s2)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Generated PV diagram at pv.png")
 }

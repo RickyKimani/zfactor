@@ -12,7 +12,7 @@
 // The package includes several built-in palettes suitable for different use cases.
 package palettes
 
-import "github.com/rickykimani/zfactor/state/color"
+import "image/color"
 
 var (
 	Default  = DefaultPalette()
@@ -29,13 +29,4 @@ var (
 type Palette interface {
 	// Isotherm returns the color of the i-th isotherm.
 	Isotherm(i int) color.Color
-
-	// CriticalIsotherm returns the color of the critical isotherm.
-	CriticalIsotherm() color.Color
-
-	// Dome returns the color of the saturation dome.
-	Dome() color.Color
-
-	// StatePoint returns the color of plotted state points.
-	StatePoint() color.Color
 }

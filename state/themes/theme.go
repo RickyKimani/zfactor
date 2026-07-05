@@ -13,7 +13,8 @@
 package themes
 
 import (
-	"github.com/rickykimani/zfactor/state/color"
+	"image/color"
+
 	"github.com/rickykimani/zfactor/state/palettes"
 	"gonum.org/v1/plot"
 )
@@ -29,11 +30,28 @@ type Theme interface {
 	// WithPalette returns a copy of the theme using p.
 	WithPalette(palettes.Palette) Theme
 
+	// Structural/reference colors (must contrast with the theme's background)
+
+	// Dome returns the color of the saturation dome.
+	Dome() color.Color
+
+	// CriticalIsotherm returns the color of the critical isotherm.
+	CriticalIsotherm() color.Color
+
+	// CriticalPoint returns the color of the critical point marker.
+	CriticalPoint() color.Color
+
+	// StatePoint returns the color of plotted state points.
+	StatePoint() color.Color
+
 	// IsothermLabel returns the color of the isotherm labels.
 	IsothermLabel() color.Color
 
 	// StateNumber returns the color of state point labels.
 	StateNumber() color.Color
+
+	// GridColor returns the color of grid lines.
+	GridColor() color.Color
 }
 
 var (
@@ -53,17 +71,20 @@ func (defaultTheme) Apply(p *plot.Plot) {
 	p.X.Label.TextStyle.Color = color.Black
 	p.Y.Label.TextStyle.Color = color.Black
 
+	// Axis lines
+	p.X.LineStyle.Color = color.Black
+	p.Y.LineStyle.Color = color.Black
+
+	// Tick marks
+	p.X.Tick.LineStyle.Color = color.Black
+	p.Y.Tick.LineStyle.Color = color.Black
+
 	// Tick labels
 	p.X.Tick.Label.Color = color.Black
 	p.Y.Tick.Label.Color = color.Black
 
-	// Axis lines
-	p.X.Color = color.Black
-	p.Y.Color = color.Black
-
 	// Legend
 	p.Legend.TextStyle.Color = color.Black
-
 }
 
 func (t defaultTheme) Palette() palettes.Palette {
@@ -75,12 +96,32 @@ func (t defaultTheme) WithPalette(p palettes.Palette) Theme {
 	return t
 }
 
-func (t defaultTheme) IsothermLabel() color.Color {
+func (defaultTheme) Dome() color.Color {
 	return color.Black
 }
 
-func (t defaultTheme) StateNumber() color.Color {
+func (defaultTheme) CriticalIsotherm() color.Color {
+	return color.RGBA{R: 255, G: 0, B: 255, A: 255} // Magenta
+}
+
+func (defaultTheme) CriticalPoint() color.Color {
+	return color.RGBA{R: 255, G: 0, B: 255, A: 255} // Magenta
+}
+
+func (defaultTheme) StatePoint() color.Color {
+	return color.RGBA{R: 255, G: 0, B: 0, A: 255} // Red
+}
+
+func (defaultTheme) IsothermLabel() color.Color {
 	return color.Black
+}
+
+func (defaultTheme) StateNumber() color.Color {
+	return color.Black
+}
+
+func (defaultTheme) GridColor() color.Color {
+	return color.RGBA{R: 220, G: 220, B: 220, A: 255} // Light grey
 }
 
 // DefaultTheme provides the standard light theme as Gonum defaults to a white background
