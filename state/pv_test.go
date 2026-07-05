@@ -36,8 +36,6 @@ func TestDrawPVThemes(t *testing.T) {
 
 	outputPathLight := filepath.Join(t.TempDir(), "pv_light.svg")
 
-	_ = os.Remove(outputPathLight)
-
 	err = state.DrawPV(cfgLight, outputPathLight, s1, s2)
 	if err != nil {
 		t.Fatalf("DrawPV failed with Default theme: %v", err)
@@ -55,8 +53,6 @@ func TestDrawPVThemes(t *testing.T) {
 	cfgDark.ShowOutputPath = false
 
 	outputPathDark := filepath.Join(t.TempDir(), "pv_dark.svg")
-
-	_ = os.Remove(outputPathDark)
 
 	err = state.DrawPV(cfgDark, outputPathDark, s1, s2)
 	if err != nil {

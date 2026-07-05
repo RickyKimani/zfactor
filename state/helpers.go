@@ -17,6 +17,9 @@ var validExts = map[string]bool{
 // verifySubstances ensures that all provided states belong to the same substance.
 // It returns the name of the substance if consistent, or an error otherwise.
 func verifySubstances(states ...*State) (string, error) {
+	if len(states) == 0 {
+		return "", errors.New("at least one state is required")
+	}
 	var prev string
 	var curr string
 	prev = states[0].Substance.Name
