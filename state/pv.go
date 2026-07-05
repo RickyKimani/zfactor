@@ -15,7 +15,6 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
-
 // PVConfig holds configuration options for customizing the appearance of the PV diagram.
 type PVConfig struct {
 	// Type specifies the cubic Equation of State (EOS) model to use for generating the PV diagram.
@@ -69,8 +68,11 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	if cfg.Type == nil {
 		return errors.New("configuration error: 'Type' field (EOS model) is required")
 	}
+	if len(states) == 0 {
+		return errors.New("state error: at least one state is required")
+	}
 	theme := cfg.Theme
-	if cfg.Theme == nil {
+	if theme == nil {
 		theme = themes.DefaultTheme()
 	}
 	palette := theme.Palette()

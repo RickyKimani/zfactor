@@ -14,7 +14,7 @@ import (
 
 func TestDrawPVThemes(t *testing.T) {
 	sub := substance.Ethane
-	
+
 	// Create some states for Ethane (Tc = 305.3 K, Pc = 48.72 bar)
 	s1, err := state.NewState(sub, 280.0, 20.0) // subcritical state
 	if err != nil {
@@ -35,7 +35,7 @@ func TestDrawPVThemes(t *testing.T) {
 	cfgLight.ShowOutputPath = false
 
 	outputPathLight := filepath.Join("..", "pv_light.svg")
-	
+
 	_ = os.Remove(outputPathLight)
 
 	err = state.DrawPV(cfgLight, outputPathLight, s1, s2)

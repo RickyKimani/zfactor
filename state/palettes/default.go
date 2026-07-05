@@ -2,6 +2,7 @@ package palettes
 
 import (
 	"image/color"
+
 	"github.com/rickykimani/zfactor/state/statecolor"
 )
 
