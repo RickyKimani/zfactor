@@ -48,7 +48,8 @@ package leekesler
 // Lee-Kesler generalized correlation tables
 // Generated from parsed PDF tables
 
-` + structCode)
+`)
+	goCode.WriteString(structCode)
 
 	var count int
 	fmt.Println("#------------------------------------------------------#")
