@@ -41,6 +41,15 @@ func TestSolveCubic(t *testing.T) {
 			wantRoots: []complex128{-1, -1, -1},
 			wantErr:   false,
 		},
+		{
+			// Regression: one real root with a NEGATIVE second radicand
+			// (-q/2 - sqrt(delta) < 0). The old cmplx.Pow implementation
+			// broke the u*v = -p/3 coupling here and returned garbage roots.
+			name: "x^3 + x^2 + x + 1 = 0 (roots -1, i, -i)",
+			a:    1, b: 1, c: 1, d: 1,
+			wantRoots: []complex128{-1, complex(0, 1), complex(0, -1)},
+			wantErr:   false,
+		},
 	}
 
 	const tol = 1e-6

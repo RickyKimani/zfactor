@@ -3,7 +3,6 @@ package zfactor
 import (
 	"errors"
 	"math"
-	"math/cmplx"
 )
 
 // SolveCubic solves ax^3 + bx^2 + cx + d = 0
@@ -32,9 +31,15 @@ func SolveCubic(a, b, c, d float64) ([3]complex128, error) {
 	var roots [3]complex128
 
 	if delta >= 0 {
-		// One real root and two complex
-		u := cmplx.Pow(complex(-q/2+math.Sqrt(delta), 0), 1.0/3)
-		v := cmplx.Pow(complex(-q/2-math.Sqrt(delta), 0), 1.0/3)
+		// One real root and two complex conjugates.
+		// Use REAL cube roots (math.Cbrt handles negative radicands): this
+		// keeps the Cardano coupling u*v = -p/3 satisfied automatically,
+		// since Cbrt(A)*Cbrt(B) = Cbrt(A*B) = Cbrt(-p^3/27) = -p/3. Taking
+		// independent principal cube roots via cmplx.Pow breaks that coupling
+		// whenever a radicand is negative and yields wrong roots.
+		sd := math.Sqrt(delta)
+		u := complex(math.Cbrt(-q/2+sd), 0)
+		v := complex(math.Cbrt(-q/2-sd), 0)
 
 		y1 := u + v
 		y2 := u*omega + v*omega2
