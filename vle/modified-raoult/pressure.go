@@ -146,7 +146,7 @@ func DewP(input PressureInput) (DewPResult, error) {
 	tol := res.opts.Tol()
 	maxIter := res.opts.MaxIter()
 
-	for iter := 0; iter < maxIter; iter++ {
+	for range maxIter {
 
 		// Compute pressure.
 		var denom float64

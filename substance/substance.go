@@ -4,7 +4,6 @@ package substance
 
 import (
 	"fmt"
-	"math"
 
 	"github.com/rickykimani/zfactor"
 	"github.com/rickykimani/zfactor/abbott"
@@ -37,24 +36,7 @@ func (s *Substance) LeeKesler(args zfactor.Args, property leekesler.Property) (f
 	pr := args.P / s.Critical.Pc
 	tr := args.T / s.Critical.Tc
 
-	c := leekesler.Correlation(property)
-
-	m0, m1, err := c.At(tr, pr)
-	if err != nil {
-		return 0, err
-	}
-
-	var m float64
-
-	switch property {
-	case leekesler.FugacityCoefficient:
-		m = m0 * math.Pow(m1, s.Acentric)
-	default:
-		m = m0 + s.Acentric*m1
-
-	}
-
-	return m, nil
+	return property.Eval(tr, pr, s.Acentric)
 }
 
 // CubicConfig creates a configuration for a cubic equation of state (EOS) solver.
