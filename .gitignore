@@ -43,6 +43,10 @@ go.work.sum
 .vscode/
 
 *.pdf
+# Keep the page ranges the parsers in scripts/ were run against, so a
+# parsing bug can be traced back to its source without locating the book
+# and rediscovering the page numbers.
+!data/*.pdf
 pv*.svg
 pv*.png
 debug/
