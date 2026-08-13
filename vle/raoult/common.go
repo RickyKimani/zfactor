@@ -36,6 +36,12 @@ func (m MixtureInput) Composition() []float64 {
 }
 
 // PSat computes saturation pressures using Antoine correlations.
+//
+// A temperature outside a correlation's fitted range is treated as a
+// caveat rather than a failure, matching the temperature solvers in this
+// package and the modified Raoult's law package. Without that, a bubble
+// temperature returned by BubbleT could be rejected by BubbleP, even
+// though the two describe the same state.
 func (m MixtureInput) PSat() ([]float64, error) {
 	if m.T <= -273.15 {
 		return nil, zfactor.ErrTemp
@@ -45,7 +51,7 @@ func (m MixtureInput) PSat() ([]float64, error) {
 	psat := make([]float64, n)
 
 	for i, model := range m.Antoine {
-		p, err := model.Pressure(m.T)
+		p, err := saturationPressure(model, m.T)
 		if err != nil {
 			return nil, err
 		}
