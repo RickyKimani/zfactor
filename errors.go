@@ -1,5 +1,7 @@
 package zfactor
 
+import "fmt"
+
 // InputError represents an error resulting from invalid input parameters.
 type InputError struct {
 	Msg string
@@ -7,6 +9,47 @@ type InputError struct {
 
 func (e InputError) Error() string {
 	return e.Msg
+}
+
+// RangeError reports that a temperature lies outside the interval over
+// which a correlation was fitted.
+//
+// The correlations in this module are fits to experimental data and stay
+// mathematically defined beyond the interval they were fitted over, so
+// the calculation is still performed and the extrapolated value returned
+// alongside this error rather than discarded. Callers that accept the
+// extrapolation may disregard it; those needing a value backed by data
+// must check for it. The vapor-liquid equilibrium solvers take the
+// former view, treating a RangeError as a caveat and any other error as
+// fatal.
+//
+// Accuracy falls away with distance from the fitted interval, and a
+// correlation is not constrained to behave sensibly far outside it.
+//
+// The type is shared so that a caller can test for an out-of-range
+// result uniformly, whichever correlation produced it:
+//
+//	var rangeErr *zfactor.RangeError
+//	if errors.As(err, &rangeErr) { ... }
+type RangeError struct {
+	Name string  // the substance or correlation the range belongs to
+	T    float64 // the offending temperature
+	Low  float64 // lower bound of the fitted range
+	High float64 // upper bound of the fitted range
+}
+
+func (e *RangeError) Error() string {
+	if e.Name == "" {
+		return fmt.Sprintf(
+			"temperature %g is outside the fitted range [%g, %g]",
+			e.T, e.Low, e.High,
+		)
+	}
+
+	return fmt.Sprintf(
+		"temperature %g is outside the range [%g, %g] fitted for %s",
+		e.T, e.Low, e.High, e.Name,
+	)
 }
 
 var (

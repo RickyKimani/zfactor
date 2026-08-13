@@ -163,6 +163,24 @@ var {{ .GoName }}Solid = &HeatCapacity{
 	D:       {{ .D }} * 1e5,
 }
 {{ end }}
+
+// All contains every heat-capacity correlation in this package, in the
+// order they appear in the source data: gases, then liquids, then
+// solids.
+//
+// It is intended for calculations and checks that range over the whole
+// table. Callers must not modify the slice or the values it points to.
+var All = []*HeatCapacity{
+{{- range .Gases }}
+	{{ .GoName }}Gas,
+{{- end }}
+{{- range .Liquids }}
+	{{ .GoName }}Liquid,
+{{- end }}
+{{- range .Solids }}
+	{{ .GoName }}Solid,
+{{- end }}
+}
 `
 
 type WrappedEntry struct {

@@ -12,27 +12,13 @@ import (
 )
 
 // RangeError reports that a temperature lies outside the interval over
-// which a correlation was fitted.
+// which a correlation was fitted. It is an alias for zfactor.RangeError,
+// so a caller may test for an out-of-range result from any correlation
+// in this module with a single type.
 //
-// The equation remains defined beyond that interval, so the calculation
-// is still performed and the extrapolated value returned alongside this
-// error rather than discarded. Callers that accept the extrapolation may
-// disregard it; those that require a value backed by data must check it.
-// The vapor-liquid equilibrium solvers in this module take the former
-// view, treating a RangeError as a caveat and any other error as fatal.
-//
-// Accuracy falls away with distance from the fitted interval, and the
-// equation diverges at t = -C, which lies below the range of every
-// tabulated substance.
-type RangeError struct {
-	T    float64 // the offending temperature (°C)
-	Low  float64 // lower bound of the fitted range (°C)
-	High float64 // upper bound of the fitted range (°C)
-}
-
-func (r RangeError) Error() string {
-	return fmt.Sprintf("t = %.2f is outside the range[%.2f-%.2f]", r.T, r.Low, r.High)
-}
+// Temperatures here are in °C. The equation diverges at t = -C, which
+// lies below the fitted range of every tabulated substance.
+type RangeError = zfactor.RangeError
 
 // Model evaluates the saturation vapor pressure of a pure substance as a
 // function of temperature, together with the inverse relation.
@@ -97,6 +83,7 @@ func (a *Antoine) LnPSat(t float64) (float64, error) {
 	var err error
 	if !a.ValidateTempRange(t) {
 		err = &RangeError{
+			Name: a.Name,
 			T:    t,
 			Low:  a.Range.Low,
 			High: a.Range.High,
