@@ -1,0 +1,20 @@
+# Go tooling writes LF and expects it back. Without this, a checkout on
+# Windows converts Go sources to CRLF and gofmt reports every file as
+# unformatted, so `gofmt -l` and any check built on it are useless there.
+#
+# The generated tables are the same: their generators write LF, and a
+# CRLF working copy makes every regeneration look like a rewrite.
+*.go text eol=lf
+
+# The data the generators read, and the scripts that produce it.
+*.json text eol=lf
+*.py text eol=lf
+
+# Task definitions and documentation.
+justfile text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+
+# Extracted book pages and rendered diagrams are binary.
+*.pdf binary
+*.png binary

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -65,7 +66,17 @@ package leekesler
 		"phi1": "departure fugacity coefficient for the lee/Kesler correlation phi^1",
 	}
 
-	for key, tableList := range tables {
+	// Emit in a fixed order. Ranging over the map directly would write
+	// the tables in a different order on every run, so regenerating
+	// produced a large diff that changed no value.
+	keys := make([]string, 0, len(tables))
+	for key := range tables {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		tableList := tables[key]
 		if len(tableList) == 0 {
 			continue
 		}
