@@ -6,6 +6,7 @@ import (
 
 	"github.com/rickykimani/zfactor"
 	"github.com/rickykimani/zfactor/cubic"
+	leekesler "github.com/rickykimani/zfactor/lee-kesler"
 	"github.com/rickykimani/zfactor/substance"
 )
 
@@ -299,6 +300,47 @@ func TestLeeKeslerAcentricEstimate(t *testing.T) {
 				)
 			}
 		})
+	}
+}
+
+// TestLeeKeslerExample3_10 reproduces part (b) of Example 3.10 of Smith,
+// Van Ness & Abbott: the molar volume of n-butane at 510 K and 25 bar
+// from the generalized compressibility-factor correlation.
+//
+// Unlike the test in the lee-kesler package, which supplies the reduced
+// conditions directly, this exercises the whole path: the substance's
+// own critical constants reduce the state, the correlation is evaluated,
+// and the tabulated acentric factor weights the departure term. The
+// example rounds Tr and Pr to three decimals before reading the tables,
+// so the tolerance accommodates that rather than the interpolation.
+func TestLeeKeslerExample3_10(t *testing.T) {
+	const (
+		T = 510.0 // K
+		P = 25.0  // bar
+
+		wantZ = 0.873
+		wantV = 1480.7 // cm³/mol
+
+		zTol   = 2e-3
+		relTol = 2e-3
+	)
+
+	got, err := substance.NButane.LeeKesler(
+		zfactor.Args{T: T, P: P},
+		leekesler.CompressibilityFactor,
+	)
+	if err != nil {
+		t.Fatalf("LeeKesler returned an unexpected error: %v", err)
+	}
+
+	if math.Abs(got-wantZ) > zTol {
+		t.Errorf("compressibility factor = %.6f; want %.3f", got, wantZ)
+	}
+
+	v := got * R * T / P
+
+	if rel := math.Abs(v-wantV) / wantV; rel > relTol {
+		t.Errorf("molar volume = %.2f cm³/mol; want %.1f (%.3f%% apart)", v, wantV, 100*rel)
 	}
 }
 
