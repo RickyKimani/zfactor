@@ -1,3 +1,37 @@
+// Package virial implements the virial equations of state, which express
+// the compressibility factor as a power series in density.
+//
+// The series has a basis in statistical mechanics rather than being an
+// empirical fit: the second coefficient B accounts for interactions
+// between pairs of molecules, the third coefficient C for interactions
+// among triples, and so on. Truncating it after a given term is
+// therefore a statement about how dense the fluid is, and the equations
+// here are for gases rather than liquids.
+//
+// Two truncations are provided. The two-term form
+//
+//	Z = 1 + BP/(RT)
+//
+// is linear in pressure and is the one obtained by truncating the
+// pressure series after B. It is reliable only at low pressure, and the
+// functions using it refuse to evaluate above 15 bar rather than return
+// a number the equation does not support.
+//
+// The three-term form is written in the density, or Leiden, series
+//
+//	Z = 1 + B/V + C/V^2,
+//
+// which rearranges to a cubic in the molar volume and so is solved with
+// the same root finder as the cubic equations of state. Retaining the
+// third coefficient extends the usable range to moderate densities.
+//
+// Coefficients must be supplied by the caller through zfactor.Args.
+// Generalized correlations for B are available in the abbott package,
+// which estimates it from the reduced temperature and acentric factor.
+//
+// Units follow whatever is used consistently for the gas constant: with
+// R in bar·cm³/(mol·K), pressures are in bar, temperatures in kelvin,
+// B in cm³/mol and C in cm⁶/mol².
 package virial
 
 import (
