@@ -68,6 +68,82 @@ func Secant(
 	)
 }
 
+// Bisection solves f(x) = 0 on the bracketing interval [lo, hi].
+//
+// The method requires the residual to change sign across the interval,
+// which guarantees that a root is enclosed and that the iteration
+// cannot leave the bracket. This makes it the appropriate choice when
+// the search must stay inside a physically meaningful domain, such as a
+// mole fraction confined to (0, 1), where the open-ended secant method
+// may wander outside.
+//
+// Convergence is achieved when the half-width of the bracket falls
+// below the specified tolerance.
+//
+// The solver returns an error if the interval is malformed or if the
+// residual does not change sign across it.
+func Bisection(
+	f func(float64) (float64, error),
+	lo, hi float64,
+	opts vle.SolverOptions,
+) (float64, error) {
+
+	if lo >= hi {
+		return 0, errors.New(
+			"bisection method failed: lower bound must be below upper bound",
+		)
+	}
+
+	tol := opts.Tol()
+	maxIter := opts.MaxIter()
+
+	flo, err := f(lo)
+	if err != nil {
+		return 0, err
+	}
+	if flo == 0 {
+		return lo, nil
+	}
+
+	fhi, err := f(hi)
+	if err != nil {
+		return 0, err
+	}
+	if fhi == 0 {
+		return hi, nil
+	}
+
+	if math.Signbit(flo) == math.Signbit(fhi) {
+		return 0, errors.New(
+			"bisection method failed: residual does not change sign across the interval",
+		)
+	}
+
+	for range maxIter {
+		mid := (lo + hi) / 2
+
+		if (hi-lo)/2 < tol {
+			return mid, nil
+		}
+
+		fmid, err := f(mid)
+		if err != nil {
+			return 0, err
+		}
+		if fmid == 0 {
+			return mid, nil
+		}
+
+		if math.Signbit(fmid) == math.Signbit(flo) {
+			lo, flo = mid, fmid
+		} else {
+			hi = mid
+		}
+	}
+
+	return 0, errors.New("bisection method failed to converge")
+}
+
 // FixedPoint solves x = g(x) by successive substitution.
 //
 // Convergence is achieved when the maximum absolute change between
