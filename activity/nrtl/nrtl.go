@@ -310,8 +310,12 @@ func (n NRTL) Activity() ([]float64, error) {
 //
 // and
 //
-//	ln(γ1∞) = τ21 + G12(τ12 - τ21)
-//	ln(γ2∞) = τ12 + G21(τ21 - τ12)
+//	ln(γ1∞) = τ21 + τ12 G12
+//	ln(γ2∞) = τ12 + τ21 G21
+//
+// These follow from the binary activity expression evaluated at
+// vanishing mole fraction: as x1 → 0 the first bracketed term tends to
+// τ21 and the second to τ12 G12.
 //
 // The receiver must contain exactly two components.
 func (n NRTL) BinaryInfiniteDilution() ([]float64, error) {
@@ -345,11 +349,9 @@ func (n NRTL) BinaryInfiniteDilution() ([]float64, error) {
 	g12 := math.Exp(-n.Alpha[0][1] * tau[0][1])
 	g21 := math.Exp(-n.Alpha[1][0] * tau[1][0])
 
-	lnGamma1 := tau[1][0] +
-		g12*(tau[0][1]-tau[1][0])
+	lnGamma1 := tau[1][0] + tau[0][1]*g12
 
-	lnGamma2 := tau[0][1] +
-		g21*(tau[1][0]-tau[0][1])
+	lnGamma2 := tau[0][1] + tau[1][0]*g21
 
 	return []float64{
 		math.Exp(lnGamma1),
