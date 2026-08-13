@@ -265,19 +265,36 @@ def parse_antoine_table(pdf_path: str) -> list:
 
             # Split prefix into Name and Formula
             # Formula is usually the last part of the prefix
-            parts = prefix.split()
+            # Reattach detached subscripts, e.g. "CCl 4" -> "CCl4".
+            parts = join_subscripts(prefix.split())
             if len(parts) < 2:
                 continue
-
-            # Fix for detached formula subscripts (e.g. "CCl 4" -> "CCl4")
-            if len(parts) > 2 and parts[-1].isdigit():
-                parts[-2] = parts[-2] + parts[-1]
-                parts.pop()
 
             formula = parts[-1]
             name = " ".join(parts[:-1])
 
             vals = [float(m.group()) for m in data_matches]
+
+            # Reclaim a subscript absorbed into A.
+            #
+            # A trailing subscript is rendered as its own text run and the
+            # extraction frequently leaves no space before the next
+            # column, so "C2H4O2" followed by "15.0717" arrives as the
+            # single token "C2H4O215.0717" and A is read as 215.0717.
+            # Where a space does survive the digit still lands on A, as
+            # in "CH3NO" followed by "214.7513".
+            #
+            # In this form of the equation, ln(P/kPa) = A - B/(t + C),
+            # A lies between roughly 12 and 20 for every substance in the
+            # table, so a value of 100 or more can only be a subscript
+            # that has been prepended to it. Move those digits back onto
+            # the formula.
+            a_text = data_matches[0].group()
+            while len(a_text) > 1 and a_text[0].isdigit() and float(a_text) >= 100:
+                formula += a_text[0]
+                a_text = a_text[1:]
+
+            vals[0] = float(a_text)
 
             substances.append({
                 "name": name,
