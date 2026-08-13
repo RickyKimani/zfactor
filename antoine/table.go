@@ -18,8 +18,8 @@ var Acetone = &Antoine{
 
 var AceticAcid = &Antoine{
 	Name:    "Acetic acid",
-	Formula: "C2H4O",
-	A:       215.07170,
+	Formula: "C2H4O2",
+	A:       15.07170,
 	B:       3580.80000,
 	C:       224.65000,
 	H:       23.70000,
@@ -242,8 +242,8 @@ var NDecane = &Antoine{
 
 var Dichloromethane = &Antoine{
 	Name:    "Dichloromethane",
-	Formula: "CH2Cl",
-	A:       213.98910,
+	Formula: "CH2Cl2",
+	A:       13.98910,
 	B:       2463.93000,
 	C:       223.24000,
 	H:       28.06000,
@@ -270,8 +270,8 @@ var DiethylEther = &Antoine{
 
 var One4Dioxane = &Antoine{
 	Name:    "1,4-Dioxane",
-	Formula: "C4H8O",
-	A:       215.09670,
+	Formula: "C4H8O2",
+	A:       15.09670,
 	B:       3579.78000,
 	C:       240.33700,
 	H:       34.16000,
@@ -326,8 +326,8 @@ var Ethylbenzene = &Antoine{
 
 var EthyleneGlycol = &Antoine{
 	Name:    "Ethylene glycol",
-	Formula: "C2H6O",
-	A:       215.75670,
+	Formula: "C2H6O2",
+	A:       15.75670,
 	B:       4187.46000,
 	C:       178.65000,
 	H:       50.73000,
@@ -382,8 +382,8 @@ var Methanol = &Antoine{
 
 var MethylAcetate = &Antoine{
 	Name:    "Methyl acetate",
-	Formula: "C3H6O",
-	A:       214.24560,
+	Formula: "C3H6O2",
+	A:       14.24560,
 	B:       2662.78000,
 	C:       219.69000,
 	H:       30.32000,
@@ -410,8 +410,8 @@ var MethylEthylKetone = &Antoine{
 
 var Nitromethane = &Antoine{
 	Name:    "Nitromethane",
-	Formula: "CH3NO",
-	A:       214.75130,
+	Formula: "CH3NO2",
+	A:       14.75130,
 	B:       3331.70000,
 	C:       227.60000,
 	H:       33.99000,
