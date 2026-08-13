@@ -93,7 +93,7 @@ func BubbleT(input TemperatureInput) (BubbleTResult, error) {
 	models := res.models
 	opts := res.opts
 
-	t0, t1, err := internal.InitialTemperatureGuesses(p, n, models)
+	t0, t1, err := internal.InitialTemperatureGuesses(p, models)
 	if err != nil {
 		return BubbleTResult{}, err
 	}
@@ -183,7 +183,7 @@ func DewT(input TemperatureInput) (DewTResult, error) {
 	models := res.models
 	opts := res.opts
 
-	t0, t1, err := internal.InitialTemperatureGuesses(p, n, models)
+	t0, t1, err := internal.InitialTemperatureGuesses(p, models)
 	if err != nil {
 		return DewTResult{}, err
 	}
