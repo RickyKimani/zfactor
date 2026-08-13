@@ -270,12 +270,13 @@ func TestSolveForVolumeInvalidInput(t *testing.T) {
 // shift cancels catastrophically. That regime is unreachable through
 // the equation-of-state solvers and is excluded here.
 //
-// The threshold is set well inside the observed accuracy: across a wide
-// sweep of equation-of-state states the worst relative error is of
-// order 1e-5, while a genuinely incorrect root — such as those produced
-// by the earlier cube-root branch — has a relative residual of order 1.
+// The threshold sits well inside the observed accuracy. Cardano's
+// formulae alone leave a relative residual of order 1e-5 on these
+// polynomials; the Newton refinement applied to each root brings that to
+// around 1e-15, so a tolerance of 1e-10 has ample margin while still
+// being five orders tighter than the unrefined method could satisfy.
 func TestSolveCubicResidual(t *testing.T) {
-	const tol = 1e-4
+	const tol = 1e-10
 
 	rng := rand.New(rand.NewSource(1))
 

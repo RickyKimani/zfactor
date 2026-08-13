@@ -51,10 +51,10 @@ func TestRangeErrorAccompaniesResult(t *testing.T) {
 				t.Errorf("RangeError reports T = %g; want the offending temperature 293.15", rangeErr.T)
 			}
 
-			if rangeErr.TMin != gas.TMin || rangeErr.TMax != gas.TMax {
+			if rangeErr.Low != gas.TMin || rangeErr.High != gas.TMax {
 				t.Errorf(
 					"RangeError reports the range [%g, %g]; want [%g, %g]",
-					rangeErr.TMin, rangeErr.TMax, gas.TMin, gas.TMax,
+					rangeErr.Low, rangeErr.High, gas.TMin, gas.TMax,
 				)
 			}
 

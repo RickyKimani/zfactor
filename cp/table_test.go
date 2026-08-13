@@ -8,45 +8,6 @@ import (
 	"github.com/rickykimani/zfactor/cp"
 )
 
-// entries returns every generated heat-capacity correlation with the
-// identifier it is exported under, so the table can be checked as a
-// whole.
-//
-// The package generates standalone variables rather than a registry, so
-// this list is maintained by hand and covers a representative subset:
-// every entry repaired after the subscript-shift bug, plus neighbours
-// that were unaffected. Emitting an All registry from cp/gen, as
-// substance/gen now does, would let these checks range over the whole
-// table instead.
-func entries() map[string]*cp.HeatCapacity {
-	all := map[string]*cp.HeatCapacity{
-		// Gases
-		"MethaneGas": cp.MethaneGas, "EthaneGas": cp.EthaneGas,
-		"PropaneGas": cp.PropaneGas, "AmmoniaGas": cp.AmmoniaGas,
-		"NitrogenDioxideGas": cp.NitrogenDioxideGas,
-		"CarbonDioxideGas":   cp.CarbonDioxideGas,
-		"One3ButadieneGas":   cp.One3ButadieneGas,
-
-		// Solids
-		"CaCO3Solid": cp.CaCO3Solid, "CaOH2Solid": cp.CaOH2Solid,
-		"CaC2Solid": cp.CaC2Solid, "CaCl2Solid": cp.CaCl2Solid,
-		"NaHCO3Solid": cp.NaHCO3Solid, "SiO2QuartzSolid": cp.SiO2QuartzSolid,
-		"CaOSolid": cp.CaOSolid, "NaOHSolid": cp.NaOHSolid,
-		"SRhombicSolid": cp.SRhombicSolid,
-
-		// Solids whose formulas carry an interior subscript, which the
-		// PDF splits mid-token: NH4Cl arrives as "NH" then "4Cl".
-		"NH4ClSolid": cp.NH4ClSolid, "Fe2O3Solid": cp.Fe2O3Solid,
-		"Fe3O4Solid": cp.Fe3O4Solid, "I2Solid": cp.I2Solid,
-		"CGraphiteSolid": cp.CGraphiteSolid,
-
-		// Liquids
-		"WaterLiquid": cp.WaterLiquid,
-	}
-
-	return all
-}
-
 // cp298Exceptions lists correlations whose tabulated Cp298/R disagrees
 // with the constants published alongside it.
 //
@@ -55,9 +16,20 @@ func entries() map[string]*cp.HeatCapacity {
 // pair and the convenience column the outlier: evaluating them at
 // 298.15 K lands nearer the accepted heat capacity than the tabulated
 // Cp298/R does.
+// The key is the name together with the formula, which distinguishes
+// entries appearing in more than one table. 1,3-Butadiene is listed as
+// both a gas and a liquid, and only the gas is inconsistent: the
+// liquid's constants reproduce its tabulated Cp298 exactly. Keying on
+// the name alone would excuse both.
 var cp298Exceptions = map[string]string{
-	"SRhombicSolid":    "Appendix C gives Cp298/R = 3.748 where its own constants give 2.718",
-	"One3ButadieneGas": "Appendix C gives Cp298/R = 10.720 where its own constants give 9.931",
+	"1,3-Butadiene/C4H6": "Table C.1 gives Cp298/R = 10.720 where its own constants give 9.931",
+	"S (rhombic)/":       "Table C.2 gives Cp298/R = 3.748 where its own constants give 2.718",
+}
+
+// phaseKey identifies an entry across the three tables. Liquids carry no
+// formula in the source, so theirs is empty.
+func phaseKey(entry *cp.HeatCapacity) string {
+	return entry.Name + "/" + entry.Formula
 }
 
 // TestCp298Consistency checks each tabulated Cp298/R against the
@@ -82,9 +54,13 @@ func TestCp298Consistency(t *testing.T) {
 		tol = 5e-3
 	)
 
-	for name, entry := range entries() {
-		t.Run(name, func(t *testing.T) {
-			if reason, skip := cp298Exceptions[name]; skip {
+	if len(cp.All) == 0 {
+		t.Fatal("cp.All is empty")
+	}
+
+	for _, entry := range cp.All {
+		t.Run(phaseKey(entry), func(t *testing.T) {
+			if reason, skip := cp298Exceptions[phaseKey(entry)]; skip {
 				t.Skipf("known source inconsistency: %s", reason)
 			}
 
@@ -112,8 +88,8 @@ func TestCp298Consistency(t *testing.T) {
 // supply, which is precisely why the corruption went unnoticed: the
 // package never returned a wrong number, it returned nothing at all.
 func TestTemperatureRangesAreSensible(t *testing.T) {
-	for name, entry := range entries() {
-		t.Run(name, func(t *testing.T) {
+	for _, entry := range cp.All {
+		t.Run(phaseKey(entry), func(t *testing.T) {
 			if entry.TMax <= entry.TMin {
 				t.Errorf(
 					"TMax = %g does not exceed TMin = %g",
