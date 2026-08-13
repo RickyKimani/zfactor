@@ -51,28 +51,16 @@ func (s *Substance) LeeKesler(args zfactor.Args, property leekesler.Property) (f
 //   - P: Pressure
 //   - R: Gas Constant
 func (s *Substance) CubicConfig(Type cubic.EOSType, args zfactor.Args) *cubic.EOSCfg {
-	tc := s.Critical.Tc
-	pc := s.Critical.Pc
-	switch Type.(type) {
-	case *cubic.VdW:
-		return cubic.NewvdWCfg(args.T, args.P, tc, pc, args.R)
-	case *cubic.RK:
-		return cubic.NewRKCfg(args.T, args.P, tc, pc, args.R)
-	case *cubic.SRK:
-		return cubic.NewSRKCfg(args.T, args.P, tc, pc, s.Acentric, args.R)
-	case *cubic.PR:
-		return cubic.NewPRCfg(args.T, args.P, tc, pc, s.Acentric, args.R)
-	default:
-		return &cubic.EOSCfg{
-			Type:     Type,
-			T:        args.T,
-			P:        args.P,
-			Tc:       tc,
-			Pc:       pc,
-			Acentric: s.Acentric,
-			R:        args.R,
-		}
+	return &cubic.EOSCfg{
+		Type:     Type,
+		T:        args.T,
+		P:        args.P,
+		Tc:       s.Critical.Tc,
+		Pc:       s.Critical.Pc,
+		Acentric: s.Acentric,
+		R:        args.R,
 	}
+
 }
 
 // Vsat calculates the saturated liquid molar volume at the given temperature using the Rackett equation.
