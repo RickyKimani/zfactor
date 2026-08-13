@@ -51,11 +51,13 @@ func main() {
 	fmt.Fprintln(f)
 
 	var count int
+	var ids []string
 	fmt.Println("#------------------------------------------------------#")
 
 	// Emit variables
 	for _, s := range subs {
 		id := goIdent(s.Name)
+		ids = append(ids, id)
 
 		fmt.Printf("Processing substance %s\n", id)
 
@@ -74,6 +76,19 @@ func main() {
 
 		count++
 	}
+
+	// Emit the registry of every generated substance.
+	fmt.Fprintln(f, "// All contains every substance in this package, in the order")
+	fmt.Fprintln(f, "// they appear in the source data.")
+	fmt.Fprintln(f, "//")
+	fmt.Fprintln(f, "// It is intended for calculations and checks that range over the")
+	fmt.Fprintln(f, "// whole database. Callers must not modify the slice or the values")
+	fmt.Fprintln(f, "// it points to.")
+	fmt.Fprintln(f, "var All = []*Substance{")
+	for _, id := range ids {
+		fmt.Fprintf(f, "\t%s,\n", id)
+	}
+	fmt.Fprintln(f, "}")
 
 	fmt.Printf("Processed %d substances\n", count)
 	fmt.Println("#------------------------------------------------------#")
