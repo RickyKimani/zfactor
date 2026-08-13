@@ -352,14 +352,14 @@ var AirGas = &HeatCapacity{
 
 var AmmoniaGas = &HeatCapacity{
 	Name:    "Ammonia",
-	Formula: "NH",
+	Formula: "NH3",
 	TMin:    298.15,
-	TMax:    3,
-	Cp298:   1800,
-	A:       4.269,
-	B:       3.578 * 1e-3,
-	C:       3.02 * 1e-6,
-	D:       0 * 1e5,
+	TMax:    1800,
+	Cp298:   4.269,
+	A:       3.578,
+	B:       3.02 * 1e-3,
+	C:       0 * 1e-6,
+	D:       -0.186 * 1e5,
 }
 
 var BromineGas = &HeatCapacity{
@@ -508,14 +508,14 @@ var NitricOxideGas = &HeatCapacity{
 
 var NitrogenDioxideGas = &HeatCapacity{
 	Name:    "Nitrogen dioxide",
-	Formula: "NO",
+	Formula: "NO2",
 	TMin:    298.15,
-	TMax:    2,
-	Cp298:   2000,
-	A:       4.447,
-	B:       4.982 * 1e-3,
-	C:       1.195 * 1e-6,
-	D:       0 * 1e5,
+	TMax:    2000,
+	Cp298:   4.447,
+	A:       4.982,
+	B:       1.195 * 1e-3,
+	C:       0 * 1e-6,
+	D:       -0.792 * 1e5,
 }
 
 var DinitrogenTetroxideGas = &HeatCapacity{
@@ -770,52 +770,52 @@ var CaOSolid = &HeatCapacity{
 	D:       -1.047 * 1e5,
 }
 
-var CaCOSolid = &HeatCapacity{
-	Name:    "CaCO",
+var CaCO3Solid = &HeatCapacity{
+	Name:    "CaCO3",
 	Formula: "",
 	TMin:    298.15,
-	TMax:    3,
-	Cp298:   1200,
-	A:       9.848,
-	B:       12.572 * 1e-3,
+	TMax:    1200,
+	Cp298:   9.848,
+	A:       12.572,
+	B:       2.637 * 1e-3,
 	C:       0,
-	D:       2.637 * 1e5,
+	D:       -3.12 * 1e5,
 }
 
-var CaOHSolid = &HeatCapacity{
-	Name:    "Ca(OH)",
+var CaOH2Solid = &HeatCapacity{
+	Name:    "Ca(OH)2",
 	Formula: "",
 	TMin:    298.15,
-	TMax:    2,
-	Cp298:   700,
-	A:       11.217,
-	B:       9.597 * 1e-3,
+	TMax:    700,
+	Cp298:   11.217,
+	A:       9.597,
+	B:       5.435 * 1e-3,
 	C:       0,
-	D:       5.435 * 1e5,
+	D:       0 * 1e5,
 }
 
-var CaCSolid = &HeatCapacity{
-	Name:    "CaC",
+var CaC2Solid = &HeatCapacity{
+	Name:    "CaC2",
 	Formula: "",
 	TMin:    298.15,
-	TMax:    2,
-	Cp298:   720,
-	A:       7.508,
-	B:       8.254 * 1e-3,
+	TMax:    720,
+	Cp298:   7.508,
+	A:       8.254,
+	B:       1.429 * 1e-3,
 	C:       0,
-	D:       1.429 * 1e5,
+	D:       -1.042 * 1e5,
 }
 
-var CaClSolid = &HeatCapacity{
-	Name:    "CaCl",
+var CaCl2Solid = &HeatCapacity{
+	Name:    "CaCl2",
 	Formula: "",
 	TMin:    298.15,
-	TMax:    2,
-	Cp298:   1055,
-	A:       8.762,
-	B:       8.646 * 1e-3,
+	TMax:    1055,
+	Cp298:   8.762,
+	A:       8.646,
+	B:       1.53 * 1e-3,
 	C:       0,
-	D:       1.53 * 1e5,
+	D:       -0.302 * 1e5,
 }
 
 var CGraphiteSolid = &HeatCapacity{
@@ -927,7 +927,7 @@ var LiClSolid = &HeatCapacity{
 }
 
 var NH4ClSolid = &HeatCapacity{
-	Name:    "NH 4Cl",
+	Name:    "NH4Cl",
 	Formula: "",
 	TMin:    298.15,
 	TMax:    458,
@@ -974,16 +974,16 @@ var NaOHSolid = &HeatCapacity{
 	D:       1.948 * 1e5,
 }
 
-var NaHCOSolid = &HeatCapacity{
-	Name:    "NaHCO",
+var NaHCO3Solid = &HeatCapacity{
+	Name:    "NaHCO3",
 	Formula: "",
 	TMin:    298.15,
-	TMax:    3,
-	Cp298:   400,
-	A:       10.539,
-	B:       5.128 * 1e-3,
+	TMax:    400,
+	Cp298:   10.539,
+	A:       5.128,
+	B:       18.148 * 1e-3,
 	C:       0,
-	D:       18.148 * 1e5,
+	D:       0 * 1e5,
 }
 
 var SRhombicSolid = &HeatCapacity{
@@ -998,14 +998,14 @@ var SRhombicSolid = &HeatCapacity{
 	D:       -0.783 * 1e5,
 }
 
-var SiOSolid = &HeatCapacity{
-	Name:    "SiO",
+var SiO2QuartzSolid = &HeatCapacity{
+	Name:    "SiO2 (quartz)",
 	Formula: "",
 	TMin:    298.15,
-	TMax:    2,
-	Cp298:   0,
-	A:       847,
-	B:       5.345 * 1e-3,
+	TMax:    847,
+	Cp298:   5.345,
+	A:       4.871,
+	B:       5.365 * 1e-3,
 	C:       0,
-	D:       4.871 * 1e5,
+	D:       -1.001 * 1e5,
 }

@@ -293,6 +293,40 @@ def parse_antoine_table(pdf_path: str) -> list:
 
     return substances
 
+# Number of data columns in each heat-capacity table.
+#
+#   Table C.1 (gases):   Tmax, Cp298/R, A, 10^3 B, 10^6 C, 10^-5 D
+#   Table C.2 (solids):  Tmax, Cp298/R, A, 10^3 B, 10^-5 D
+#   Table C.3 (liquids): Cp298/R, A, 10^3 B, 10^6 C
+COLUMN_COUNTS = {"gases": 6, "solids": 5, "liquids": 4}
+
+
+def join_subscripts(tokens: list) -> list:
+    """
+    Reattach chemical subscripts to the token they belong to.
+
+    The PDF renders subscripts as separate text runs, so a formula such
+    as NH3 extracts as ["NH", "3"] and Ca(OH)2 as ["Ca(OH)", "2"]. The
+    split also occurs mid-formula: NH4Cl arrives as ["NH", "4Cl"] and
+    Fe2O3 may arrive as ["Fe", "2O", "3"].
+
+    Once the numeric columns have been split off the right of the row,
+    any remaining token that begins with a digit is the continuation of
+    the formula before it, so it is appended to that token. Species
+    names beginning with a locant, such as 1,3-Butadiene, are unaffected
+    because they open the row and so have nothing to attach to.
+    """
+    joined = []
+
+    for token in tokens:
+        if joined and token[0].isdigit() and not joined[-1][-1].isdigit():
+            joined[-1] += token
+        else:
+            joined.append(token)
+
+    return joined
+
+
 def parse_cp_tables(pdf_path: str) -> dict:
     reader = PdfReader(pdf_path)
     
@@ -380,19 +414,33 @@ def parse_cp_tables(pdf_path: str) -> dict:
             if not parts:
                 continue
 
-            # Find where data starts (first number or MISSING)
-            data_start_idx = -1
-            for i, p in enumerate(parts):
-                if is_number_or_missing(p):
-                    data_start_idx = i
-                    break
-            
-            if data_start_idx == -1:
+            # Split the row from the RIGHT, taking the known number of
+            # data columns, rather than scanning from the left for the
+            # first number.
+            #
+            # The PDF renders chemical subscripts as separate text runs,
+            # so "NH3" extracts as "NH" followed by "3" and "CaCO3" as
+            # "CaCO" followed by "3". Scanning from the left mistakes
+            # that subscript for the first data column, which shifts
+            # every remaining value one place and drops the last one off
+            # the end. Anchoring on the right is immune to it, because
+            # the number of data columns per table is fixed.
+            expected = COLUMN_COUNTS.get(current_table)
+            if expected is None:
                 continue
-                
-            name_parts = parts[:data_start_idx]
-            data_parts = parts[data_start_idx:]
-            
+
+            split_idx = len(parts)
+            while split_idx > 0 and len(parts) - split_idx < expected:
+                if not is_number_or_missing(parts[split_idx - 1]):
+                    break
+                split_idx -= 1
+
+            data_parts = parts[split_idx:]
+            if len(data_parts) < expected:
+                continue
+
+            name_parts = join_subscripts(parts[:split_idx])
+
             # Filter non-valid rows
             if not name_parts:
                 continue
