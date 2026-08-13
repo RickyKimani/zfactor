@@ -15,8 +15,17 @@ import (
 //
 //	|x(k+1) - x(k)| < tolerance
 //
-// The solver returns an error if the method encounters a near-zero
-// slope or fails to converge within the maximum iteration limit.
+// The criterion is on the step rather than on the residual. Since the
+// step is the residual scaled by the secant slope, a small step does
+// imply a residual small against the local variation of the function,
+// which is the appropriate comparison for a solver that knows nothing
+// about the scale of what it is given. Where a function is very flat,
+// though, the step can collapse while the residual remains meaningful,
+// so a returned value is not on its own proof of a root.
+//
+// The solver returns an error if the residual takes the same value at
+// both points, if a step leaves the finite range, or if it fails to
+// converge within the maximum iteration limit.
 func Secant(
 	f func(float64) (float64, error),
 	x0, x1 float64,
@@ -40,13 +49,24 @@ func Secant(
 
 		denom := f1 - f0
 
-		if math.Abs(denom) < 1e-14 {
+		// The secant step divides by the change in the residual. Only an
+		// exact zero makes that impossible; comparing against a fixed
+		// magnitude instead would reject well-posed problems whose
+		// residuals are simply small, since the threshold would then sit
+		// above the whole scale of the function.
+		if denom == 0 {
 			return 0, errors.New(
-				"secant method failed: slope too close to zero",
+				"secant method failed: the residual takes the same value at both points",
 			)
 		}
 
 		x2 := x1 - f1*(x1-x0)/denom
+
+		if math.IsNaN(x2) || math.IsInf(x2, 0) {
+			return 0, errors.New(
+				"secant method failed: the step left the finite range",
+			)
+		}
 
 		if math.Abs(x2-x1) < tol {
 			return x2, nil

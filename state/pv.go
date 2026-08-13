@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/rickykimani/zfactor"
 	"github.com/rickykimani/zfactor/cubic"
@@ -79,9 +80,19 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	}
 	ext := filepath.Ext(output)
 	if ok := validExts[ext]; !ok {
+		// Consider the candidates in a fixed order. Several extensions
+		// can sit the same edit distance from a typo -- ".pgn" is two
+		// from both ".png" and ".pdf" -- and ranging over the map
+		// directly would suggest a different one from run to run.
+		candidates := make([]string, 0, len(validExts))
+		for valid := range validExts {
+			candidates = append(candidates, valid)
+		}
+		sort.Strings(candidates)
+
 		closest := ""
 		minDist := int(^uint(0) >> 1)
-		for valid := range validExts {
+		for _, valid := range candidates {
 			dist := levenshtein(ext, valid)
 			if dist < minDist {
 				minDist = dist

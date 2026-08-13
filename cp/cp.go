@@ -30,34 +30,17 @@ type HeatCapacity struct {
 }
 
 // RangeError reports that a temperature lies outside the interval over
-// which a heat-capacity correlation was fitted.
+// which a heat-capacity correlation was fitted. It is an alias for
+// zfactor.RangeError, so a caller may test for an out-of-range result
+// from any correlation in this module with a single type.
 //
-// The correlations are polynomial fits to experimental data. They remain
-// mathematically defined outside their fitted range, so the calculation
-// is still performed and the extrapolated result returned alongside this
-// error rather than discarded. Callers that accept the extrapolation may
-// disregard it; those that require a value backed by data must check it.
-//
-// Accuracy degrades with distance from the fitted interval, and the
-// polynomials are not constrained to behave sensibly far outside it.
-type RangeError struct {
-	Name string  // substance the correlation describes
-	T    float64 // the offending temperature (K)
-	TMin float64 // lower bound of the fitted range (K)
-	TMax float64 // upper bound of the fitted range (K)
-}
-
-func (e *RangeError) Error() string {
-	return fmt.Sprintf(
-		"temperature %g K is outside the range [%g, %g] fitted for %s",
-		e.T, e.TMin, e.TMax, e.Name,
-	)
-}
+// Temperatures here are in kelvin.
+type RangeError = zfactor.RangeError
 
 // checkRange reports whether T lies within the fitted interval.
 func (h *HeatCapacity) checkRange(T float64) error {
 	if T < h.TMin || T > h.TMax {
-		return &RangeError{Name: h.Name, T: T, TMin: h.TMin, TMax: h.TMax}
+		return &RangeError{Name: h.Name, T: T, Low: h.TMin, High: h.TMax}
 	}
 	return nil
 }
