@@ -1,15 +1,14 @@
 // Package cp provides coefficients for the calculation of heat capacities
-// of gases (in the ideal-gas state), solids, and liquids.
+// of gases (in the ideal-gas state), solids, and liquids, together with
+// the ideal-gas enthalpy and entropy changes obtained by integrating them.
 //
 // The parameters stored in HeatCapacity struct correspond to the equation:
 //
 //	Cp/R = A + B*T + C*T^2 + D*T^-2
-//
-// Note: This package currently only provides the data constants. Calculation
-// functions for integrals (Enthalpy/Entropy changes) are pending implementation.
 package cp
 
 import (
+	"errors"
 	"fmt"
 	"math"
 
@@ -30,7 +29,38 @@ type HeatCapacity struct {
 	D       float64
 }
 
-var errStr string = "Temperature %v K is out of range [%v - %v]"
+// RangeError reports that a temperature lies outside the interval over
+// which a heat-capacity correlation was fitted.
+//
+// The correlations are polynomial fits to experimental data. They remain
+// mathematically defined outside their fitted range, so the calculation
+// is still performed and the extrapolated result returned alongside this
+// error rather than discarded. Callers that accept the extrapolation may
+// disregard it; those that require a value backed by data must check it.
+//
+// Accuracy degrades with distance from the fitted interval, and the
+// polynomials are not constrained to behave sensibly far outside it.
+type RangeError struct {
+	Name string  // substance the correlation describes
+	T    float64 // the offending temperature (K)
+	TMin float64 // lower bound of the fitted range (K)
+	TMax float64 // upper bound of the fitted range (K)
+}
+
+func (e *RangeError) Error() string {
+	return fmt.Sprintf(
+		"temperature %g K is outside the range [%g, %g] fitted for %s",
+		e.T, e.TMin, e.TMax, e.Name,
+	)
+}
+
+// checkRange reports whether T lies within the fitted interval.
+func (h *HeatCapacity) checkRange(T float64) error {
+	if T < h.TMin || T > h.TMax {
+		return &RangeError{Name: h.Name, T: T, TMin: h.TMin, TMax: h.TMax}
+	}
+	return nil
+}
 
 // IdealGasEnthalpyChange calculates the change in enthalpy (Delta H) for an ideal gas state
 // between two states.
@@ -41,6 +71,12 @@ var errStr string = "Temperature %v K is out of range [%v - %v]"
 //   - R: Universal Gas Constant
 //
 // Formula: Delta H = R * Integral(Cp/R dT) from T1 to T2
+//
+// A temperature outside the correlation's fitted range does not prevent
+// the calculation: the extrapolated value is returned together with a
+// *RangeError, which callers may inspect with errors.As. Invalid input —
+// a non-positive temperature or pressure, or conflicting gas constants —
+// yields zero and an error instead, since no meaningful value exists.
 func (h *HeatCapacity) IdealGasEnthalpyChange(state1, state2 zfactor.Args) (float64, error) {
 	T1 := state1.T
 	P1 := state1.P
@@ -61,12 +97,8 @@ func (h *HeatCapacity) IdealGasEnthalpyChange(state1, state2 zfactor.Args) (floa
 		return 0, zfactor.ErrPressure
 	}
 
-	if T1 > h.TMax || T1 < h.TMin {
-		return 0, fmt.Errorf(errStr, T1, h.TMin, h.TMax)
-	}
-	if T2 > h.TMax || T2 < h.TMin {
-		return 0, fmt.Errorf(errStr, T2, h.TMin, h.TMax)
-	}
+	// Reported alongside the result rather than in place of it.
+	rangeErr := errors.Join(h.checkRange(T1), h.checkRange(T2))
 
 	// Integral of Cp/R * dT
 	// Cp/R = A + BT + CT^2 + DT^-2
@@ -77,7 +109,7 @@ func (h *HeatCapacity) IdealGasEnthalpyChange(state1, state2 zfactor.Args) (floa
 	termC := (h.C / 3) * (T2*T2*T2 - T1*T1*T1)
 	termD := -h.D * (1/T2 - 1/T1)
 
-	return R * (termA + termB + termC + termD), nil
+	return R * (termA + termB + termC + termD), rangeErr
 }
 
 // IdealGasEntropyChange calculates the change in entropy (Delta S) for an ideal gas state
@@ -89,6 +121,10 @@ func (h *HeatCapacity) IdealGasEnthalpyChange(state1, state2 zfactor.Args) (floa
 //   - R: Universal Gas Constant
 //
 // Formula: Delta S = R * (Integral(Cp/(R*T) dT) - ln(P2/P1))
+//
+// As with IdealGasEnthalpyChange, a temperature outside the fitted range
+// returns the extrapolated value together with a *RangeError, while
+// invalid input returns zero and an error.
 func (h *HeatCapacity) IdealGasEntropyChange(state1, state2 zfactor.Args) (float64, error) {
 	T1 := state1.T
 	P1 := state1.P
@@ -109,12 +145,8 @@ func (h *HeatCapacity) IdealGasEntropyChange(state1, state2 zfactor.Args) (float
 		return 0, zfactor.ErrPressure
 	}
 
-	if T1 > h.TMax || T1 < h.TMin {
-		return 0, fmt.Errorf(errStr, T1, h.TMin, h.TMax)
-	}
-	if T2 > h.TMax || T2 < h.TMin {
-		return 0, fmt.Errorf(errStr, T2, h.TMin, h.TMax)
-	}
+	// Reported alongside the result rather than in place of it.
+	rangeErr := errors.Join(h.checkRange(T1), h.checkRange(T2))
 
 	// Integral of (Cp/R)/T * dT
 	// Cp/R = A + BT + CT^2 + DT^-2
@@ -130,5 +162,5 @@ func (h *HeatCapacity) IdealGasEntropyChange(state1, state2 zfactor.Args) (float
 	integral := termA + termB + termC + termD
 	pressureTerm := math.Log(P2 / P1)
 
-	return R * (integral - pressureTerm), nil
+	return R * (integral - pressureTerm), rangeErr
 }
