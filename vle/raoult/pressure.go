@@ -1,5 +1,7 @@
 package raoult
 
+import "github.com/rickykimani/zfactor/vle"
+
 // PressureInput provides a composition vector and saturation pressures
 // for Raoult-law pressure calculations.
 //
@@ -16,7 +18,18 @@ type PressureInput interface {
 type SaturationPressureInput struct {
 	// Compositions represent a composition vector. x for BUBL P calculations and y for DEW P calculations
 	Compositions []float64
-	PSats        []float64
+
+	// Saturation pressures, in the same order as the composition.
+	PSats []float64
+
+	// P is the system pressure. It is required by a flash calculation,
+	// where the pressure is given, and ignored by the bubble- and
+	// dew-point calculations, where it is what is being found.
+	P float64
+
+	// Options configures the iterative solvers. A zero value selects the
+	// package defaults.
+	Options vle.SolverOptions
 }
 
 // Composition returns the liquid composition.
@@ -27,6 +40,16 @@ func (p SaturationPressureInput) Composition() []float64 {
 // PSat returns the supplied saturation pressures.
 func (p SaturationPressureInput) PSat() ([]float64, error) {
 	return p.PSats, nil
+}
+
+// Pressure returns the system pressure.
+func (p SaturationPressureInput) Pressure() float64 {
+	return p.P
+}
+
+// SolverOptions returns the solver configuration.
+func (p SaturationPressureInput) SolverOptions() vle.SolverOptions {
+	return p.Options
 }
 
 // BubblePResult contains the bubble pressure and vapor composition.
