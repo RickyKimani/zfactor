@@ -129,9 +129,13 @@ examples-build:
 
 # Build and run every example, so a stale one cannot pass unnoticed.
 examples:
+    #!/usr/bin/env sh
     # The README links to these, and they exercise the public API the way
     # a reader will, which the test suite does not.
-    #!/usr/bin/env sh
+    #
+    # just only treats a recipe as a script when the shebang is its first
+    # line; a comment above it demotes the body to one command per line,
+    # where the indentation below is a syntax error.
     set -e
     for dir in examples/*/; do
         name=$(basename "$dir")
