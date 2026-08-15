@@ -1,3 +1,10 @@
+// A gas mixture treated as a single pseudo-substance.
+//
+// Kay's rule averages the critical properties of the components linearly,
+// producing a fictional pure species that generalized correlations such as
+// Lee-Kesler can then be applied to.
+//
+// Run with: go run ./examples/problem_mixture
 package main
 
 import (

@@ -231,7 +231,7 @@ func main() {
 ```
 ### Example Output
 
-The following diagram was generated using the code in [examples/main.go](examples/main.go):
+The following diagram was generated using the code in [examples/pvdiagram/main.go](examples/pvdiagram/main.go):
 
 ![PV Diagram](images/ethane_pv.svg)
 

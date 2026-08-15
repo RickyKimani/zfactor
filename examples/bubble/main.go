@@ -1,3 +1,10 @@
+// Bubble and dew points: the two edges of the two-phase region.
+//
+// The first half uses Raoult's law, appropriate when the liquid is close
+// to ideal. The second uses the modified law with a Wilson activity
+// model, for acetone and water, where the liquid is not.
+//
+// Run with: go run ./examples/bubble
 package main
 
 import (

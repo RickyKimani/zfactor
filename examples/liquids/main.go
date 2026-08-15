@@ -1,3 +1,10 @@
+// Liquid-phase properties: vapor pressure, saturated volume and density.
+//
+// Three correlations, each from a different source: Antoine for the
+// saturation pressure, Rackett for the saturated liquid volume, and the
+// digitised Lydersen chart for the reduced density.
+//
+// Run with: go run ./examples/liquids
 package main
 
 import (

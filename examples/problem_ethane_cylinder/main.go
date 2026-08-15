@@ -1,3 +1,11 @@
+// A worked problem: the molar volume of ethane by two routes.
+//
+// The Lee-Kesler generalized correlation and the Soave/Redlich/Kwong
+// equation of state are applied to the same state and compared, which is
+// the usual way of judging how much the choice of method matters. The
+// states are then drawn on a PV diagram.
+//
+// Run with: go run ./examples/problem_ethane_cylinder
 package main
 
 import (

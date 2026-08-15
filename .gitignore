@@ -52,4 +52,8 @@ pv*.png
 debug/
 data/lydersen_raw.json
 misc/
-examples/
+# The examples are part of the documentation: the README links to them,
+# and `just examples` builds and runs every one so they cannot rot
+# unnoticed. Only the diagrams they emit are ignored.
+examples/**/*.svg
+examples/**/*.png

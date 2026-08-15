@@ -1,3 +1,10 @@
+// Residual properties: how far a real fluid departs from an ideal gas.
+//
+// Two routes to the same quantities are compared. The Abbott correlations
+// derive them from the second virial coefficient and are adequate at low
+// reduced pressure; the Lee-Kesler tables are needed above it.
+//
+// Run with: go run ./examples/residual
 package main
 
 import (
