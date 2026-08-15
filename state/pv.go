@@ -16,6 +16,16 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
+const (
+	// isothermLabelOffset is how far past the end of a curve its isotherm
+	// label is drawn.
+	isothermLabelOffset = vg.Length(2)
+
+	// isothermLabelMargin is the gap kept between the end of that text and
+	// the edge of the canvas.
+	isothermLabelMargin = vg.Length(6)
+)
+
 // PVConfig holds configuration options for customizing the appearance of the PV diagram.
 type PVConfig struct {
 	// Type specifies the cubic Equation of State (EOS) model to use for generating the PV diagram.
@@ -181,15 +191,24 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	critLine.LineStyle.Width = vg.Points(1)
 	p.Add(critLine)
 
+	// Isotherm labels sit just past the right end of their curve, which is
+	// also where the x-axis ends. The widest of them is tracked so the axis
+	// can be extended to make room; without it the text runs off the canvas
+	// and is clipped.
+	var widestLabel vg.Length
+
 	if cfg.LabelIsotherms && len(critPts) > 0 {
 		lastPt := critPts[len(critPts)-1]
+		text := fmt.Sprintf("Tc=%.1f K", Tc)
 		labels, _ := plotter.NewLabels(plotter.XYLabels{
 			XYs:    []plotter.XY{lastPt},
-			Labels: []string{fmt.Sprintf("Tc=%.1f K", Tc)},
+			Labels: []string{text},
 		})
-		labels.Offset.X = vg.Points(2)
+		labels.Offset.X = isothermLabelOffset
 		labels.TextStyle[0].Color = theme.IsothermLabel()
 		p.Add(labels)
+
+		widestLabel = labels.TextStyle[0].Width(text)
 	}
 
 	// 2. Draw Saturation Dome
@@ -269,11 +288,12 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 		if cfg.LabelIsotherms && len(isoPts) > 0 {
 			lastPt := isoPts[len(isoPts)-1]
+			text := fmt.Sprintf("T=%.1f K", state.Temperature)
 			labels, _ := plotter.NewLabels(plotter.XYLabels{
 				XYs:    []plotter.XY{lastPt},
-				Labels: []string{fmt.Sprintf("T=%.1f K", state.Temperature)},
+				Labels: []string{text},
 			})
-			labels.Offset.X = vg.Points(2)
+			labels.Offset.X = isothermLabelOffset
 			// Shift label to avoid overlap with Critical Isotherm
 			if state.Temperature < Tc {
 				labels.Offset.Y = vg.Points(-10)
@@ -283,6 +303,10 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 			labels.TextStyle[0].Color = theme.IsothermLabel()
 
 			p.Add(labels)
+
+			if w := labels.TextStyle[0].Width(text); w > widestLabel {
+				widestLabel = w
+			}
 		}
 
 		// Calculate State Point
@@ -351,6 +375,15 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 	}
 
+	width := cfg.Width
+	if width == 0 {
+		width = DefaultPVConfig(cfg.Type).Width
+	}
+	height := cfg.Height
+	if height == 0 {
+		height = DefaultPVConfig(cfg.Type).Height
+	}
+
 	// Set Axes Limits
 	p.X.Min = 0
 	p.X.Max = maxViewV
@@ -362,13 +395,25 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 	}
 
-	width := cfg.Width
-	if width == 0 {
-		width = DefaultPVConfig(cfg.Type).Width
-	}
-	height := cfg.Height
-	if height == 0 {
-		height = DefaultPVConfig(cfg.Type).Height
+	// Extend the x-axis past the curves so the isotherm labels drawn at
+	// their right ends stay on the canvas. The room reserved is the text
+	// itself, the gap it is offset by, and a margin so it does not sit
+	// flush against the edge; reserving only the text leaves it touching.
+	//
+	// The room is reserved in data units, so it is the text width as a
+	// share of the plotting area. drawArea is a deliberate under-estimate
+	// of that area's share of the figure: erring low reserves a little
+	// more than needed, which is the safe direction. Part of any
+	// reservation is absorbed by the axis snapping its maximum to a tick,
+	// so the margin that survives is smaller than the amount asked for.
+	if widestLabel > 0 {
+		const drawArea = 0.82
+
+		needed := widestLabel + isothermLabelOffset + isothermLabelMargin
+
+		if usable := float64(width) * drawArea; usable > 0 {
+			p.X.Max = maxViewV * (1 + float64(needed)/usable)
+		}
 	}
 
 	err = p.Save(width, height, output)

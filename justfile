@@ -1,12 +1,17 @@
 # zfactor — common tasks.
 #
 # Run `just` with no arguments to see the list.
+#
+# Recipes are written for nushell, so `nu` must be on PATH:
+# https://www.nushell.sh/book/installation.html
+set shell := ["nu", "-c"]
 
 # Directory holding the page ranges the parsers were run against.
 data := "data"
 
 # The book the tables are transcribed from. Not in the repository:
-# see the extract recipes.
+# see the extract recipes. Override it if your copy is named
+# differently, e.g. `just book="Smith 9e.pdf" extract 688 689 appendix_c`.
 book := "book.pdf"
 
 _default:
@@ -49,7 +54,9 @@ race:
 
 # Statement coverage for every package.
 cover:
-    @go test ./... -cover 2>&1 | grep -E '^(ok|---)' || true
+    @# `complete` captures the exit code rather than propagating it, so a
+    @# failing package still leaves the coverage of the others readable.
+    @let result = (go test ./... -cover | complete); ($result.stdout + $result.stderr) | lines | where $it =~ '^(ok|---)' | to text
 
 # Per-function coverage for one package, e.g. `just cover-pkg cubic`.
 cover-pkg pkg:
@@ -58,8 +65,8 @@ cover-pkg pkg:
 
 # Per-function coverage for one package, only what is under 100%.
 cover-gaps pkg:
-    @go test ./{{ pkg }}/ -coverprofile=coverage.out > /dev/null
-    @go tool cover -func=coverage.out | awk '$3+0 < 100'
+    @go test ./{{ pkg }}/ -coverprofile=coverage.out | ignore
+    @go tool cover -func=coverage.out | lines | where {|line| ($line | split row -r '\s+' | last | str replace '%' '' | into float) < 100 } | to text
 
 # Open a coverage report for one package in the browser.
 cover-html pkg:
@@ -74,7 +81,7 @@ fmt:
 
 # Report files that are not gofmt-clean, without changing them.
 fmt-check:
-    @test -z "$(gofmt -l .)" || { echo "not gofmt-clean:"; gofmt -l .; exit 1; }
+    @let unformatted = (gofmt -l . | lines | where {|line| ($line | str trim) != "" }); if ($unformatted | is-not-empty) { print "not gofmt-clean:"; $unformatted | each {|file| print $file } | ignore; exit 1 }
 
 # Run go vet.
 vet:
@@ -87,39 +94,32 @@ check: fmt-check vet retest examples-build
 
 # Regenerate every table from the JSON under data/.
 generate:
-    # The generators are deterministic, so this is a no-op unless the
-    # source data has changed.
+    @# The generators are deterministic, so this is a no-op unless the
+    @# source data has changed.
     go generate ./...
 
 # Show what regenerating would change, without keeping it.
 generate-check: generate
-    @git diff --stat -- '*/table.go' '*/tables.go' || true
+    @git diff --stat -- '*/table.go' '*/tables.go'
 
 # ------------------------------------------------------------- extract
 
 # Extract book pages into data/, e.g. `just extract 688 689 appendix_c`.
 extract start end name:
-    # The extracted pages are kept in the repository so that a parsing
-    # bug can be traced to its source without locating the book again.
-    uv run python -c "import sys; sys.path.insert(0,'scripts'); \
-        from extractor import extract_pages; \
-        extract_pages('{{ book }}', {{ start }}, {{ end }}, '{{ data }}/{{ name }}.pdf')"
+    @# The extracted pages are kept in the repository so that a parsing
+    @# bug can be traced to its source without locating the book again.
+    @#
+    @# The Python is held in a nushell raw string, r#'...'#, so that neither
+    @# its quotes nor its backslashes need escaping.
+    uv run python -c r#'import sys; sys.path.insert(0,"scripts"); from extractor import extract_pages; extract_pages("{{ book }}", {{ start }}, {{ end }}, "{{ data }}/{{ name }}.pdf")'#
 
 # Re-parse the heat-capacity tables (Appendix C) into data/cp.json.
 parse-cp:
-    uv run python -c "import sys, json; sys.path.insert(0,'scripts'); \
-        from parse import parse_cp_tables; \
-        t = parse_cp_tables('{{ data }}/appendix_c_heat_capacities.pdf'); \
-        f = open('{{ data }}/cp.json','w',encoding='utf-8'); \
-        json.dump(t, f, indent=2); f.write('\n')"
+    uv run python -c r#'import sys, json; sys.path.insert(0,"scripts"); from parse import parse_cp_tables; t = parse_cp_tables("{{ data }}/appendix_c_heat_capacities.pdf"); f = open("{{ data }}/cp.json","w",encoding="utf-8"); json.dump(t, f, indent=2); f.write("\n")'#
 
 # Re-parse the Antoine constants (Table B.2) into data/b2_antoine.json.
 parse-antoine:
-    uv run python -c "import sys, json; sys.path.insert(0,'scripts'); \
-        from parse import parse_antoine_table; \
-        t = parse_antoine_table('{{ data }}/appendix_b2_antoine.pdf'); \
-        f = open('{{ data }}/b2_antoine.json','w',encoding='utf-8'); \
-        json.dump(t, f, indent=2); f.write('\n')"
+    uv run python -c r#'import sys, json; sys.path.insert(0,"scripts"); from parse import parse_antoine_table; t = parse_antoine_table("{{ data }}/appendix_b2_antoine.pdf"); f = open("{{ data }}/b2_antoine.json","w",encoding="utf-8"); json.dump(t, f, indent=2); f.write("\n")'#
 
 # ------------------------------------------------------------ examples
 
@@ -129,20 +129,22 @@ examples-build:
 
 # Build and run every example, so a stale one cannot pass unnoticed.
 examples:
-    #!/usr/bin/env sh
+    #!/usr/bin/env nu
     # The README links to these, and they exercise the public API the way
     # a reader will, which the test suite does not.
     #
     # just only treats a recipe as a script when the shebang is its first
     # line; a comment above it demotes the body to one command per line,
     # where the indentation below is a syntax error.
-    set -e
-    for dir in examples/*/; do
-        name=$(basename "$dir")
-        echo ""
-        echo "===== $name ====="
-        go run "./examples/$name"
-    done
+    #
+    # nushell aborts the script when an external command exits non-zero,
+    # so no `set -e` equivalent is needed: a broken example fails the run.
+    for dir in (ls examples | where type == dir | get name) {
+        let name = ($dir | path basename)
+        print ""
+        print $"===== ($name) ====="
+        go run $"./examples/($name)"
+    }
 
 # Run one example, e.g. `just example flash`.
 example name:
@@ -152,8 +154,7 @@ example name:
 
 # Serve the package documentation locally.
 doc:
-    @echo "serving on http://localhost:6060/pkg/github.com/rickykimani/zfactor/"
-    go run golang.org/x/tools/cmd/godoc@latest -http=:6060
+    go doc -http
 
 # Print one package's documentation, e.g. `just doc-pkg cubic`.
 doc-pkg pkg:
