@@ -181,15 +181,24 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 	critLine.LineStyle.Width = vg.Points(1)
 	p.Add(critLine)
 
+	// Isotherm labels sit just past the right end of their curve, which is
+	// also where the x-axis ends. The widest of them is tracked so the axis
+	// can be extended to make room; without it the text runs off the canvas
+	// and is clipped.
+	var widestLabel vg.Length
+
 	if cfg.LabelIsotherms && len(critPts) > 0 {
 		lastPt := critPts[len(critPts)-1]
+		text := fmt.Sprintf("Tc=%.1f K", Tc)
 		labels, _ := plotter.NewLabels(plotter.XYLabels{
 			XYs:    []plotter.XY{lastPt},
-			Labels: []string{fmt.Sprintf("Tc=%.1f K", Tc)},
+			Labels: []string{text},
 		})
 		labels.Offset.X = vg.Points(2)
 		labels.TextStyle[0].Color = theme.IsothermLabel()
 		p.Add(labels)
+
+		widestLabel = labels.TextStyle[0].Width(text)
 	}
 
 	// 2. Draw Saturation Dome
@@ -269,9 +278,10 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 
 		if cfg.LabelIsotherms && len(isoPts) > 0 {
 			lastPt := isoPts[len(isoPts)-1]
+			text := fmt.Sprintf("T=%.1f K", state.Temperature)
 			labels, _ := plotter.NewLabels(plotter.XYLabels{
 				XYs:    []plotter.XY{lastPt},
-				Labels: []string{fmt.Sprintf("T=%.1f K", state.Temperature)},
+				Labels: []string{text},
 			})
 			labels.Offset.X = vg.Points(2)
 			// Shift label to avoid overlap with Critical Isotherm
@@ -283,6 +293,10 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 			labels.TextStyle[0].Color = theme.IsothermLabel()
 
 			p.Add(labels)
+
+			if w := labels.TextStyle[0].Width(text); w > widestLabel {
+				widestLabel = w
+			}
 		}
 
 		// Calculate State Point
@@ -351,6 +365,15 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 	}
 
+	width := cfg.Width
+	if width == 0 {
+		width = DefaultPVConfig(cfg.Type).Width
+	}
+	height := cfg.Height
+	if height == 0 {
+		height = DefaultPVConfig(cfg.Type).Height
+	}
+
 	// Set Axes Limits
 	p.X.Min = 0
 	p.X.Max = maxViewV
@@ -362,13 +385,16 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 	}
 
-	width := cfg.Width
-	if width == 0 {
-		width = DefaultPVConfig(cfg.Type).Width
-	}
-	height := cfg.Height
-	if height == 0 {
-		height = DefaultPVConfig(cfg.Type).Height
+	// Extend the x-axis past the curves by the width of the widest isotherm
+	// label, so the labels drawn at their right ends stay on the canvas. The
+	// room needed is a fraction of the figure, so it shrinks as the figure
+	// grows; drawArea approximates what is left after the y-axis furniture.
+	if widestLabel > 0 {
+		const drawArea = 0.82
+
+		if usable := float64(width) * drawArea; usable > 0 {
+			p.X.Max = maxViewV * (1 + float64(widestLabel)/usable)
+		}
 	}
 
 	err = p.Save(width, height, output)
