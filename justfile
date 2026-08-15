@@ -81,7 +81,7 @@ vet:
     go vet ./...
 
 # Everything a change should pass before being committed.
-check: fmt-check vet retest
+check: fmt-check vet retest examples-build
 
 # ------------------------------------------------------------ generate
 
@@ -120,6 +120,29 @@ parse-antoine:
         t = parse_antoine_table('{{ data }}/appendix_b2_antoine.pdf'); \
         f = open('{{ data }}/b2_antoine.json','w',encoding='utf-8'); \
         json.dump(t, f, indent=2); f.write('\n')"
+
+# ------------------------------------------------------------ examples
+
+# Build every example.
+examples-build:
+    go build ./examples/...
+
+# Build and run every example, so a stale one cannot pass unnoticed.
+examples:
+    # The README links to these, and they exercise the public API the way
+    # a reader will, which the test suite does not.
+    #!/usr/bin/env sh
+    set -e
+    for dir in examples/*/; do
+        name=$(basename "$dir")
+        echo ""
+        echo "===== $name ====="
+        go run "./examples/$name"
+    done
+
+# Run one example, e.g. `just example flash`.
+example name:
+    go run ./examples/{{ name }}
 
 # ----------------------------------------------------------------- doc
 

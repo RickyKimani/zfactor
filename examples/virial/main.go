@@ -1,3 +1,11 @@
+// The virial equations: a power series in density, truncated.
+//
+// The two-term form is linear in pressure and reliable only where the gas
+// is thin, which is why it refuses to evaluate above 15 bar. The
+// three-term form keeps one more coefficient and reaches further, at the
+// cost of solving a cubic.
+//
+// Run with: go run ./examples/virial
 package main
 
 import (
