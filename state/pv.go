@@ -16,6 +16,16 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
+const (
+	// isothermLabelOffset is how far past the end of a curve its isotherm
+	// label is drawn.
+	isothermLabelOffset = vg.Length(2)
+
+	// isothermLabelMargin is the gap kept between the end of that text and
+	// the edge of the canvas.
+	isothermLabelMargin = vg.Length(6)
+)
+
 // PVConfig holds configuration options for customizing the appearance of the PV diagram.
 type PVConfig struct {
 	// Type specifies the cubic Equation of State (EOS) model to use for generating the PV diagram.
@@ -194,7 +204,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 			XYs:    []plotter.XY{lastPt},
 			Labels: []string{text},
 		})
-		labels.Offset.X = vg.Points(2)
+		labels.Offset.X = isothermLabelOffset
 		labels.TextStyle[0].Color = theme.IsothermLabel()
 		p.Add(labels)
 
@@ -283,7 +293,7 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 				XYs:    []plotter.XY{lastPt},
 				Labels: []string{text},
 			})
-			labels.Offset.X = vg.Points(2)
+			labels.Offset.X = isothermLabelOffset
 			// Shift label to avoid overlap with Critical Isotherm
 			if state.Temperature < Tc {
 				labels.Offset.Y = vg.Points(-10)
@@ -385,15 +395,24 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 	}
 
-	// Extend the x-axis past the curves by the width of the widest isotherm
-	// label, so the labels drawn at their right ends stay on the canvas. The
-	// room needed is a fraction of the figure, so it shrinks as the figure
-	// grows; drawArea approximates what is left after the y-axis furniture.
+	// Extend the x-axis past the curves so the isotherm labels drawn at
+	// their right ends stay on the canvas. The room reserved is the text
+	// itself, the gap it is offset by, and a margin so it does not sit
+	// flush against the edge; reserving only the text leaves it touching.
+	//
+	// The room is reserved in data units, so it is the text width as a
+	// share of the plotting area. drawArea is a deliberate under-estimate
+	// of that area's share of the figure: erring low reserves a little
+	// more than needed, which is the safe direction. Part of any
+	// reservation is absorbed by the axis snapping its maximum to a tick,
+	// so the margin that survives is smaller than the amount asked for.
 	if widestLabel > 0 {
 		const drawArea = 0.82
 
+		needed := widestLabel + isothermLabelOffset + isothermLabelMargin
+
 		if usable := float64(width) * drawArea; usable > 0 {
-			p.X.Max = maxViewV * (1 + float64(widestLabel)/usable)
+			p.X.Max = maxViewV * (1 + float64(needed)/usable)
 		}
 	}
 
