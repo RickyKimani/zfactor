@@ -36,7 +36,7 @@ fmt.Printf("%.4f of the feed is vapor\n", result.V) // 0.7365, book: 0.7364
 
 | Area | What you get |
 | --- | --- |
-| **Cubic equations of state** | van der Waals, Redlich–Kwong, Soave–RK, Peng–Robinson. Volume, pressure and Z, plus saturation pressure by equal fugacity. |
+| **Cubic equations of state** | van der Waals, Redlich–Kwong, Soave–RK, Peng–Robinson. Volume, pressure and Z, saturation pressure by equal fugacity, and the departure properties: residual *H* and *S*, and the fugacity coefficient. |
 | **Generalized correlations** | Lee–Kesler tables (Z, residual *H* and *S*, fugacity coefficient) and the Abbott correlations for the second virial coefficient. |
 | **Virial equations** | Two-term (pressure series) and three-term (Leiden/density series) truncations. |
 | **Vapor–liquid equilibrium** | Bubble and dew point in both *P* and *T*, under Raoult's law or the modified law with activity coefficients. |
@@ -185,13 +185,20 @@ reach it. Test with `errors.As`.
 
 ### 4. Residual properties
 
-Departures from ideal-gas behaviour, from either the Abbott correlations or the
-Lee–Kesler tables. Lee–Kesler is the better choice at high pressure.
+Departures from ideal-gas behaviour, by three routes: the Abbott correlations,
+the Lee–Kesler tables, or a cubic equation of state. Abbott is a second-virial
+correlation and so is limited to modest pressures; Lee–Kesler is tabulated data
+and reads well across the range; the equation of state carries no tables at all
+and gives a liquid as readily as a vapor.
+
+All three return the same dimensionless groups, *H*ᴿ/(*R T*c) and *S*ᴿ/*R*, so
+they can be compared directly.
 
 Full example: [examples/residual/main.go](examples/residual/main.go)
 
 ```go
 import (
+	"github.com/rickykimani/zfactor/cubic"
 	leekesler "github.com/rickykimani/zfactor/lee-kesler"
 	"github.com/rickykimani/zfactor/substance"
 )
@@ -205,6 +212,31 @@ sR, _ := eth.AbbottResidualEntropy(args)
 hrLK, _ := eth.LeeKesler(args, leekesler.ResidualEnthalpy)
 srLK, _ := eth.LeeKesler(args, leekesler.ResidualEntropy)
 ```
+
+From an equation of state, the state has to be solved before a departure can be
+evaluated, so the gas constant is needed and the phase is named. A subcritical
+state has a liquid root and a vapor root with a different residual property
+apiece; `cubic.StablePhase` picks whichever one actually exists, by comparing
+their fugacities.
+
+```go
+butane := substance.NButane
+srk := &cubic.SRK{}
+
+// R in bar·cm³/(mol·K), matching the pressure unit.
+state := zfactor.Args{T: 500.0, P: 50.0, R: zfactor.RSI * 10}
+
+hrEOS, _ := butane.CubicResidualEnthalpy(srk, cubic.StablePhase, state)
+srEOS, _ := butane.CubicResidualEntropy(srk, cubic.StablePhase, state)
+
+// The residual Gibbs energy, which ties the other two together:
+// ln φ = Hᴿ/RT − Sᴿ/R.
+lnPhi, _ := butane.CubicLogFugacity(srk, cubic.StablePhase, state)
+```
+
+Naming `cubic.LiquidPhase` or `cubic.VaporPhase` instead asks for that root
+whether or not it is the stable one, which is what a flash loop wants and what
+makes the metastable region reachable.
 
 ### 5. Mixtures
 
@@ -498,7 +530,7 @@ better sources are found.
 | --- | --- |
 | `zfactor` | `Args`, physical constants, the shared `RangeError`. |
 | `substance` | 87 species with critical properties, plus substance-level methods (`Ethane.LeeKesler(…)`). |
-| `cubic` | vdW, RK, SRK, PR. Volume, pressure, Z, saturation pressure. |
+| `cubic` | vdW, RK, SRK, PR. Volume, pressure, Z, saturation pressure, residual *H* and *S*, fugacity coefficient, and phase selection among the roots. |
 | `lee-kesler` | The generalized correlation tables and interpolation. |
 | `virial` | Two- and three-term virial equations. |
 | `abbott` | Generalized second virial coefficient and residual properties. |
@@ -520,11 +552,7 @@ Not implemented yet. Listed roughly in the order they are likely to land.
       e.g. Orbey–Vera, so the three-term form no longer needs *C* supplied.
 - [ ] **Raw PVT data.** Fit and interpolate measured data instead of relying
       solely on correlations.
-- [ ] **Residual properties directly from a cubic EOS**, rather than only from
-      the Abbott and Lee–Kesler correlations.
 - [ ] **Partial molar properties.**
-- [ ] **Fugacity coefficients from an EOS.** Currently available only through
-      the Lee–Kesler tables.
 - [ ] **Poynting correction**, for VLE at pressures where the liquid's
       compressibility stops being negligible.
 - [ ] **Henry's law**, for dissolved gases well above their critical
