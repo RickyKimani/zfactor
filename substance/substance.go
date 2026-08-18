@@ -157,3 +157,91 @@ func (s *Substance) LeeKeslerVaporPressure(T float64) (float64, error) {
 	}
 	return leekesler.VaporPressure(T, s.Tn, s.Critical.Tc, s.Critical.Pc)
 }
+
+// CubicResidualEnthalpy calculates the dimensionless residual enthalpy
+// H^R / (R * Tc) at the given temperature (K) and pressure (bar) from a cubic
+// equation of state.
+//
+// This is the same quantity AbbottResidualEnthalpy and the Lee-Kesler tables
+// return, by a different route: the equation of state is solved at the state
+// and the departure functions evaluated from its own parameters, rather than
+// read from a generalized correlation.
+//
+// A state may admit a liquid root and a vapour root, and it has a residual
+// enthalpy for each, so the phase is named rather than assumed. Where only one
+// real root exists both phases return it.
+//
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+//   - R: Gas constant, in units consistent with the critical pressure
+//
+// It returns an error if the temperature or pressure is non-positive, or if the
+// equation has no real root at the state.
+func (s *Substance) CubicResidualEnthalpy(Type cubic.EOSType, phase cubic.Phase, args zfactor.Args) (float64, error) {
+	cfg, state, err := s.cubicPhase(Type, phase, args)
+	if err != nil {
+		return 0, err
+	}
+
+	return cubic.ResidualEnthalpy(cfg, state.Z, state.A, state.B)
+}
+
+// CubicResidualEntropy calculates the dimensionless residual entropy S^R / R at
+// the given temperature (K) and pressure (bar) from a cubic equation of state.
+//
+// The arguments carry the same meaning as in CubicResidualEnthalpy.
+func (s *Substance) CubicResidualEntropy(Type cubic.EOSType, phase cubic.Phase, args zfactor.Args) (float64, error) {
+	cfg, state, err := s.cubicPhase(Type, phase, args)
+	if err != nil {
+		return 0, err
+	}
+
+	return cubic.ResidualEntropy(cfg, state.Z, state.A, state.B)
+}
+
+// CubicLogFugacity calculates the natural logarithm of the fugacity
+// coefficient at the given temperature (K) and pressure (bar) from a cubic
+// equation of state.
+//
+// It completes the set: the three departure properties a cubic equation
+// supplies are the residual enthalpy, the residual entropy and this, and
+// ln phi is the residual Gibbs energy G^R/(R T) that ties the other two
+// together.
+//
+// The arguments carry the same meaning as in CubicResidualEnthalpy.
+func (s *Substance) CubicLogFugacity(Type cubic.EOSType, phase cubic.Phase, args zfactor.Args) (float64, error) {
+	cfg, state, err := s.cubicPhase(Type, phase, args)
+	if err != nil {
+		return 0, err
+	}
+
+	return cubic.LogFugacity(cfg, state.Z, state.A, state.B), nil
+}
+
+// cubicPhase builds the configuration for a cubic equation of state at a state
+// and solves it for one phase, which is the work every method above shares.
+func (s *Substance) cubicPhase(
+	Type cubic.EOSType,
+	phase cubic.Phase,
+	args zfactor.Args,
+) (*cubic.EOSCfg, *cubic.PhaseState, error) {
+	if args.T <= 0 {
+		return nil, nil, zfactor.ErrTemp
+	}
+	if args.P <= 0 {
+		return nil, nil, zfactor.ErrPressure
+	}
+	if args.R <= 0 {
+		return nil, nil, zfactor.ErrUniversalConst
+	}
+
+	cfg := s.CubicConfig(Type, args)
+
+	state, err := cubic.SolvePhase(cfg, phase)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return cfg, state, nil
+}
