@@ -310,47 +310,17 @@ func DrawPV(cfg *PVConfig, output string, states ...*State) error {
 		}
 
 		// Calculate State Point
-		volRes, err := cubic.SolveForVolume(stateCfg)
+		//
+		// Where the equation admits three roots the state is marked at the
+		// phase that actually exists, which SolvePhase settles by comparing
+		// their fugacities. Supercritical states have a single root and are
+		// unaffected by the choice.
+		solved, err := cubic.SolvePhase(stateCfg, cubic.StablePhase)
 		if err != nil {
 			continue
 		}
-		roots := volRes.Clean()
 
-		if len(roots) == 0 {
-			continue
-		}
-
-		// Determine which root represents the state
-		// If 1 root: Supercritical or Single Phase
-		// If 3 roots: Two-Phase region possible.
-		// But we are given P and T.
-		// If T < Tc and P < Psat -> Vapor (largest root)
-		// If T < Tc and P > Psat -> Liquid (smallest root)
-		// If T > Tc -> Single root
-
-		var stateV float64
-
-		if state.Temperature >= Tc {
-			stateV = roots[0] // Only 1 real root usually
-		} else {
-			// Subcritical
-			pSat, err := cubic.SaturationPressure(stateCfg, state.Temperature)
-			if err == nil {
-				if state.Pressure > pSat {
-					stateV = roots[0] // Liquid
-				} else if state.Pressure < pSat {
-					stateV = roots[len(roots)-1] // Vapor
-				} else {
-					// Saturation
-					// Ambiguous V, could be anywhere.
-					// Usually user implies one, but let's pick Vapor for visualization or both?
-					stateV = roots[len(roots)-1]
-				}
-			} else {
-				// Fallback
-				stateV = roots[len(roots)-1]
-			}
-		}
+		stateV := solved.V
 
 		// Plot State Marker
 		scatter, err := plotter.NewScatter(plotter.XYs{{X: stateV, Y: state.Pressure}})
