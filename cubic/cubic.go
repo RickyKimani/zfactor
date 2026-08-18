@@ -247,10 +247,16 @@ func NewRKCfg(T, P, Tc, Pc, R float64) *EOSCfg {
 type SRK struct{}
 
 func (*SRK) Alpha(tr, w float64) float64 {
-	a := 0.480 + 1.574*w - 0.176*w*w
 	b := 1 - math.Sqrt(tr)
-	c := 1 + a*b
+	c := 1 + srkM(w)*b
 	return c * c
+}
+
+// srkM is Soave's polynomial for m, the only place its coefficients appear.
+// The derivative of alpha needs the same m, and reading it from here is what
+// keeps the two from drifting apart.
+func srkM(w float64) float64 {
+	return 0.480 + 1.574*w - 0.176*w*w
 }
 
 func (*SRK) Params() *Params {
@@ -279,10 +285,15 @@ func NewSRKCfg(T, P, Tc, Pc, W, R float64) *EOSCfg {
 type PR struct{}
 
 func (*PR) Alpha(tr, w float64) float64 {
-	a := 0.37464 + 1.54226*w - 0.26992*w*w
 	b := 1 - math.Sqrt(tr)
-	c := 1 + a*b
+	c := 1 + prM(w)*b
 	return c * c
+}
+
+// prM is the Peng-Robinson polynomial for m, held apart for the same reason
+// as srkM.
+func prM(w float64) float64 {
+	return 0.37464 + 1.54226*w - 0.26992*w*w
 }
 
 func (*PR) Params() *Params {
