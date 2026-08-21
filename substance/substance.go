@@ -10,6 +10,7 @@ import (
 	"github.com/rickykimani/zfactor/cubic"
 	leekesler "github.com/rickykimani/zfactor/lee-kesler"
 	"github.com/rickykimani/zfactor/liquids"
+	ov "github.com/rickykimani/zfactor/orbey-vera"
 )
 
 type CriticalProps struct {
@@ -138,6 +139,50 @@ func (s *Substance) AbbottResidualEntropy(args zfactor.Args) (float64, error) {
 	Pr := args.P / s.Critical.Pc
 
 	return abbott.ResidualEntropy(Tr, Pr, s.Acentric)
+}
+
+// OVResidualEnthalpy calculates the dimensionless residual enthalpy H^R / (R * Tc)
+// at the given temperature (K) and pressure (bar) using the Orbey-Vera
+// third-virial correlation together with the Abbott second-virial correlation.
+//
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+//
+// It returns an error if the temperature or pressure is non-positive.
+func (s *Substance) OVResidualEnthalpy(args zfactor.Args) (float64, error) {
+	if args.T <= 0 {
+		return 0, zfactor.ErrTemp
+	}
+	if args.P <= 0 {
+		return 0, zfactor.ErrPressure
+	}
+	Tr := args.T / s.Critical.Tc
+	Pr := args.P / s.Critical.Pc
+
+	return ov.ResidualEnthalpy(Tr, Pr, s.Acentric)
+}
+
+// OVResidualEntropy calculates the dimensionless residual entropy S^R / R at
+// the given temperature (K) and pressure (bar) using the Orbey-Vera
+// third-virial correlation together with the Abbott second-virial correlation.
+//
+// Required Args:
+//   - T: Temperature in Kelvin
+//   - P: Pressure in bar
+//
+// It returns an error if the temperature or pressure is non-positive.
+func (s *Substance) OVResidualEntropy(args zfactor.Args) (float64, error) {
+	if args.T <= 0 {
+		return 0, zfactor.ErrTemp
+	}
+	if args.P <= 0 {
+		return 0, zfactor.ErrPressure
+	}
+	Tr := args.T / s.Critical.Tc
+	Pr := args.P / s.Critical.Pc
+
+	return ov.ResidualEntropy(Tr, Pr, s.Acentric)
 }
 
 // LeeKeslerAcentric estimates the acentric factor using the Lee-Kesler correlation.

@@ -40,6 +40,25 @@ func B1(Tr float64) (float64, error) {
 	return 0.139 - 0.172/math.Pow(Tr, 4.2), nil
 }
 
+// ReducedB calculates the reduced second virial coefficient.
+//
+// B * Pc / (R * Tc) = B0 + ω * B1 = hat(B)
+//
+// It returns an error if Tr <= 0
+func ReducedB(Tr, acentric float64) (float64, error) {
+	// No need to check for Tr here
+	B0, err := B0(Tr)
+	if err != nil {
+		return 0, err
+	}
+	B1, err := B1(Tr)
+	if err != nil {
+		return 0, err
+	}
+
+	return B0 + acentric*B1, nil
+}
+
 // DB0 calculates the first derivative of B0 with respect to reduced temperature (Tr).
 //
 //	dB0/dTr = 0.675 / Tr^2.6
